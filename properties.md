@@ -52,6 +52,8 @@ A simple string.
 - firstName
 ```
 
+[![Open in Stackblitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/mnfst-manifest-r3tmlw?file=manifest%2Fbackend.yml)
+
 ### Textarea
 
 Textarea field for medium-size texts.
@@ -59,6 +61,8 @@ Textarea field for medium-size texts.
 ```yaml
 - { name: description, type: text }
 ```
+
+[![Open in Stackblitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/mnfst-manifest-ih3ish?file=manifest%2Fbackend.yml)
 
 ### Number
 
@@ -68,6 +72,8 @@ A numerical value.
 - { name: age, type: number }
 ```
 
+[![Open in Stackblitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/mnfst-manifest-i339nv?file=manifest%2Fbackend.yml)
+
 ### Link
 
 An URL that links to an external page.
@@ -75,6 +81,8 @@ An URL that links to an external page.
 ```yaml
 - { name: website, type: link }
 ```
+
+[![Open in Stackblitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/mnfst-manifest-6s8jxx?file=manifest%2Fbackend.yml)
 
 ### Money
 
@@ -90,6 +98,8 @@ A money field with a currency. Money properties can have up to 2 digits after co
 | ------------ | ------- | ------ | ------------------------------------------------------------------------------------------------ |
 | **currency** | _USD_   | string | [ISO 4217 currency code](https://en.wikipedia.org/wiki/ISO_4217#List_of_ISO_4217_currency_codes) |
 
+[![Open in Stackblitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/mnfst-manifest-jjlyxu?file=manifest%2Fbackend.yml)
+
 ### Date
 
 Basic date field.
@@ -97,6 +107,8 @@ Basic date field.
 ```yaml
 - { name: startDate, type: date }
 ```
+
+[![Open in Stackblitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/mnfst-manifest-bmxncv?file=manifest%2Fbackend.yml)
 
 ### Timestamp
 
@@ -106,11 +118,15 @@ Timestamp field.
 - { name: acquiredAt, type: timestamp }
 ```
 
+[![Open in Stackblitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/mnfst-manifest-mrz18z?file=manifest%2Fbackend.yml)
+
 ### Email
 
 ```yaml
 - { name: email, type: email }
 ```
+
+[![Open in Stackblitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/mnfst-manifest-5pokfh?file=manifest%2Fbackend.yml)
 
 ### Boolean
 
@@ -120,6 +136,8 @@ For any field with a "true or false" value.
 - { name: isActive, type: boolean }
 ```
 
+[![Open in Stackblitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/mnfst-manifest-u5iyur?file=manifest%2Fbackend.yml)
+
 ### File
 
 A file upload. Read more in the [file upload doc](./upload.md#upload-a-file).
@@ -127,6 +145,8 @@ A file upload. Read more in the [file upload doc](./upload.md#upload-a-file).
 ```yaml
 - { name: document, type: file }
 ```
+
+[![Open in Stackblitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/mnfst-manifest-dylmky?file=manifest%2Fbackend.yml)
 
 ### Image
 
@@ -137,7 +157,7 @@ An image upload. The different sizes should be provided to generate several size
     name: photo,
     type: image,
     options:
-      { sizes: { small: { height: 90, width: 90 }, large: { width: 200 } } }
+      { sizes: { small: { height: 90, width: 90 }, large: { width: 200 } } },
   }
 ```
 
@@ -147,6 +167,8 @@ An image upload. The different sizes should be provided to generate several size
 | --------- | -------------------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **sizes** | _thumbnail (80x80)_ _medium (160x160)_ | ImageSizesObject | An object with each key being the name of each size and with `width`, `height` and `fit` optional props. The _fit_ options works as in [Sharp](https://sharp.pixelplumbing.com/api-resize) |
 
+[![Open in Stackblitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/mnfst-manifest-rytpmz?file=manifest%2Fbackend.yml)
+
 ### Password
 
 Password field. Most of the time you do not need to implement passwords manually as [authenticable entities](./auth.md#authenticable-entities) have built-in `email` and `password` fields to log in.
@@ -154,6 +176,8 @@ Password field. Most of the time you do not need to implement passwords manually
 ```yaml
 - { name: password, type: password }
 ```
+
+[![Open in Stackblitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/mnfst-manifest-n15k9a?file=manifest%2Fbackend.yml)
 
 :::warning
 When setting the type as `password`, Manifest hashes automatically the value before storing it. Passwords should never be stored as clear text.
@@ -181,6 +205,8 @@ A given choice of options.
 | **values**     | _(empty)_ | String[] | An array of strings representing the available choices |
 | **sequential** | `false`   | boolean  | Specifies if the values are ordered in a logical sense |
 
+[![Open in Stackblitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/mnfst-manifest-ashxqx?file=manifest%2Fbackend.yml)
+
 ### Location
 
 The location type consists in a object with `lat` and `lng` coordinates.
@@ -188,3 +214,5 @@ The location type consists in a object with `lat` and `lng` coordinates.
 ```yaml
 - { name: location, type: location }
 ```
+
+[![Open in Stackblitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/mnfst-manifest-nqb5ix?file=manifest%2Fbackend.yml)
