@@ -2,7 +2,7 @@
 id: javascript-sdk
 ---
 
-# Javascript SDK
+# JavaScript SDK
 
 Use the **Manifest JS SDK** to fetch and manipulate your data from your JS client.
 
@@ -103,9 +103,10 @@ When filtering, you have access to the following operators: `=`, `!=`, `>`, `>=`
 
 ## Get started with your favorite front-end framework
 
-See the following quick start guides to integrate CASE with popular front-end frameworks:
+See the following quick start guides to integrate Manifest with popular front-end frameworks:
 
+- [Get started with Angular](angular.md)
+- [Get started with Astro](astro.md)
 - [Get started with React](react.md)
 - [Get started with Svelte](svelte.md)
-- [Get started with Angular](angular.md)
 - [Get started with Vue](vue.md)
