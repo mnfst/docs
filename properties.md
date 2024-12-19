@@ -35,11 +35,11 @@ You can pass arguments using the long syntax:
 
 ## Property types
 
-Manifest vision of **property types** goes beyond software development typing and is already built-in for real world usages. For example, the [Money](#money) PropType is handier than [Number](#number) for managing amounts as it comes with a `currency` options and only allows 2 digits after coma.
+Manifest vision of **property types** goes beyond software development typing and is already built-in for real world usages. For example, the [Money](#money) PropType is handier than [Number](#number) for managing amounts as it comes with a `currency` option that only allows 2 digits after the comma.
 
-Each PropType comes with a built-in type [validation](#validation).
+Each PropType comes with built-in type [validation](./validation.md).
 
-Some of them have specific options. Here is a list of the available types
+Some of them have specific options. Here is a list of the available types:
 
 ### String
 
@@ -86,7 +86,7 @@ An URL that links to an external page.
 
 ### Money
 
-A money field with a currency. Money properties can have up to 2 digits after coma.
+A money field with a currency. Money properties can have up to 2 digits after the comma.
 
 ```yaml
 - { name: price, type: money, options: { currency: 'EUR' } }
