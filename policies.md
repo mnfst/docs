@@ -6,6 +6,8 @@ id: policies
 
 API Policies ensure that we provide specific access to resources for users. They are a way to implement **Authorization** following the RBAC (Role-Based Access Control) method. Indeed it is possible to create different entities (ex: User, Manager...) with different access to resources.
 
+Policies can be added to [entities](./entities.md) or [endpoints](./endpoints.md).
+
 ## Entity rules
 
 Each entity has **5 rules** where one or several access policies can be applied:
