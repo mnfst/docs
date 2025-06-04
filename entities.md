@@ -32,7 +32,7 @@ entities:
       - name
 ```
 
-This file will generate the **Cat** and **Dog** entity both with a `name` property. In Manifest by default all entities have an incremental **id** so you do not need to add it. They also have automatic **createdAt** and **updatedAt** columns that are not selected by default in the API requests.
+This file will generate the **Cat** and **Dog** entity both with a `name` property. In Manifest by default all entities have an **id** (UUID format) so you do not need to add it. They also have automatic **createdAt** and **updatedAt** columns that are not selected by default in the API requests.
 
 You can now add your own pets through the admin panel!
 

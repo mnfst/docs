@@ -161,7 +161,7 @@ Get the current logged-in user.
 
     ```json title="Example HTTP Response"
     {
-      id: 1,
+      id: 'a8f5f167-6d3b-4c8f-9e2a-7b4d8c9f1e3a',
       email: 'contributor@test.com'
     }
     ```

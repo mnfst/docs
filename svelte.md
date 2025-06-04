@@ -45,7 +45,7 @@ In that example we are using a Cat entity [created previously](entities.md). Rep
   import { onMount } from "svelte";
 
   interface Cat {
-    id: number;
+    id: string;
     name: string;
     type: string;
     image: string;

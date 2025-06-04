@@ -82,11 +82,11 @@ GET /api/collection/users
 {
   "data": [
     {
-      "id": 1,
+      "id": "2c4e6a8b-0d1f-4357-9ace-bdf024681357",
       "name": "Lara"
     },
     {
-      "id": 2,
+      "id": "e4d5c6b7-a890-4123-9876-543210fedcba",
       "name": "Karl"
     }
   ],
@@ -142,11 +142,11 @@ Order your list by a defined property. By default the results are ordered by `id
     // Output: {
     //   "data": [
     //     {
-    //       "id": 1,
+    //       "id": 'e4d5c6b7-a890-4123-9876-543210fedcba',
     //       "name": "Lara"
     //     },
     //     {
-    //       "id": 2,
+    //       "id": '2c4e6a8b-0d1f-4357-9ace-bdf024681357',
     //       "name": "Karl"
     //     }
     //   ],
@@ -214,7 +214,7 @@ This operation will fetch a single item based on its ID.
 **Request URL**: `GET /api/collections/:slug/:id`
 
     ```http title="Example HTTP Request"
-    GET /api/collections/cats/34
+    GET /api/collections/cats/2c4e6a8b-0d1f-4357-9ace-bdf024681357
     ```
 
     ```json title="Example HTTP Response"
@@ -227,8 +227,8 @@ This operation will fetch a single item based on its ID.
   </TabItem>
   <TabItem value="sdk" label="JS SDK" default>
     ```js title="Example SDK usage"
-    // Get cat with ID 34
-    const cat = await manifest.from('cats').findOneById(34)
+    // Get cat with ID 2c4e6a8b-0d1f-4357-9ace-bdf024681357
+    const cat = await manifest.from('cats').findOneById('2c4e6a8b-0d1f-4357-9ace-bdf024681357')
 
     console.log(cat);
     // Output: {
@@ -261,7 +261,7 @@ This operation will create a new item and store it in the database. The newly cr
 
     ```json title="Example HTTP Response"
     {
-      "id": 25,
+      "id": '6ba7b810-9dad-11d1-80b4-00c04fd430c8',
       "name": "Pikachu",
       "type": "electric",
       "level": 3,
@@ -280,7 +280,7 @@ This operation will create a new item and store it in the database. The newly cr
 
     console.log(newPokemon);
     // Output: {
-    //  id: 25,
+    //  id: '6ba7b810-9dad-11d1-80b4-00c04fd430c8',
     //  name: "Pikachu",
     //  type: "electric",
     //  level: 3
@@ -301,7 +301,7 @@ Unlike [partial updates](#patch-an-item), this operation will replace the whole 
 **Request URL**: `PUT /api/collections/:slug/:id`
 
     ```http title="Example HTTP Request"
-    PUT /api/collections/pokemons/25
+    PUT /api/collections/pokemons/6ba7b810-9dad-11d1-80b4-00c04fd430c8
     Content-Type: application/json
     Body:
     {
@@ -314,7 +314,7 @@ Unlike [partial updates](#patch-an-item), this operation will replace the whole 
 
     ```json title="Example HTTP Response"
     {
-      "id": 25,
+      "id": '6ba7b810-9dad-11d1-80b4-00c04fd430c8',
       "name": "Raichu",
       "type": "electric",
       "level": 8
@@ -324,8 +324,8 @@ Unlike [partial updates](#patch-an-item), this operation will replace the whole 
   </TabItem>
   <TabItem value="sdk" label="JS SDK" default>
     ```js title="Example SDK usage"
-    // Updates the Pokemon item with ID 25.
-    const newPokemon = await manifest.from('pokemons').update(25, {
+    // Updates the Pokemon item with ID a1b2c3d4-e5f6-4789-abcd-ef0123456789.
+    const newPokemon = await manifest.from('pokemons').update('a1b2c3d4-e5f6-4789-abcd-ef0123456789', {
       name: "Raichu",
       type: "electric",
       level: 8,
@@ -333,7 +333,7 @@ Unlike [partial updates](#patch-an-item), this operation will replace the whole 
 
     console.log(newPokemon);
     // Output: {
-    //  id: 25,
+    //  id: 'a1b2c3d4-e5f6-4789-abcd-ef0123456789',
     //  name: "Raichu",
     //  type: "electric",
     // level: 8
@@ -353,7 +353,7 @@ Unlike [fully replacement](#update-an-item), this operation will only modify the
 **Request URL**: `PATCH /api/collections/:slug/:id`
 
     ```http title="Example HTTP Request"
-    PATCH /api/collections/pokemons/25
+    PATCH /api/collections/pokemons/a1b2c3d4-e5f6-4789-abcd-ef0123456789
     Content-Type: application/json
     Body:
     {
@@ -363,7 +363,7 @@ Unlike [fully replacement](#update-an-item), this operation will only modify the
 
     ```json title="Example HTTP Response"
     {
-      "id": 25,
+      "id": 'a1b2c3d4-e5f6-4789-abcd-ef0123456789',
       "name": "Pikachu",
       "type": "electric",
       "level": 5
@@ -373,14 +373,14 @@ Unlike [fully replacement](#update-an-item), this operation will only modify the
  </TabItem>
  <TabItem value="sdk" label="JS SDK" default>
     ```js title="Example SDK usage"
-    // Patches the Pokemon item with ID 25.
-    const newPokemon = await manifest.from('pokemons').patch(25, {
+    // Patches the Pokemon item with ID a1b2c3d4-e5f6-4789-abcd-ef0123456789.
+    const newPokemon = await manifest.from('pokemons').patch('a1b2c3d4-e5f6-4789-abcd-ef0123456789', {
       level: 5
     })
 
     console.log(newPokemon);
     // Output: {
-    //  id: 25,
+    //  id: 'a1b2c3d4-e5f6-4789-abcd-ef0123456789',
     //  name: "Pikachu",
     //  type: "electric",
     //  level: 5
@@ -399,7 +399,8 @@ This operation will delete permanently an item from the database. This is an irr
 **Request URL**: `DELETE /api/collections/:slug/:id`
 
 ```http title="Example HTTP Request"
-DELETE api/collections/cats/60
+DELETE api/collections/cats/550e8400-e29b-41d4-a716-446655440000
+
 ```
 
 ```json title="Example HTTP Response"
@@ -412,8 +413,9 @@ DELETE api/collections/cats/60
  </TabItem>
  <TabItem value="sdk" label="JS SDK" default>
    ```js title="Example SDK usage"
-    // Delete the cat with ID 60.
-    const deletedCat = await manifest.from('cats').delete(60)
+    // Delete the cat with ID 550e8400-e29b-41d4-a716-446655440000
+.
+    const deletedCat = await manifest.from('cats').delete('550e8400-e29b-41d4-a716-446655440000')
 
     console.log(deletedCat);
     // Output: {
@@ -593,11 +595,11 @@ Once the relation is loaded, you can also filter items by their relation id or p
 <Tabs>
   <TabItem value="sdk" label="JS SDK" default>
     ```js
-      // Get all cats that belong to owner with id 1.
+      // Get all cats that belong to owner with id 3f2504e0-4f89-11d3-9a0c-0305e82c3301.
       const cats = await manifest
         .from('cats')
         .with(['owner'])
-        .where('owner.id = 1')
+        .where('owner.id = 3f2504e0-4f89-11d3-9a0c-0305e82c3301')
         .find()
 
       // Get all cats that have an owner with name "Jorge".
@@ -611,8 +613,8 @@ Once the relation is loaded, you can also filter items by their relation id or p
   </TabItem>
   <TabItem value="rest" label="REST API" default>
     ```http
-    // Get all cats that belong to owner with id 1.
-    GET http://localhost:1111/api/dynamic/cats?relations=owner&owner.id_eq=1
+    // Get all cats that belong to owner with id 3f2504e0-4f89-11d3-9a0c-0305e82c3301.
+    GET http://localhost:1111/api/dynamic/cats?relations=owner&owner.id_eq=3f2504e0-4f89-11d3-9a0c-0305e82c3301
 
     // Get all cats that have an owner with name "Jorge".
     GET http://localhost:1111/api/dynamic/cats?relations=owner&owner.name_eq=Jorge
@@ -634,8 +636,8 @@ To store or update an item with its relations, you have to pass the relation id(
     Content-Type: application/json
     {
         "name": "Mike",
-        "teamId": 10,
-        "skillIds": [1,2,3,4,5]
+        "teamId": 'e4d5c6b7-a890-4123-9876-543210fedcba',
+        "skillIds": ['12345678-1234-5678-9abc-123456789012', '3f2504e0-4f89-11d3-9a0c-0305e82c3301']
     }
     ```
 
@@ -645,8 +647,8 @@ To store or update an item with its relations, you have to pass the relation id(
       // Store a new player with relations Team and Skill.
       const newPlayer = await manifest.from('players').create({
         name: 'Mike',
-        teamId: 10,
-        skillIds: [1,2,3,4,5]
+        teamId: 'e4d5c6b7-a890-4123-9876-543210fedcba',
+        skillIds: ['12345678-1234-5678-9abc-123456789012', '3f2504e0-4f89-11d3-9a0c-0305e82c3301']
       })
     ```
 
@@ -667,19 +669,19 @@ As for updating properties, you can either do a **full replacement** using the u
   <TabItem value="rest" label="REST API" default>
     ```http
     // Replaces the whole skill relations by the new skillIds array.
-    PUT http://localhost:1111/api/dynamic/players/1
+    PUT http://localhost:1111/api/dynamic/players/e4d5c6b7-a890-4123-9876-543210fedcba
     Content-Type: application/json
     {
       name: 'Mike',
-      teamId: 10,
-      skillIds: [10, 11]
+      teamId: 'e4d5c6b7-a890-4123-9876-543210fedcba',
+      skillIds: ['12345678-1234-5678-9abc-123456789012', '3f2504e0-4f89-11d3-9a0c-0305e82c3301']
     }
 
     // Updates the team without changing the skills or the name.
-    PATCH http://localhost:1111/api/dynamic/players/1
+    PATCH http://localhost:1111/api/dynamic/players/e4d5c6b7-a890-4123-9876-543210fedcba
     Content-Type: application/json
     {
-      teamId: 5,
+      teamId: '9b2fff23-ec93-4b48-9322-bbd4b6b5b123',
     }
     ```
 
@@ -687,14 +689,14 @@ As for updating properties, you can either do a **full replacement** using the u
   <TabItem value="sdk" label="JS SDK" default>
     ```js
       // Replaces the whole skill relations by the new skillIds array.
-      await manifest.from('players').update(1, {
+      await manifest.from('players').update('e4d5c6b7-a890-4123-9876-543210fedcba', {
         name: 'Mike',
-        teamId: 10,
-        skillIds: [10, 11]
+        teamId: 'e4d5c6b7-a890-4123-9876-543210fedcba',
+        skillIds: ['12345678-1234-5678-9abc-123456789012', '3f2504e0-4f89-11d3-9a0c-0305e82c3301']
       })
 
       // Updates the team without changing the skills or the name.
-      await manifest.from('players').patch(1, {teamId: 5})
+      await manifest.from('players').patch('e4d5c6b7-a890-4123-9876-543210fedcba', {teamId: '9b2fff23-ec93-4b48-9322-bbd4b6b5b123'})
     ```
 
   </TabItem>

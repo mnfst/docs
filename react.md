@@ -42,7 +42,7 @@ import { useEffect, useState } from "react";
 
 function App() {
   interface Cat {
-    id: number;
+    id: string;
     name: string;
   }
 

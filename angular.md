@@ -46,7 +46,7 @@ import Manifest from '@mnfst/sdk'
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  cats: { id: number, name: string }[] = []
+  cats: { id: string, name: string }[] = []
 
   async ngOnInit() {
     // Init SDK.
