@@ -47,9 +47,7 @@ entities:
       - name
 ```
 
-Authenticable entities have 2 extra properties that are used as credentials to log in: `email` and `password`. You do not need to specify them.
-
-The passwords are automatically hashed using _bcryt_ with 10 salt rounds.
+Authenticable entities have 2 extra properties that are used as credentials to log in: `email` and `password`. You do not need to specify them.The `email` property expects a unique valid emails and the `password` property is automatically hashed using _bcryt_ with 10 salt rounds.
 
 ## Actions
 
@@ -187,7 +185,7 @@ Logout removes the token from future request headers.
   </TabItem>
     <TabItem value="sdk" label="JS SDK" default>
     ```js
-    // All future calls will lose the "Authorization" header.
+    // Resets the "Authorization" header for all future calls.
     await manifest.logout()
     ```
 

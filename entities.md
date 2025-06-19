@@ -246,6 +246,8 @@ Timestamp field (ISO 8601 Format)
 ```
 
 #### Email
+You can create one-to-many relationships or many-to-many relationships. Defining relationships in your entities allows you to load relations when you query them and also filter by relations.
+
 
 ```yaml
 - { name: email, type: email }
@@ -341,7 +343,7 @@ The location type consists in a object with `lat` and `lng` coordinates.
 
 ## Relations
 
-You can create **one-to-many** relationships or **many-to-many** relationships.
+You can create **one-to-many** relationships or **many-to-many** relationships. Defining relationships in your entities allows you to [load relations](./crud.md#load-relations) when you query them and also [filter your query by relations](./crud.md#filter-by-relation).
 
 ### Syntax
 

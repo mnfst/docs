@@ -261,7 +261,7 @@ This operation will create a new item and store it in the database. The newly cr
 
     ```json title="Example HTTP Response"
     {
-      "id": '6ba7b810-9dad-11d1-80b4-00c04fd430c8',
+      "id": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
       "name": "Pikachu",
       "type": "electric",
       "level": 3,
@@ -280,7 +280,7 @@ This operation will create a new item and store it in the database. The newly cr
 
     console.log(newPokemon);
     // Output: {
-    //  id: '6ba7b810-9dad-11d1-80b4-00c04fd430c8',
+    //  id: "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
     //  name: "Pikachu",
     //  type: "electric",
     //  level: 3
@@ -314,7 +314,7 @@ Unlike [partial updates](#patch-an-item), this operation will replace the whole 
 
     ```json title="Example HTTP Response"
     {
-      "id": '6ba7b810-9dad-11d1-80b4-00c04fd430c8',
+      "id": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
       "name": "Raichu",
       "type": "electric",
       "level": 8
@@ -333,7 +333,7 @@ Unlike [partial updates](#patch-an-item), this operation will replace the whole 
 
     console.log(newPokemon);
     // Output: {
-    //  id: 'a1b2c3d4-e5f6-4789-abcd-ef0123456789',
+    //  id: "a1b2c3d4-e5f6-4789-abcd-ef0123456789",
     //  name: "Raichu",
     //  type: "electric",
     // level: 8
@@ -363,7 +363,7 @@ Unlike [fully replacement](#update-an-item), this operation will only modify the
 
     ```json title="Example HTTP Response"
     {
-      "id": 'a1b2c3d4-e5f6-4789-abcd-ef0123456789',
+      "id": "a1b2c3d4-e5f6-4789-abcd-ef0123456789",
       "name": "Pikachu",
       "type": "electric",
       "level": 5
@@ -380,7 +380,7 @@ Unlike [fully replacement](#update-an-item), this operation will only modify the
 
     console.log(newPokemon);
     // Output: {
-    //  id: 'a1b2c3d4-e5f6-4789-abcd-ef0123456789',
+    //  id: "a1b2c3d4-e5f6-4789-abcd-ef0123456789",
     //  name: "Pikachu",
     //  type: "electric",
     //  level: 5
