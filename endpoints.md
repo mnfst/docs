@@ -60,7 +60,7 @@ Each endpoint can be defined in the YAML file with the following values:
 
 ## Manipulate data with the backend SDK
 
-The next thing you may want to do is to **read and write data from your app**. This can be done using the Manifest backend SDK that shares the same CRUD and upload functions as the [JS SDK](http://localhost:3000/docs/javascript-sdk) for the front-end.
+The next thing you may want to do is to **read and write data from your app**. This can be done using the Manifest backend SDK that shares the same CRUD and upload functions as the [JS SDK](./crud.md#using-the-javascript-sdk) for the front-end.
 
 Take the following example of a `manifest.yml` file of a **leaderboard**:
 
