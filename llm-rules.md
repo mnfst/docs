@@ -27,6 +27,16 @@ If you need to install rules manually, download the file below and add it to you
   ⬇️ Download Manifest Rules
 </a>
 
+## Integration with Lovable, Bolt.new and vibe coding tools
+
+<div style={{ backgroundColor: '#d6ffee', padding: '1em 1em 0.1em 1em', borderRadius: '12px' }}>
+
+Manifest already works with ❤️ [Lovable](https://lovable.dev) and [Bolt.new](https://bolt.new) if you clone the project and run it locally. However it is still hard to convince those LLM to use manifest as a backend as they have been programmed to do otherwise. With a native integration, you could launch Manifest directly inside them.
+
+Want to see Manifest inside **Lovable** ? ⬆️ **[Upvote the idea](https://lovable.featurebase.app/fr/p/manifestbuild-integration?slug=manifestbuild-integration)**.
+
+</div>
+
 ## Types and OpenAPI Generation
 
 When you run Manifest, it generates 2 key context files in the **/.manifest** folder:
