@@ -1,0 +1,26 @@
+/* Manifest docs — custom brand overrides */
+
+/* Warm sidebar background */
+#sidebar {
+  --tw-bg-opacity: 1;
+}
+
+/* Accent color on anchor links */
+.nav-anchor {
+  border-color: #0891b2;
+}
+
+/* Card hover accent */
+.card:hover {
+  border-color: #22d3ee;
+}
+
+/* Teal tint on inline code */
+.mdx-content :not(pre) > code {
+  color: #0891b2;
+}
+
+/* Hide Mintlify footer branding */
+#footer a[href*="mintlify"] {
+  display: none;
+}
