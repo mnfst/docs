@@ -19,3 +19,8 @@
 .mdx-content :not(pre) > code {
   color: #0891b2;
 }
+
+/* Hide Mintlify footer branding */
+#footer a[href*="mintlify"] {
+  display: none;
+}

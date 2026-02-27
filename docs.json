@@ -48,10 +48,6 @@
   "navbar": {
     "links": [
       {
-        "label": "Dashboard",
-        "href": "https://app.manifest.build"
-      },
-      {
         "type": "github",
         "href": "https://github.com/mnfst/manifest"
       },
@@ -62,8 +58,8 @@
     ],
     "primary": {
       "type": "button",
-      "label": "Get Started",
-      "href": "/install"
+      "label": "Dashboard",
+      "href": "https://app.manifest.build"
     }
   },
   "navigation": {
@@ -93,36 +89,32 @@
               "configuration",
               "contributing"
             ]
+          },
+          {
+            "group": "Links",
+            "pages": [
+              {
+                "title": "Homepage",
+                "icon": "globe",
+                "url": "https://manifest.build"
+              }
+            ]
           }
         ]
       }
     ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Discord",
-          "href": "https://discord.gg/FepAked3W7",
-          "icon": "message-circle",
-          "color": {
-            "light": "#5865F2",
-            "dark": "#7289DA"
-          }
-        }
-      ]
-    }
+    "global": {}
   },
   "footer": {
     "socials": {
       "github": "https://github.com/mnfst/manifest",
-      "discord": "https://discord.gg/FepAked3W7",
-      "x": "https://x.com/AiManifest"
+      "discord": "https://discord.gg/FepAked3W7"
     },
     "links": [
       {
         "header": "Product",
         "items": [
           { "label": "Dashboard", "href": "https://app.manifest.build" },
-          { "label": "Install", "href": "/install" },
           { "label": "Routing", "href": "/routing" }
         ]
       },
