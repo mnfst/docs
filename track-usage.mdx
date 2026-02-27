@@ -1,0 +1,59 @@
+---
+title: "Track usage"
+description: "Understand what data Manifest tracks and how costs are calculated"
+---
+
+## Overview dashboard
+
+The dashboard shows:
+
+- **Total messages** — number of LLM calls.
+- **Total tokens** — input, output, and cache read tokens.
+- **Total cost** — calculated from model pricing and token counts.
+- **Messages over time** — chart of LLM calls by period.
+- **Cost over time** — chart of spend by period.
+- **Model distribution** — breakdown of which models handled requests.
+
+{/* TODO: Add dashboard screenshot to images/dashboard.png */}
+
+## Metrics captured
+
+| Metric | Description |
+|--------|-------------|
+| **Messages** | Number of LLM calls |
+| **Input tokens** | Prompt tokens sent |
+| **Output tokens** | Completion tokens received |
+| **Cache read tokens** | Tokens served from cache |
+| **Cost (USD)** | Calculated from model pricing × tokens |
+| **Duration (ms)** | Round-trip latency |
+| **Model** | Which LLM handled the request |
+| **Routing tier** | simple / standard / complex / reasoning |
+| **Agent name** | The OpenClaw agent that sent the request |
+
+## How cost is calculated
+
+Manifest maintains a pricing table for 40+ models (Anthropic, OpenAI, Google, DeepSeek, and more).
+
+```
+Cost = input_tokens × input_price + output_tokens × output_price
+```
+
+Pricing is refreshed automatically in the background. In local mode, pricing syncs from OpenRouter.
+
+## Message log
+
+Every LLM call is recorded with full metadata. The message log provides:
+
+- Paginated list of all requests.
+- Filters by agent, model, and time range.
+
+## Data storage
+
+<Tabs>
+  <Tab title="Cloud">
+    PostgreSQL hosted at app.manifest.build. Data persists across devices and is accessible from any browser.
+  </Tab>
+  <Tab title="Local">
+    SQLite file at `~/.openclaw/manifest/manifest.db`. Data stays on your machine. The dashboard is only accessible from localhost.
+  </Tab>
+</Tabs>

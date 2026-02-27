@@ -1,0 +1,76 @@
+---
+title: "Install"
+description: "Get Manifest running in under a minute"
+---
+
+## Prerequisites
+
+<Tabs>
+  <Tab title="Cloud">
+    - An OpenClaw installation.
+    - A Manifest account at [app.manifest.build](https://app.manifest.build).
+  </Tab>
+  <Tab title="Local">
+    - An OpenClaw installation.
+    - Node.js >= 20.
+    - No account needed.
+  </Tab>
+</Tabs>
+
+## Install the plugin
+
+```bash
+openclaw plugins install manifest
+```
+
+## Configure mode
+
+<Tabs>
+  <Tab title="Cloud">
+    <Steps>
+      <Step title="Sign up">
+        Create an account at [app.manifest.build](https://app.manifest.build).
+      </Step>
+      <Step title="Create an agent">
+        Open the Workspace page and create a new agent.
+      </Step>
+      <Step title="Copy your API key">
+        Copy the generated API key (`mnfst_...`).
+      </Step>
+      <Step title="Configure the plugin">
+        ```bash
+        openclaw config set plugins.entries.manifest.config.mode cloud
+        openclaw config set plugins.entries.manifest.config.apiKey "mnfst_YOUR_KEY"
+        ```
+      </Step>
+    </Steps>
+  </Tab>
+  <Tab title="Local">
+    No configuration needed. Local mode is the default.
+
+    Optionally change the dashboard port:
+
+    ```bash
+    openclaw config set plugins.entries.manifest.config.port 3000
+    ```
+  </Tab>
+</Tabs>
+
+## Restart the gateway
+
+```bash
+openclaw gateway restart
+```
+
+## Verify
+
+<Tabs>
+  <Tab title="Cloud">
+    Open [app.manifest.build](https://app.manifest.build). Send a message to any agent — it should appear in the dashboard within 30 seconds.
+  </Tab>
+  <Tab title="Local">
+    Open [http://127.0.0.1:2099](http://127.0.0.1:2099). Send a message to any agent — it should appear in the dashboard within 10 seconds.
+  </Tab>
+</Tabs>
+
+<Info>The gateway batches telemetry every 10–30 seconds. New messages may take a moment to appear.</Info>
