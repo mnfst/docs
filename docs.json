@@ -63,37 +63,32 @@
     }
   },
   "navigation": {
-    "groups": [
+    "tabs": [
       {
-        "group": "Getting Started",
-        "pages": [
-          "introduction",
-          "install",
-          "cloud-vs-local"
-        ]
-      },
-      {
-        "group": "Features",
-        "pages": [
-          "track-usage",
-          "set-limits",
-          "routing"
-        ]
-      },
-      {
-        "group": "Reference",
-        "pages": [
-          "configuration",
-          "contributing"
-        ]
-      },
-      {
-        "group": "Links",
-        "pages": [
+        "tab": "Documentation",
+        "groups": [
           {
-            "title": "Homepage",
-            "icon": "globe",
-            "url": "https://manifest.build"
+            "group": "Getting Started",
+            "pages": [
+              "introduction",
+              "install",
+              "cloud-vs-local"
+            ]
+          },
+          {
+            "group": "Features",
+            "pages": [
+              "track-usage",
+              "set-limits",
+              "routing"
+            ]
+          },
+          {
+            "group": "Reference",
+            "pages": [
+              "configuration",
+              "contributing"
+            ]
           }
         ]
       }
