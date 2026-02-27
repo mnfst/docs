@@ -1,0 +1,80 @@
+---
+title: "Configuration"
+description: "All settings reference for Manifest"
+---
+
+## Plugin settings
+
+Set these via `openclaw config set plugins.entries.manifest.config.<key> <value>`.
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `mode` | `string` | `local` | `local`, `cloud`, or `dev` |
+| `apiKey` | `string` | — | OTLP key (`mnfst_...`). Required for cloud. Auto-generated for local. |
+| `endpoint` | `string` | `https://app.manifest.build/otlp` | OTLP endpoint. Only used in cloud/dev. |
+| `port` | `number` | `2099` | Dashboard port (local only). |
+| `host` | `string` | `127.0.0.1` | Bind address (local only). |
+
+## Environment variables
+
+<Tabs>
+  <Tab title="Cloud">
+    For self-hosting the cloud backend:
+
+    | Variable | Description |
+    |----------|-------------|
+    | `BETTER_AUTH_SECRET` | Auth secret for session signing |
+    | `DATABASE_URL` | PostgreSQL connection string |
+    | `PORT` | Server port (default: 3001) |
+    | `BIND_ADDRESS` | Bind address (default: 0.0.0.0) |
+    | `NODE_ENV` | `production` or `development` |
+    | `CORS_ORIGIN` | Allowed CORS origin |
+    | `API_KEY` | Internal API key |
+    | `THROTTLE_TTL` | Rate limit window in ms (default: 60000) |
+    | `THROTTLE_LIMIT` | Max requests per window (default: 100) |
+    | `MAILGUN_API_KEY` | Mailgun API key for email alerts |
+    | `MAILGUN_DOMAIN` | Mailgun domain |
+    | `MAILGUN_FROM` | Sender address for alerts |
+    | `GOOGLE_CLIENT_ID` | Google OAuth client ID |
+    | `GOOGLE_CLIENT_SECRET` | Google OAuth client secret |
+    | `GITHUB_CLIENT_ID` | GitHub OAuth client ID |
+    | `GITHUB_CLIENT_SECRET` | GitHub OAuth client secret |
+    | `DISCORD_CLIENT_ID` | Discord OAuth client ID |
+    | `DISCORD_CLIENT_SECRET` | Discord OAuth client secret |
+    | `SEED_DATA` | Set to `true` to seed demo data on startup |
+  </Tab>
+  <Tab title="Local">
+    No environment variables needed. Local mode runs with zero configuration.
+
+    If self-hosting the backend in local mode, set `MANIFEST_MODE=local`.
+  </Tab>
+</Tabs>
+
+## Config file locations
+
+<Tabs>
+  <Tab title="Cloud">
+    All config is managed via environment variables or the dashboard UI. No local config files.
+  </Tab>
+  <Tab title="Local">
+    | Path | Description |
+    |------|-------------|
+    | `~/.openclaw/manifest/config.json` | API key, auth secret, email provider config |
+    | `~/.openclaw/manifest/manifest.db` | SQLite database |
+    | `~/.openclaw/openclaw.json` | OpenClaw master config (provider injection) |
+  </Tab>
+</Tabs>
+
+## Opt-out of analytics
+
+```bash
+MANIFEST_TELEMETRY_OPTOUT=1
+```
+
+Or add `"telemetryOptOut": true` to `~/.openclaw/manifest/config.json`.
+
+## Rate limiting
+
+Default: 100 requests per 60-second window.
+
+Configurable via `THROTTLE_TTL` (ms) and `THROTTLE_LIMIT` (count) environment variables (self-hosted only).

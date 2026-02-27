@@ -1,0 +1,48 @@
+---
+title: "Manifest"
+description: "Take control of your OpenClaw costs"
+---
+
+Manifest is an open-source OpenClaw plugin that routes queries to the most cost-effective model and gives you a real-time dashboard to track tokens, costs, and usage.
+
+## Why Manifest
+
+<CardGroup cols={3}>
+  <Card title="Smart routing" icon="route">
+    Scores each query across 23 dimensions and picks the cheapest model that can handle it. Saves up to 90%.
+  </Card>
+  <Card title="Real-time dashboard" icon="chart-line">
+    Track tokens, costs, messages, and model usage at a glance.
+  </Card>
+  <Card title="Set limits" icon="shield-halved">
+    Get notified or automatically block requests when spending exceeds a threshold.
+  </Card>
+</CardGroup>
+
+## How it works
+
+Manifest intercepts each OpenClaw request, runs a scoring algorithm in under 2 ms, assigns a tier (simple / standard / complex / reasoning), and forwards the query to the matching model. All telemetry is captured via OpenTelemetry and displayed in the dashboard.
+
+## Manifest vs OpenRouter
+
+| | Manifest | OpenRouter |
+|---|---|---|
+| **Open source** | Yes | No |
+| **Self-hostable** | Yes | No |
+| **Privacy** | Metadata only (or 100% local) | Full request proxied |
+| **Routing logic** | Transparent, 23-dimension scoring | Black box |
+| **Cost** | Free | Per-token markup |
+| **Dashboard** | Built-in | Separate |
+| **Works with OpenClaw** | Native plugin | Requires config |
+
+## Privacy
+
+- **Local mode:** All data stays on your machine. Nothing is sent anywhere.
+- **Cloud mode:** Only OpenTelemetry metadata (model name, token counts, latency) is sent — never message content.
+- **Opt-out of analytics:** Set `MANIFEST_TELEMETRY_OPTOUT=1` to disable anonymous usage analytics.
+
+## Next step
+
+<Card title="Install Manifest" icon="download" href="/install">
+  Get Manifest running in under a minute.
+</Card>

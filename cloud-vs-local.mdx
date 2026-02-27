@@ -1,0 +1,48 @@
+---
+title: "Cloud vs Local"
+description: "Choose the right mode for your workflow"
+---
+
+Manifest runs in two modes: **Cloud** (hosted at app.manifest.build) and **Local** (embedded on your machine). Both share the same features — the difference is where data lives and how auth works.
+
+## Comparison
+
+| | Cloud | Local |
+|---|---|---|
+| **Setup** | Sign up + API key | Zero config |
+| **Data storage** | PostgreSQL (hosted) | SQLite on your machine |
+| **Dashboard** | app.manifest.build | http://127.0.0.1:2099 |
+| **Auth** | Email/password or OAuth (Google, GitHub, Discord) | Auto-login (loopback trust) |
+| **Multi-device** | Yes — access from any browser | No — localhost only |
+| **API key** | Generated in dashboard (`mnfst_...`) | Auto-generated (`mnfst_local_...`) |
+| **Email alerts** | Built-in (platform mail) | Requires provider config (Mailgun/Resend/SendGrid) |
+| **Telemetry interval** | ~30 seconds | ~10 seconds |
+| **Privacy** | Metadata only (no message content) | 100% on your machine |
+| **Cost** | Free | Free |
+
+## When to use Cloud
+
+- You work across multiple machines.
+- You want email alerts without configuring a mail provider.
+- You want a managed experience with no local server.
+
+## When to use Local
+
+- Privacy is paramount — no data leaves your machine.
+- You don't need multi-device access.
+- You prefer zero-config, offline-capable tooling.
+
+## Switching modes
+
+```bash
+# Switch to cloud
+openclaw config set plugins.entries.manifest.config.mode cloud
+openclaw config set plugins.entries.manifest.config.apiKey "mnfst_YOUR_KEY"
+openclaw gateway restart
+
+# Switch to local
+openclaw config set plugins.entries.manifest.config.mode local
+openclaw gateway restart
+```
+
+<Warning>Switching modes does not migrate data. Cloud and local have separate databases.</Warning>

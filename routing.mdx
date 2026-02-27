@@ -1,0 +1,76 @@
+---
+title: "Routing"
+description: "How Manifest scores queries and routes them to the cheapest capable model"
+---
+
+## What is routing?
+
+Instead of sending every request to the same expensive model, Manifest scores each query and routes it to the cheapest model that can handle it.
+
+- Four tiers: **simple**, **standard**, **complex**, **reasoning**.
+- Scoring happens in under 2 ms with zero external calls.
+
+## The four tiers
+
+<CardGroup cols={2}>
+  <Card title="Simple" icon="feather">
+    Greetings, definitions, short factual questions. Routed to the cheapest model.
+  </Card>
+  <Card title="Standard" icon="code">
+    General coding help, moderate questions. Good quality at low cost.
+  </Card>
+  <Card title="Complex" icon="layer-group">
+    Multi-step tasks, large context, code generation. Best quality models.
+  </Card>
+  <Card title="Reasoning" icon="brain">
+    Formal logic, proofs, math, multi-constraint problems. Reasoning-capable models only.
+  </Card>
+</CardGroup>
+
+## How scoring works
+
+23 dimensions grouped into two categories:
+
+**Keyword-based (13)** — Scans the prompt for patterns like "prove", "write function", "what is", etc.
+
+**Structural (10)** — Analyzes token count, nesting depth, code-to-prose ratio, tool count, conversation depth, etc.
+
+Each dimension has a weight. The weighted sum maps to a tier via threshold boundaries. A confidence score (0–1) indicates how clearly the request fits its tier.
+
+## Session momentum
+
+Manifest remembers the last 5 tier assignments (30-minute TTL).
+
+Short follow-up messages ("yes", "do it") inherit momentum from the conversation, preventing unnecessary tier drops.
+
+## Tier overrides
+
+Certain signals force a minimum tier:
+
+| Signal | Minimum tier |
+|--------|-------------|
+| Tools detected | **standard** |
+| Large context (>50k tokens) | **complex** |
+| Formal logic keywords | **reasoning** |
+
+## Response headers
+
+Every routed response includes:
+
+| Header | Description |
+|--------|-------------|
+| `X-Manifest-Tier` | Assigned tier |
+| `X-Manifest-Model` | Actual model used |
+| `X-Manifest-Provider` | Provider (anthropic, openai, google, etc.) |
+| `X-Manifest-Confidence` | Scoring confidence (0–1) |
+
+## Cloud vs Local
+
+<Tabs>
+  <Tab title="Cloud">
+    Routing is performed server-side. Model mappings are managed by the Manifest team and updated regularly.
+  </Tab>
+  <Tab title="Local">
+    Routing runs on your machine inside the embedded server. The model-to-tier mapping is seeded on first boot and can be customized in the dashboard.
+  </Tab>
+</Tabs>

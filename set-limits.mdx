@@ -1,0 +1,84 @@
+---
+title: "Set limits"
+description: "Configure alerts and hard limits to control spending"
+---
+
+## What are limits?
+
+Two types of rules you can set per agent:
+
+- **Notify** — Sends an email alert when a threshold is reached.
+- **Block** — Returns HTTP 429 and stops requests when the threshold is reached.
+
+## Creating a rule
+
+<Tabs>
+  <Tab title="Cloud">
+    <Steps>
+      <Step title="Open agent settings">
+        Open your agent's Settings page in the dashboard.
+      </Step>
+      <Step title="Add a rule">
+        Under "Notification Rules", click **Add Rule**.
+      </Step>
+      <Step title="Configure the rule">
+        Pick a metric (tokens or cost), period (hour / day / week / month), threshold, and action (notify or block).
+      </Step>
+      <Step title="Save">
+        Save. The rule takes effect immediately.
+      </Step>
+    </Steps>
+  </Tab>
+  <Tab title="Local">
+    <Steps>
+      <Step title="Open the dashboard">
+        Open [http://127.0.0.1:2099](http://127.0.0.1:2099) and navigate to your agent's settings.
+      </Step>
+      <Step title="Add a rule">
+        Add a rule with metric, period, threshold, and action.
+      </Step>
+      <Step title="Save">
+        Save. The rule takes effect immediately.
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
+
+## How blocking works
+
+When a "block" rule triggers, the next ingest request returns `429 Too Many Requests` with a message:
+
+```
+Limit exceeded: cost usage ($X) exceeds $Y per day
+```
+
+The block resets at the start of the next period.
+
+## Email notifications
+
+<Tabs>
+  <Tab title="Cloud">
+    Emails are sent via the platform's mail provider. Make sure your account email is valid.
+  </Tab>
+  <Tab title="Local">
+    Configure an email provider in `~/.openclaw/manifest/config.json`:
+
+    ```json
+    {
+      "email": {
+        "provider": "mailgun",
+        "apiKey": "key-...",
+        "domain": "mg.example.com",
+        "from": "alerts@example.com"
+      }
+    }
+    ```
+
+    Supported providers: Mailgun, Resend, SendGrid. If no provider is configured, email notifications are skipped (block rules still work).
+  </Tab>
+</Tabs>
+
+## Checking rules
+
+- Rules are evaluated hourly (cron) for notifications, and on every ingest for blocks.
+- A notification is sent once per rule per period to avoid spam.
