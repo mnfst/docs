@@ -63,47 +63,41 @@
     }
   },
   "navigation": {
-    "tabs": [
+    "groups": [
       {
-        "tab": "Documentation",
-        "groups": [
+        "group": "Getting Started",
+        "pages": [
+          "introduction",
+          "install",
+          "cloud-vs-local"
+        ]
+      },
+      {
+        "group": "Features",
+        "pages": [
+          "track-usage",
+          "set-limits",
+          "routing"
+        ]
+      },
+      {
+        "group": "Reference",
+        "pages": [
+          "configuration",
+          "contributing"
+        ]
+      },
+      {
+        "group": "Links",
+        "pages": [
           {
-            "group": "Getting Started",
-            "pages": [
-              "introduction",
-              "install",
-              "cloud-vs-local"
-            ]
-          },
-          {
-            "group": "Features",
-            "pages": [
-              "track-usage",
-              "set-limits",
-              "routing"
-            ]
-          },
-          {
-            "group": "Reference",
-            "pages": [
-              "configuration",
-              "contributing"
-            ]
-          },
-          {
-            "group": "Links",
-            "pages": [
-              {
-                "title": "Homepage",
-                "icon": "globe",
-                "url": "https://manifest.build"
-              }
-            ]
+            "title": "Homepage",
+            "icon": "globe",
+            "url": "https://manifest.build"
           }
         ]
       }
-    ],
-    "global": {}
+    ]
   },
   "footer": {
     "socials": {
