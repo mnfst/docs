@@ -1,10 +1,11 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "name": "Manifest",
-  "theme": "mint",
+  "theme": "maple",
   "logo": {
     "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    "dark": "/logo/dark.svg",
+    "href": "https://manifest.build"
   },
   "favicon": "/favicon.svg",
   "colors": {
@@ -12,17 +13,57 @@
     "light": "#22d3ee",
     "dark": "#164e63"
   },
+  "background": {
+    "decoration": "gradient",
+    "color": {
+      "light": "#fcfaf5",
+      "dark": "#171717"
+    }
+  },
+  "fonts": {
+    "heading": {
+      "family": "Bricolage Grotesque",
+      "weight": 700
+    },
+    "body": {
+      "family": "DM Sans",
+      "weight": 400
+    }
+  },
+  "icons": {
+    "library": "lucide"
+  },
+  "styling": {
+    "eyebrows": "breadcrumbs",
+    "codeblocks": {
+      "theme": {
+        "light": "github-light",
+        "dark": "github-dark"
+      }
+    }
+  },
+  "search": {
+    "prompt": "Search Manifest docs..."
+  },
   "navbar": {
     "links": [
       {
         "label": "Dashboard",
         "href": "https://app.manifest.build"
+      },
+      {
+        "type": "github",
+        "href": "https://github.com/mnfst/manifest"
+      },
+      {
+        "type": "discord",
+        "href": "https://discord.gg/FepAked3W7"
       }
     ],
     "primary": {
       "type": "button",
-      "label": "GitHub",
-      "href": "https://github.com/mnfst/manifest"
+      "label": "Get Started",
+      "href": "/install"
     }
   },
   "navigation": {
@@ -61,7 +102,11 @@
         {
           "anchor": "Discord",
           "href": "https://discord.gg/FepAked3W7",
-          "icon": "discord"
+          "icon": "message-circle",
+          "color": {
+            "light": "#5865F2",
+            "dark": "#7289DA"
+          }
         }
       ]
     }
@@ -69,7 +114,26 @@
   "footer": {
     "socials": {
       "github": "https://github.com/mnfst/manifest",
-      "discord": "https://discord.gg/FepAked3W7"
-    }
+      "discord": "https://discord.gg/FepAked3W7",
+      "x": "https://x.com/AiManifest"
+    },
+    "links": [
+      {
+        "header": "Product",
+        "items": [
+          { "label": "Dashboard", "href": "https://app.manifest.build" },
+          { "label": "Install", "href": "/install" },
+          { "label": "Routing", "href": "/routing" }
+        ]
+      },
+      {
+        "header": "Community",
+        "items": [
+          { "label": "GitHub", "href": "https://github.com/mnfst/manifest" },
+          { "label": "Discord", "href": "https://discord.gg/FepAked3W7" },
+          { "label": "Contributing", "href": "/contributing" }
+        ]
+      }
+    ]
   }
 }
