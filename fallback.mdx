@@ -14,13 +14,67 @@ When a model fails to respond — whether due to a provider outage, rate limit, 
   <Step title="Request fails">
     The primary model returns an error (5xx, timeout, rate limit, etc.).
   </Step>
+  <Step title="Auth rotation">
+    If the error is a rate limit (HTTP 429), Manifest first rotates through other authentication profiles for the same provider before moving on.
+  </Step>
   <Step title="Manifest selects a backup">
-    Manifest picks the next available model within the same tier. The backup model is chosen based on capability and cost, so quality stays consistent.
+    Once the primary provider is exhausted, Manifest picks the next fallback model from the list. The backup is chosen within the same tier so quality stays consistent.
   </Step>
   <Step title="Request is retried">
-    The original request is forwarded to the backup model. If that model also fails, Manifest continues down the list until a model succeeds or all options are exhausted.
+    The original request is forwarded to the backup model. If that model also fails, Manifest continues down the fallback list until a model succeeds or all options are exhausted.
   </Step>
 </Steps>
+
+## What triggers a fallback
+
+Not every error triggers a model switch. Manifest is selective:
+
+| Trigger | Behavior |
+|---------|----------|
+| **Rate limit (429)** | Rotates auth profiles first, then advances to next fallback model |
+| **Server error (5xx)** | Advances to next fallback model |
+| **Timeout** | Advances to next fallback model |
+| **Auth error (401)** | Advances to next fallback model |
+| **Bad request (400)** | Advances to next fallback model |
+
+## Configuration
+
+Configure fallback models in your `openclaw.json`:
+
+```json
+{
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "anthropic/claude-sonnet-4-6",
+        "fallbacks": [
+          "anthropic/claude-haiku-4-5",
+          "openai/gpt-4o",
+          "google/gemini-2.5-flash"
+        ]
+      }
+    }
+  }
+}
+```
+
+Fallback models are tried in order. Each tier supports up to **5 fallback models**.
+
+### Managing fallbacks via CLI
+
+```bash
+# List current fallback models
+openclaw models fallbacks list
+
+# Add a fallback model
+openclaw models fallbacks add openai/gpt-4o
+
+# Remove a fallback model
+openclaw models fallbacks remove openai/gpt-4o
+
+# Clear all fallback models
+openclaw models fallbacks clear
+```
 
 ## Model discovery fallback
 
