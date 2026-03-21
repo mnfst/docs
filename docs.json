@@ -80,7 +80,8 @@
             "pages": [
               "track-usage",
               "set-limits",
-              "routing"
+              "routing",
+              "fallback"
             ]
           },
           {

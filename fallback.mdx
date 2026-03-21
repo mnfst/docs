@@ -1,0 +1,124 @@
+---
+title: "Fallback"
+description: "Automatic fallbacks — if a model fails, retry with backup models instantly"
+icon: "life-ring"
+---
+
+## What is fallback?
+
+When a model fails to respond — whether due to a provider outage, rate limit, or unexpected error — Manifest automatically retries the request with a backup model. This happens instantly and transparently, so your agents never return a raw error to the end user.
+
+## How it works
+
+<Steps>
+  <Step title="Request fails">
+    The primary model returns an error (5xx, timeout, rate limit, etc.).
+  </Step>
+  <Step title="Auth rotation">
+    If the error is a rate limit (HTTP 429), Manifest first rotates through other authentication profiles for the same provider before moving on.
+  </Step>
+  <Step title="Manifest selects a backup">
+    Once the primary provider is exhausted, Manifest picks the next fallback model from the list. The backup is chosen within the same tier so quality stays consistent.
+  </Step>
+  <Step title="Request is retried">
+    The original request is forwarded to the backup model. If that model also fails, Manifest continues down the fallback list until a model succeeds or all options are exhausted.
+  </Step>
+</Steps>
+
+## What triggers a fallback
+
+Not every error triggers a model switch. Manifest is selective:
+
+| Trigger | Behavior |
+|---------|----------|
+| **Rate limit (429)** | Rotates auth profiles first, then advances to next fallback model |
+| **Server error (5xx)** | Advances to next fallback model |
+| **Timeout** | Advances to next fallback model |
+| **Auth error (401)** | Advances to next fallback model |
+| **Bad request (400)** | Advances to next fallback model |
+
+## Configuration
+
+Configure fallback models in your `openclaw.json`:
+
+```json
+{
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "anthropic/claude-sonnet-4-6",
+        "fallbacks": [
+          "anthropic/claude-haiku-4-5",
+          "openai/gpt-4o",
+          "google/gemini-2.5-flash"
+        ]
+      }
+    }
+  }
+}
+```
+
+Fallback models are tried in order. Each tier supports up to **5 fallback models**.
+
+### Managing fallbacks via CLI
+
+```bash
+# List current fallback models
+openclaw models fallbacks list
+
+# Add a fallback model
+openclaw models fallbacks add openai/gpt-4o
+
+# Remove a fallback model
+openclaw models fallbacks remove openai/gpt-4o
+
+# Clear all fallback models
+openclaw models fallbacks clear
+```
+
+## Model discovery fallback
+
+Manifest also applies a fallback strategy when discovering which models a provider supports:
+
+| Priority | Source | Description |
+|----------|--------|-------------|
+| 1 | Provider's native `/models` API | Direct integration with the LLM provider |
+| 2 | OpenRouter pricing cache | Filtered by vendor prefix when the native API is unavailable |
+| 3 | Manual pricing reference | Hardcoded fallback for providers without a `/models` endpoint |
+
+This ensures that model lists are always available, even when a provider's API is temporarily down or does not expose a model listing endpoint.
+
+## Response headers
+
+When a fallback is triggered, the response headers reflect the model that actually handled the request:
+
+| Header | Description |
+|--------|-------------|
+| `X-Manifest-Model` | The model that served the response (may differ from the original target) |
+| `X-Manifest-Provider` | The provider that handled the request |
+
+## Fallback vs routing
+
+| | Routing | Fallback |
+|---|---|---|
+| **When** | Before the request is sent | After the request fails |
+| **Goal** | Pick the cheapest capable model | Recover from a failure |
+| **Speed** | < 2 ms scoring | Adds one extra round-trip per retry |
+| **Tier** | Assigns a tier | Stays within the same tier |
+
+Routing and fallback work together: routing picks the best model upfront, and fallback ensures reliability if that model is unavailable.
+
+## Cloud vs Local
+
+<Tabs>
+  <Tab title="Cloud">
+    Fallback models are managed by the Manifest team. The pool of available backup models is updated regularly to reflect provider availability and pricing changes.
+  </Tab>
+  <Tab title="Local">
+    Fallback uses the models you have configured in your connected providers. Add multiple providers to maximize fallback coverage — if one provider goes down, models from other providers can take over.
+  </Tab>
+</Tabs>
+
+<Tip>
+  Connect at least two providers to get the most out of automatic fallbacks. A single provider means fallback is limited to other models from that same provider.
+</Tip>
