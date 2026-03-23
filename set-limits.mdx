@@ -1,6 +1,6 @@
 ---
 title: "Set limits"
-description: "Configure alerts and hard limits to control spending"
+description: "Set up alerts and hard caps on agent spending"
 icon: "shield-alert"
 ---
 
@@ -8,8 +8,8 @@ icon: "shield-alert"
 
 Two types of rules you can set per agent:
 
-- **Notify** — Sends an email alert when a threshold is reached.
-- **Block** — Returns HTTP 429 and stops requests when the threshold is reached.
+- **Notify** — Sends you an email when a threshold is hit.
+- **Block** — Returns HTTP 429 and stops requests once the threshold is hit.
 
 ## Creating a rule
 
@@ -59,7 +59,7 @@ The block resets at the start of the next period.
 
 <Tabs>
   <Tab title="Cloud">
-    Emails are sent via the platform's mail provider. Make sure your account email is valid.
+    Emails are sent through the platform's mail provider. Make sure your account email is correct.
   </Tab>
   <Tab title="Local">
     Configure an email provider in `~/.openclaw/manifest/config.json`:

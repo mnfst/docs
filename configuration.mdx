@@ -27,7 +27,7 @@ Set these via `openclaw config set plugins.entries.manifest.config.<key> <value>
     | `BETTER_AUTH_SECRET` | Auth secret for session signing |
     | `DATABASE_URL` | PostgreSQL connection string |
     | `PORT` | Server port (default: 3001) |
-    | `BIND_ADDRESS` | Bind address (default: 0.0.0.0) |
+    | `BIND_ADDRESS` | Bind address (default: 127.0.0.1) |
     | `NODE_ENV` | `production` or `development` |
     | `CORS_ORIGIN` | Allowed CORS origin |
     | `API_KEY` | Internal API key |
@@ -45,7 +45,7 @@ Set these via `openclaw config set plugins.entries.manifest.config.<key> <value>
     | `SEED_DATA` | Set to `true` to seed demo data on startup |
   </Tab>
   <Tab title="Local">
-    No environment variables needed. Local mode runs with zero configuration.
+    No environment variables needed. Local mode works out of the box.
 
     If self-hosting the backend in local mode, set `MANIFEST_MODE=local`.
   </Tab>
@@ -65,14 +65,6 @@ Set these via `openclaw config set plugins.entries.manifest.config.<key> <value>
     | `~/.openclaw/openclaw.json` | OpenClaw master config (provider injection) |
   </Tab>
 </Tabs>
-
-## Opt-out of analytics
-
-```bash
-MANIFEST_TELEMETRY_OPTOUT=1
-```
-
-Or add `"telemetryOptOut": true` to `~/.openclaw/manifest/config.json`.
 
 ## Rate limiting
 
