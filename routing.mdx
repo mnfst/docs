@@ -1,6 +1,6 @@
 ---
 title: "Routing"
-description: "How Manifest scores queries and routes them to the cheapest capable model"
+description: "How Manifest picks the cheapest model that can handle your query"
 icon: "split"
 ---
 
@@ -32,9 +32,9 @@ Instead of sending every request to the same expensive model, Manifest scores ea
 
 23 dimensions grouped into two categories:
 
-**Keyword-based (13)** — Scans the prompt for patterns like "prove", "write function", "what is", etc.
+**Keyword-based (14)** — Scans the prompt for patterns like "prove", "write function", "what is", etc.
 
-**Structural (10)** — Analyzes token count, nesting depth, code-to-prose ratio, tool count, conversation depth, etc.
+**Structural (9)** — Analyzes token count, nesting depth, code-to-prose ratio, tool count, conversation depth, etc.
 
 Each dimension has a weight. The weighted sum maps to a tier via threshold boundaries. A confidence score (0–1) indicates how clearly the request fits its tier.
 
@@ -42,11 +42,11 @@ Each dimension has a weight. The weighted sum maps to a tier via threshold bound
 
 Manifest remembers the last 5 tier assignments (30-minute TTL).
 
-Short follow-up messages ("yes", "do it") inherit momentum from the conversation, preventing unnecessary tier drops.
+Short follow-up messages ("yes", "do it") inherit momentum from the conversation, so they don't drop to a cheaper tier unnecessarily.
 
 ## Tier overrides
 
-Certain signals force a minimum tier:
+Some signals force a minimum tier regardless of the score:
 
 | Signal | Minimum tier |
 |--------|-------------|
@@ -56,7 +56,7 @@ Certain signals force a minimum tier:
 
 ## Response headers
 
-Every routed response includes:
+Every response includes these headers:
 
 | Header | Description |
 |--------|-------------|
@@ -64,6 +64,7 @@ Every routed response includes:
 | `X-Manifest-Model` | Actual model used |
 | `X-Manifest-Provider` | Provider (anthropic, openai, google, etc.) |
 | `X-Manifest-Confidence` | Scoring confidence (0–1) |
+| `X-Manifest-Reason` | Why this tier was selected |
 
 ## Cloud vs Local
 

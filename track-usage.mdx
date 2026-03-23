@@ -1,19 +1,19 @@
 ---
 title: "Track usage"
-description: "Understand what data Manifest tracks and how costs are calculated"
+description: "What Manifest tracks and how costs are calculated"
 icon: "chart-bar"
 ---
 
-## Overview dashboard
+## Dashboard
 
-The dashboard shows:
+The main dashboard shows:
 
 - **Total messages** — number of LLM calls.
 - **Total tokens** — input, output, and cache read tokens.
 - **Total cost** — calculated from model pricing and token counts.
-- **Messages over time** — chart of LLM calls by period.
-- **Cost over time** — chart of spend by period.
-- **Model distribution** — breakdown of which models handled requests.
+- **Messages over time** — LLM calls charted by period.
+- **Cost over time** — spend charted by period.
+- **Model distribution** — which models handled what percentage of requests.
 
 {/* TODO: Add dashboard screenshot to images/dashboard.png */}
 
@@ -33,20 +33,20 @@ The dashboard shows:
 
 ## How cost is calculated
 
-Manifest maintains a pricing table for 40+ models (Anthropic, OpenAI, Google, DeepSeek, and more).
+Manifest has pricing data for 40+ models across Anthropic, OpenAI, Google, DeepSeek, and others.
 
 ```
 Cost = input_tokens × input_price + output_tokens × output_price
 ```
 
-Pricing is refreshed automatically in the background. In local mode, pricing syncs from OpenRouter.
+Pricing updates in the background. In local mode, it syncs from OpenRouter.
 
 ## Message log
 
-Every LLM call is recorded with full metadata. The message log provides:
+Every LLM call is recorded. You can browse the log with:
 
-- Paginated list of all requests.
-- Filters by agent, model, and time range.
+- Pagination across all requests.
+- Filters for agent, model, and time range.
 
 ## Data storage
 

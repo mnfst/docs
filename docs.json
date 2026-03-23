@@ -79,9 +79,9 @@
             "group": "Features",
             "pages": [
               "track-usage",
-              "set-limits",
               "routing",
-              "fallback"
+              "fallback",
+              "set-limits"
             ]
           },
           {

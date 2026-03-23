@@ -4,25 +4,25 @@ description: "Take control of your OpenClaw costs."
 icon: "house"
 ---
 
-Manifest is an open-source OpenClaw plugin that routes queries to the most cost-effective model and gives you a real-time dashboard to track tokens, costs, and usage.
+Manifest is an open-source OpenClaw plugin that routes queries to the cheapest model that can handle them. It comes with a dashboard for tracking tokens, costs, and usage.
 
 ## Why Manifest
 
 <CardGroup cols={3}>
-  <Card title="Automatic fallbacks" icon="life-ring" href="/fallback">
-    If a model fails, Manifest retries with a backup model instantly — no downtime, no manual intervention.
+  <Card title="Smart routing" icon="split" href="/routing">
+    Scores each query and routes it to the cheapest model that can handle it.
   </Card>
-  <Card title="Real-time dashboard" icon="chart-no-axes-combined">
-    Track tokens, costs, messages, and model usage at a glance.
+  <Card title="Automatic fallbacks" icon="life-buoy" href="/fallback">
+    If a model fails, Manifest retries with a backup. No downtime, no manual switching.
   </Card>
-  <Card title="Set limits" icon="shield-alert">
-    Get notified or automatically block requests when spending exceeds a threshold.
+  <Card title="Set limits" icon="shield-alert" href="/set-limits">
+    Get email alerts or block requests when spending crosses a threshold.
   </Card>
 </CardGroup>
 
 ## How it works
 
-Manifest intercepts each OpenClaw request, runs a scoring algorithm in under 2 ms, assigns a tier (simple / standard / complex / reasoning), and forwards the query to the matching model. All telemetry is captured via OpenTelemetry and displayed in the dashboard.
+Manifest intercepts each OpenClaw request, scores the query in under 2 ms, assigns a tier (simple / standard / complex / reasoning), and forwards it to the matching model. Token counts, latency, and cost data are collected via OpenTelemetry and show up in the dashboard.
 
 ## Manifest vs OpenRouter
 
@@ -31,7 +31,7 @@ Manifest intercepts each OpenClaw request, runs a scoring algorithm in under 2 m
 | **Open source** | Yes | No |
 | **Self-hostable** | Yes | No |
 | **Privacy** | Metadata only (or 100% local) | Full request proxied |
-| **Routing logic** | Transparent, 23-dimension scoring | Black box |
+| **Routing logic** | Transparent, open-source scoring | Black box |
 | **Cost** | Free | Per-token markup |
 | **Dashboard** | Built-in | Separate |
 | **Works with OpenClaw** | Native plugin | Requires config |
@@ -39,11 +39,10 @@ Manifest intercepts each OpenClaw request, runs a scoring algorithm in under 2 m
 ## Privacy
 
 - **Local mode:** All data stays on your machine. Nothing is sent anywhere.
-- **Cloud mode:** Only OpenTelemetry metadata (model name, token counts, latency) is sent — never message content.
-- **Opt-out of analytics:** Set `MANIFEST_TELEMETRY_OPTOUT=1` to disable anonymous usage analytics.
+- **Cloud mode:** Only OpenTelemetry metadata (model name, token counts, latency) is sent. Message content never leaves your machine.
 
 ## Next step
 
 <Card title="Install Manifest" icon="arrow-down-to-line" href="/install">
-  Get Manifest running in under a minute.
+  Install Manifest and start routing.
 </Card>
