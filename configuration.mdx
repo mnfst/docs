@@ -4,17 +4,25 @@ description: "All settings reference for Manifest"
 icon: "settings"
 ---
 
-## Plugin settings
+## manifest (self-hosted)
 
-Set these via `openclaw config set plugins.entries.manifest.config.<key> <value>`.
+Set via `openclaw config set plugins.entries.manifest.config.<key> <value>`.
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
-| `mode` | `string` | `local` | `local`, `cloud`, or `dev` |
-| `apiKey` | `string` | — | OTLP key (`mnfst_...`). Required for cloud. Auto-generated for local. |
-| `endpoint` | `string` | `https://app.manifest.build/otlp` | OTLP endpoint. Only used in cloud/dev. |
-| `port` | `number` | `2099` | Dashboard port (local only). |
-| `host` | `string` | `127.0.0.1` | Bind address (local only). |
+| `port` | `number` | `2099` | Embedded server port |
+| `host` | `string` | `127.0.0.1` | Bind address |
+
+## manifest-provider (cloud)
+
+Set via `openclaw config set plugins.entries.manifest-provider.config.<key> <value>`.
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `devMode` | `boolean` | auto | Skip API key validation. Auto-detected when the endpoint is a loopback address. |
+| `endpoint` | `string` | `https://app.manifest.build` | Manifest server URL |
+
+API key is set via `openclaw providers setup manifest-provider` (interactive) or the `MANIFEST_API_KEY` environment variable.
 
 ## Environment variables
 
