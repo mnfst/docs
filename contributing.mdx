@@ -14,6 +14,17 @@ icon: "git-pull-request"
 | Auth | Better Auth |
 | Build | Turborepo |
 
+## Project structure
+
+```
+packages/
+├── backend/              # NestJS API server
+├── frontend/             # SolidJS dashboard
+└── openclaw-plugins/
+    ├── manifest/          # npm: manifest — self-hosted plugin (embedded server + dashboard)
+    └── manifest-provider/ # npm: manifest-provider — cloud-only provider plugin
+```
+
 ## Prerequisites
 
 - Node.js 22.x
@@ -100,6 +111,10 @@ npm run test:e2e --workspace=packages/backend
 
 # Vitest frontend tests
 npm test --workspace=packages/frontend
+
+# Plugin tests
+npm test --workspace=packages/openclaw-plugins/manifest
+npm test --workspace=packages/openclaw-plugins/manifest-provider
 ```
 
 ## Database migrations

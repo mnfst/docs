@@ -1,16 +1,17 @@
 ---
 title: "Cloud vs Local"
-description: "Choose the right mode for your workflow"
+description: "Choose the right plugin for your workflow"
 icon: "cloud"
 ---
 
-Manifest runs in two modes: **Cloud** (hosted at app.manifest.build) and **Local** (embedded on your machine). Same features, different tradeoffs around privacy and convenience.
+Manifest ships as two plugins: **manifest-provider** (cloud, hosted at app.manifest.build) and **manifest** (self-hosted, runs on your machine). Same routing and dashboard, different tradeoffs on privacy and convenience.
 
 ## Comparison
 
-| | Cloud | Local |
+| | Cloud (`manifest-provider`) | Local (`manifest`) |
 |---|---|---|
 | **Setup** | Sign up + API key | Zero config |
+| **Package size** | ~22 KB | ~50 MB |
 | **Data storage** | PostgreSQL (hosted) | SQLite on your machine |
 | **Dashboard** | app.manifest.build | http://127.0.0.1:2099 |
 | **Auth** | Email/password or OAuth (Google, GitHub, Discord) | Auto-login (loopback trust) |
@@ -33,17 +34,17 @@ Manifest runs in two modes: **Cloud** (hosted at app.manifest.build) and **Local
 - You don't need multi-device access.
 - You want something that works offline with no setup.
 
-## Switching modes
+## Switching plugins
 
 ```bash
 # Switch to cloud
-openclaw config set plugins.entries.manifest.config.mode cloud
-openclaw config set plugins.entries.manifest.config.apiKey "mnfst_YOUR_KEY"
+openclaw plugins install manifest-provider
+openclaw providers setup manifest-provider
 openclaw gateway restart
 
 # Switch to local
-openclaw config set plugins.entries.manifest.config.mode local
+openclaw plugins install manifest
 openclaw gateway restart
 ```
 
-<Warning>Switching modes does not migrate data. Cloud and local have separate databases.</Warning>
+<Warning>Switching does not migrate data. Cloud and local have separate databases.</Warning>

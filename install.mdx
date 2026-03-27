@@ -18,13 +18,7 @@ icon: "download"
   </Tab>
 </Tabs>
 
-## Install the plugin
-
-```bash
-openclaw plugins install manifest
-```
-
-## Configure mode
+## Install
 
 <Tabs>
   <Tab title="Cloud">
@@ -38,16 +32,44 @@ openclaw plugins install manifest
       <Step title="Copy your API key">
         Copy the generated API key (`mnfst_...`).
       </Step>
-      <Step title="Configure the plugin">
+      <Step title="Install the plugin">
         ```bash
-        openclaw config set plugins.entries.manifest.config.mode cloud
-        openclaw config set plugins.entries.manifest.config.apiKey "mnfst_YOUR_KEY"
+        openclaw plugins install manifest-provider
+        ```
+      </Step>
+      <Step title="Set up your API key">
+        ```bash
+        openclaw providers setup manifest-provider
+        ```
+        This prompts you for the API key interactively.
+
+        In CI/CD, set the key as an environment variable instead:
+        ```bash
+        export MANIFEST_API_KEY=mnfst_YOUR_KEY
+        ```
+      </Step>
+      <Step title="Restart the gateway">
+        ```bash
+        openclaw gateway restart
         ```
       </Step>
     </Steps>
   </Tab>
   <Tab title="Local">
-    No configuration needed. Local mode is the default.
+    <Steps>
+      <Step title="Install the plugin">
+        ```bash
+        openclaw plugins install manifest
+        ```
+      </Step>
+      <Step title="Restart the gateway">
+        ```bash
+        openclaw gateway restart
+        ```
+      </Step>
+    </Steps>
+
+    No configuration needed. Local mode works out of the box.
 
     Optionally change the dashboard port:
 
@@ -56,12 +78,6 @@ openclaw plugins install manifest
     ```
   </Tab>
 </Tabs>
-
-## Restart the gateway
-
-```bash
-openclaw gateway restart
-```
 
 ## Verify
 
@@ -74,4 +90,4 @@ openclaw gateway restart
   </Tab>
 </Tabs>
 
-<Info>The gateway batches telemetry every 10–30 seconds. New messages may take a moment to appear.</Info>
+<Info>The gateway batches telemetry every 10-30 seconds. New messages may take a moment to appear.</Info>
