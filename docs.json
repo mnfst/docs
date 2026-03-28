@@ -137,6 +137,10 @@
     {
       "source": "/",
       "destination": "/introduction"
+    },
+    {
+      "source": "/docs",
+      "destination": "/introduction"
     }
   ]
 }
