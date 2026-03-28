@@ -1,7 +1,7 @@
 ---
-title: "Install"
-description: "Install Manifest and start routing"
-icon: "download"
+title: "Getting Started"
+description: "Set up Manifest and start routing"
+icon: "rocket"
 ---
 
 ## Prerequisites
@@ -18,7 +18,7 @@ icon: "download"
   </Tab>
 </Tabs>
 
-## Install
+## Setup
 
 <Tabs>
   <Tab title="Cloud">
@@ -29,29 +29,10 @@ icon: "download"
       <Step title="Create an agent">
         Open the Workspace page and create a new agent.
       </Step>
-      <Step title="Copy your API key">
-        Copy the generated API key (`mnfst_...`).
-      </Step>
-      <Step title="Add Manifest as a provider">
-        ```bash
-        openclaw config set models.providers.manifest \
-          '{"baseUrl":"https://app.manifest.build/v1","api":"openai-completions","apiKey":"mnfst_YOUR_KEY","models":[{"id":"auto","name":"Manifest Auto"}]}'
-        ```
-        Replace `mnfst_YOUR_KEY` with the key from the previous step.
-      </Step>
-      <Step title="Set the default model">
-        ```bash
-        openclaw config set agents.defaults.model.primary manifest/auto
-        ```
-      </Step>
-      <Step title="Restart the gateway">
-        ```bash
-        openclaw gateway restart
-        ```
+      <Step title="Follow the install wizard">
+        The dashboard shows setup instructions with everything pre-filled. Follow the steps to add Manifest as a provider in OpenClaw and restart the gateway.
       </Step>
     </Steps>
-
-    <Tip>You can also run `openclaw onboard`, select **Custom Provider**, and enter the Base URL (`https://app.manifest.build/v1`), your API key, model ID (`auto`), and endpoint ID (`manifest`).</Tip>
   </Tab>
   <Tab title="Local">
     <Steps>
@@ -88,4 +69,4 @@ icon: "download"
   </Tab>
 </Tabs>
 
-<Info>Usage data appears in the dashboard as requests flow through the router.</Info>
+<Info>Usage data is recorded each time a request is routed through `manifest/auto`.</Info>
