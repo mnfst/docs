@@ -71,7 +71,7 @@
             "group": "Getting Started",
             "pages": [
               "introduction",
-              "install",
+              "get-started",
               "cloud-vs-local"
             ]
           },
@@ -141,6 +141,10 @@
     {
       "source": "/docs",
       "destination": "/introduction"
+    },
+    {
+      "source": "/install",
+      "destination": "/get-started"
     }
   ]
 }
