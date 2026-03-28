@@ -4,7 +4,7 @@ description: "Take control of your OpenClaw costs."
 icon: "house"
 ---
 
-Manifest is an open-source OpenClaw plugin that routes queries to the cheapest model that can handle them. It comes with a dashboard for tracking tokens, costs, and usage.
+Manifest is an open-source LLM router for OpenClaw that routes queries to the cheapest model that can handle them. It comes with a dashboard for tracking tokens, costs, and usage.
 
 ## Why Manifest
 
@@ -22,7 +22,7 @@ Manifest is an open-source OpenClaw plugin that routes queries to the cheapest m
 
 ## How it works
 
-Manifest intercepts each OpenClaw request, scores the query in under 2 ms, assigns a tier (simple / standard / complex / reasoning), and forwards it to the matching model. Token counts, latency, and cost data are collected via OpenTelemetry and show up in the dashboard.
+Manifest intercepts each OpenClaw request, scores the query in under 2 ms, assigns a tier (simple / standard / complex / reasoning), and forwards it to the matching model. Token counts, latency, and cost data are captured as requests flow through the router and show up in the dashboard.
 
 ## Manifest vs OpenRouter
 
@@ -34,12 +34,12 @@ Manifest intercepts each OpenClaw request, scores the query in under 2 ms, assig
 | **Routing logic** | Transparent, open-source scoring | Black box |
 | **Cost** | Free | Per-token markup |
 | **Dashboard** | Built-in | Separate |
-| **Works with OpenClaw** | Native plugin | Requires config |
+| **Works with OpenClaw** | Native integration | Requires config |
 
 ## Privacy
 
-- **Local plugin (`manifest`):** All data stays on your machine. Nothing is sent anywhere.
-- **Cloud plugin (`manifest-provider`):** Only OpenTelemetry metadata (model name, token counts, latency) is sent. Message content never leaves your machine.
+- **Local:** All data stays on your machine. Nothing is sent anywhere.
+- **Cloud:** Requests are routed through the Manifest proxy. Only model name, token counts, and latency are stored. Message content is not persisted.
 
 ## Next step
 

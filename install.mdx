@@ -32,20 +32,16 @@ icon: "download"
       <Step title="Copy your API key">
         Copy the generated API key (`mnfst_...`).
       </Step>
-      <Step title="Install the plugin">
+      <Step title="Add Manifest as a provider">
         ```bash
-        openclaw plugins install manifest-provider
+        openclaw config set models.providers.manifest \
+          '{"baseUrl":"https://app.manifest.build/v1","api":"openai-completions","apiKey":"mnfst_YOUR_KEY","models":[{"id":"auto","name":"Manifest Auto"}]}'
         ```
+        Replace `mnfst_YOUR_KEY` with the key from the previous step.
       </Step>
-      <Step title="Set up your API key">
+      <Step title="Set the default model">
         ```bash
-        openclaw providers setup manifest-provider
-        ```
-        This prompts you for the API key interactively.
-
-        In CI/CD, set the key as an environment variable instead:
-        ```bash
-        export MANIFEST_API_KEY=mnfst_YOUR_KEY
+        openclaw config set agents.defaults.model.primary manifest/auto
         ```
       </Step>
       <Step title="Restart the gateway">
@@ -54,6 +50,8 @@ icon: "download"
         ```
       </Step>
     </Steps>
+
+    <Tip>You can also run `openclaw onboard`, select **Custom Provider**, and enter the Base URL (`https://app.manifest.build/v1`), your API key, model ID (`auto`), and endpoint ID (`manifest`).</Tip>
   </Tab>
   <Tab title="Local">
     <Steps>
@@ -90,4 +88,4 @@ icon: "download"
   </Tab>
 </Tabs>
 
-<Info>The gateway batches telemetry every 10-30 seconds. New messages may take a moment to appear.</Info>
+<Info>Usage data appears in the dashboard as requests flow through the router.</Info>

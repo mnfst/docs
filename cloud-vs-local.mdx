@@ -1,25 +1,23 @@
 ---
 title: "Cloud vs Local"
-description: "Choose the right plugin for your workflow"
+description: "Choose the right mode for your workflow"
 icon: "cloud"
 ---
 
-Manifest ships as two plugins: **manifest-provider** (cloud, hosted at app.manifest.build) and **manifest** (self-hosted, runs on your machine). Same routing and dashboard, different tradeoffs on privacy and convenience.
+Manifest is available in two modes: **Cloud** (hosted at app.manifest.build, configured as a custom provider in OpenClaw) and **Local** (self-hosted plugin that runs on your machine). Same routing and dashboard, different tradeoffs on privacy and convenience.
 
 ## Comparison
 
-| | Cloud (`manifest-provider`) | Local (`manifest`) |
+| | Cloud | Local |
 |---|---|---|
-| **Setup** | Sign up + API key | Zero config |
-| **Package size** | ~22 KB | ~50 MB |
+| **Setup** | Sign up + provider config | Plugin install, zero config |
 | **Data storage** | PostgreSQL (hosted) | SQLite on your machine |
 | **Dashboard** | app.manifest.build | http://127.0.0.1:2099 |
 | **Auth** | Email/password or OAuth (Google, GitHub, Discord) | Auto-login (loopback trust) |
 | **Multi-device** | Yes — access from any browser | No — localhost only |
 | **API key** | Generated in dashboard (`mnfst_...`) | Auto-generated (`mnfst_local_...`) |
 | **Email alerts** | Built-in (platform mail) | Requires provider config (Mailgun/Resend/SendGrid) |
-| **Telemetry interval** | ~30 seconds | ~10 seconds |
-| **Privacy** | Metadata only (no message content) | 100% on your machine |
+| **Privacy** | Requests routed through Manifest proxy; content not persisted | 100% on your machine |
 | **Cost** | Free | Free |
 
 ## When to use Cloud
@@ -33,18 +31,6 @@ Manifest ships as two plugins: **manifest-provider** (cloud, hosted at app.manif
 - You don't want any data leaving your machine.
 - You don't need multi-device access.
 - You want something that works offline with no setup.
+- You want to use local models like Ollama.
 
-## Switching plugins
-
-```bash
-# Switch to cloud
-openclaw plugins install manifest-provider
-openclaw providers setup manifest-provider
-openclaw gateway restart
-
-# Switch to local
-openclaw plugins install manifest
-openclaw gateway restart
-```
-
-<Warning>Switching does not migrate data. Cloud and local have separate databases.</Warning>
+<Info>Cloud and Local are independent. They have separate data stores and are not interchangeable.</Info>

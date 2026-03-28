@@ -13,16 +13,33 @@ Set via `openclaw config set plugins.entries.manifest.config.<key> <value>`.
 | `port` | `number` | `2099` | Embedded server port |
 | `host` | `string` | `127.0.0.1` | Bind address |
 
-## manifest-provider (cloud)
+## Cloud (provider config)
 
-Set via `openclaw config set plugins.entries.manifest-provider.config.<key> <value>`.
+Cloud mode is configured as a custom provider in `~/.openclaw/openclaw.json` under `models.providers.manifest`.
 
-| Setting | Type | Default | Description |
-|---------|------|---------|-------------|
-| `devMode` | `boolean` | auto | Skip API key validation. Auto-detected when the endpoint is a loopback address. |
-| `endpoint` | `string` | `https://app.manifest.build` | Manifest server URL |
+Set via `openclaw config set models.providers.manifest '<json>'`.
 
-API key is set via `openclaw providers setup manifest-provider` (interactive) or the `MANIFEST_API_KEY` environment variable.
+```json
+{
+  "baseUrl": "https://app.manifest.build/v1",
+  "api": "openai-completions",
+  "apiKey": "mnfst_YOUR_KEY",
+  "models": [{ "id": "auto", "name": "Manifest Auto" }]
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `baseUrl` | `string` | Yes | Manifest API endpoint (`https://app.manifest.build/v1`) |
+| `api` | `string` | Yes | Must be `openai-completions` |
+| `apiKey` | `string` | Yes | Your Manifest API key (`mnfst_...`) |
+| `models` | `array` | Yes | Model list. Use `[{"id":"auto","name":"Manifest Auto"}]` |
+
+The default model is set separately:
+
+```bash
+openclaw config set agents.defaults.model.primary manifest/auto
+```
 
 ## Environment variables
 
@@ -63,7 +80,11 @@ API key is set via `openclaw providers setup manifest-provider` (interactive) or
 
 <Tabs>
   <Tab title="Cloud">
-    All config is managed via environment variables or the dashboard UI. No local config files.
+    | Path | Description |
+    |------|-------------|
+    | `~/.openclaw/openclaw.json` | Provider config under `models.providers.manifest` |
+
+    All other config is managed via the dashboard UI. For self-hosting, use environment variables.
   </Tab>
   <Tab title="Local">
     | Path | Description |

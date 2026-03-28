@@ -8,46 +8,31 @@ icon: "shield-alert"
 
 Two types of rules you can set per agent:
 
-- **Notify** — Sends you an email when a threshold is hit.
-- **Block** — Returns HTTP 429 and stops requests once the threshold is hit.
+- **Email Alert** — Sends you an email when a threshold is hit.
+- **Hard Limit** — Returns HTTP 429 and stops requests once the threshold is hit.
+
+You can also combine both on a single rule.
 
 ## Creating a rule
 
-<Tabs>
-  <Tab title="Cloud">
-    <Steps>
-      <Step title="Open agent settings">
-        Open your agent's Settings page in the dashboard.
-      </Step>
-      <Step title="Add a rule">
-        Under "Notification Rules", click **Add Rule**.
-      </Step>
-      <Step title="Configure the rule">
-        Pick a metric (tokens or cost), period (hour / day / week / month), threshold, and action (notify or block).
-      </Step>
-      <Step title="Save">
-        Save. The rule takes effect immediately.
-      </Step>
-    </Steps>
-  </Tab>
-  <Tab title="Local">
-    <Steps>
-      <Step title="Open the dashboard">
-        Open [http://127.0.0.1:2099](http://127.0.0.1:2099) and navigate to your agent's settings.
-      </Step>
-      <Step title="Add a rule">
-        Add a rule with metric, period, threshold, and action.
-      </Step>
-      <Step title="Save">
-        Save. The rule takes effect immediately.
-      </Step>
-    </Steps>
-  </Tab>
-</Tabs>
+<Steps>
+  <Step title="Open the Limits page">
+    Navigate to your agent's **Limits** page in the dashboard.
+  </Step>
+  <Step title="Create a rule">
+    Click **+ Create rule**.
+  </Step>
+  <Step title="Configure the rule">
+    Pick a rule type (Email Alert, Hard Limit, or both), a metric (tokens or cost), a threshold, and a period (hour / day / week / month).
+  </Step>
+  <Step title="Save">
+    Click **Create rule**. The rule takes effect immediately.
+  </Step>
+</Steps>
 
 ## How blocking works
 
-When a "block" rule triggers, the next ingest request returns `429 Too Many Requests` with a message:
+When a Hard Limit triggers, the next proxy request returns `429 Too Many Requests` with a message:
 
 ```
 Limit exceeded: cost usage ($X) exceeds $Y per day
@@ -59,27 +44,20 @@ The block resets at the start of the next period.
 
 <Tabs>
   <Tab title="Cloud">
-    Emails are sent through the platform's mail provider. Make sure your account email is correct.
+    Alerts are sent to your account email. Make sure it is correct in your profile settings.
   </Tab>
   <Tab title="Local">
-    Configure an email provider in `~/.openclaw/manifest/config.json`:
+    Choose an email provider in the dashboard's **Limits** page. Supported providers:
 
-    ```json
-    {
-      "email": {
-        "provider": "mailgun",
-        "apiKey": "key-...",
-        "domain": "mg.example.com",
-        "from": "alerts@example.com"
-      }
-    }
-    ```
+    - **Resend**
+    - **Mailgun**
+    - **SendGrid**
 
-    Supported providers: Mailgun, Resend, SendGrid. If no provider is configured, email notifications are skipped (block rules still work).
+    Click a provider card, enter your API key, domain, and notification email, then save. If no provider is configured, email alerts are skipped (Hard Limit rules still work).
   </Tab>
 </Tabs>
 
 ## Checking rules
 
-- Rules are evaluated hourly (cron) for notifications, and on every ingest for blocks.
+- Rules are evaluated hourly (cron) for notifications, and on every request for blocks.
 - A notification is sent once per rule per period to avoid spam.
