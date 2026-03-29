@@ -30,11 +30,13 @@ Instead of sending every request to the same expensive model, Manifest scores ea
 
 ## How scoring works
 
-23 dimensions grouped into two categories:
+23 dimensions grouped into three categories:
 
 **Keyword-based (14)** — Scans the prompt for patterns like "prove", "write function", "what is", etc.
 
-**Structural (9)** — Analyzes token count, nesting depth, code-to-prose ratio, tool count, conversation depth, etc.
+**Structural (5)** — Analyzes token count, nesting depth, code-to-prose ratio, conditional logic, and constraint density.
+
+**Contextual (4)** — Considers expected output length, repetition requests, tool count, and conversation depth.
 
 Each dimension has a weight. The weighted sum maps to a tier via threshold boundaries. A confidence score (0–1) indicates how clearly the request fits its tier.
 
