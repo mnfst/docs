@@ -16,6 +16,10 @@ icon: "rocket"
     - Node.js >= 20.
     - No account needed.
   </Tab>
+  <Tab title="Docker">
+    - Docker installed on your machine.
+    - No Node.js or account needed.
+  </Tab>
 </Tabs>
 
 ## Setup
@@ -56,6 +60,25 @@ icon: "rocket"
     openclaw config set plugins.entries.manifest.config.port 3000
     ```
   </Tab>
+  <Tab title="Docker">
+    <Steps>
+      <Step title="Download the compose file">
+        ```bash
+        curl -O https://raw.githubusercontent.com/mnfst/manifest/main/docker-compose.yml
+        ```
+      </Step>
+      <Step title="Start the services">
+        ```bash
+        docker compose up -d
+        ```
+      </Step>
+      <Step title="Open the dashboard">
+        Go to [http://localhost:3001](http://localhost:3001) and log in with `admin@manifest.build` / `manifest`.
+      </Step>
+    </Steps>
+
+    See the full [Docker guide](/docker) for custom ports, standalone mode, and environment variables.
+  </Tab>
 </Tabs>
 
 ## Verify
@@ -66,6 +89,9 @@ icon: "rocket"
   </Tab>
   <Tab title="Local">
     Open [http://127.0.0.1:2099](http://127.0.0.1:2099). Send a message to any agent. It should appear in the dashboard within 10 seconds.
+  </Tab>
+  <Tab title="Docker">
+    Open [http://localhost:3001](http://localhost:3001). Connect a provider on the Routing page, then send a message. It should appear in the dashboard immediately.
   </Tab>
 </Tabs>
 

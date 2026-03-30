@@ -72,6 +72,7 @@
             "pages": [
               "introduction",
               "get-started",
+              "docker",
               "cloud-vs-local"
             ]
           },
