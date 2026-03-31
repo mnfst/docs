@@ -1,0 +1,106 @@
+---
+title: "Docker"
+description: "Run Manifest with Docker"
+icon: "docker"
+---
+
+Run the full Manifest stack with Docker. No Node.js required — just Docker.
+
+## Quick start
+
+<Steps>
+  <Step title="Download the compose file">
+    ```bash
+    curl -O https://raw.githubusercontent.com/mnfst/manifest/main/docker-compose.yml
+    ```
+  </Step>
+  <Step title="Start the services">
+    ```bash
+    docker compose up -d
+    ```
+
+    This starts Manifest and a PostgreSQL database.
+  </Step>
+  <Step title="Open the dashboard">
+    Go to [http://localhost:3001](http://localhost:3001) and log in with the demo account:
+
+    - **Email:** `admin@manifest.build`
+    - **Password:** `manifest`
+  </Step>
+  <Step title="Connect a provider">
+    Open the **Routing** page and add an LLM provider (OpenAI, Anthropic, Gemini, etc.) with your API key.
+  </Step>
+  <Step title="Connect OpenClaw">
+    In the agent settings, copy the setup command and run it in your terminal:
+
+    ```bash
+    openclaw config set plugins.entries.manifest-model-router.config.devMode true
+    openclaw config set plugins.entries.manifest-model-router.config.endpoint http://localhost:3001
+    openclaw gateway restart
+    ```
+  </Step>
+</Steps>
+
+## Verify
+
+Send a message through OpenClaw. It should appear in the Manifest dashboard within a few seconds.
+
+```bash
+curl -X POST http://localhost:3001/v1/chat/completions \
+  -H "Authorization: Bearer YOUR_MNFST_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"model": "manifest/auto", "messages": [{"role": "user", "content": "Hello"}]}'
+```
+
+## Custom port
+
+To run on a different port (e.g. 8080), update both the port mapping and `BETTER_AUTH_URL` in `docker-compose.yml`:
+
+```yaml
+ports:
+  - "8080:3001"
+environment:
+  - BETTER_AUTH_URL=http://localhost:8080
+```
+
+<Warning>If you see an "Invalid origin" error on the login page, `BETTER_AUTH_URL` doesn't match the port you're accessing the dashboard on.</Warning>
+
+## Standalone (bring your own PostgreSQL)
+
+If you already have a PostgreSQL instance:
+
+```bash
+docker run -d \
+  -p 3001:3001 \
+  -e DATABASE_URL=postgresql://user:pass@host:5432/manifest \
+  -e BETTER_AUTH_SECRET=$(openssl rand -hex 32) \
+  -e BETTER_AUTH_URL=http://localhost:3001 \
+  -e NODE_ENV=development \
+  -e MANIFEST_TRUST_LAN=true \
+  manifestdotbuild/manifest
+```
+
+<Info>`NODE_ENV=development` enables automatic database migrations on startup.</Info>
+
+## Environment variables
+
+| Variable | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `DATABASE_URL` | Yes | — | PostgreSQL connection string |
+| `BETTER_AUTH_SECRET` | Yes | — | Session signing secret (min 32 chars). Generate with `openssl rand -hex 32` |
+| `BETTER_AUTH_URL` | No | `http://localhost:3001` | Public URL of the app. Set when using a custom port |
+| `PORT` | No | `3001` | Internal server port |
+| `NODE_ENV` | No | `production` | Set `development` for auto-migrations |
+| `SEED_DATA` | No | `false` | Seed demo data on startup |
+| `MANIFEST_TRUST_LAN` | No | `false` | Trust private network IPs for auth (required for Docker) |
+
+## Stop and clean up
+
+```bash
+docker compose down       # Stop services (keeps data)
+docker compose down -v    # Stop and delete all data
+```
+
+## Docker Hub
+
+The image is available at [manifestdotbuild/manifest](https://hub.docker.com/r/manifestdotbuild/manifest) on Docker Hub.
