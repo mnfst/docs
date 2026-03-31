@@ -24,3 +24,25 @@
 #footer a[href*="mintlify"] {
   display: none;
 }
+
+/* Callouts: tighter spacing & smaller radii */
+.callout {
+  border-radius: 6px !important;
+  padding: 10px 14px !important;
+  margin-top: 12px !important;
+  margin-bottom: 12px !important;
+}
+
+.callout pre {
+  border-radius: 4px !important;
+  margin-top: 8px !important;
+  margin-bottom: 8px !important;
+}
+
+.callout p:last-child {
+  margin-top: 0 !important;
+}
+
+.callout .code-block {
+  margin-bottom: 0.5rem !important;
+}

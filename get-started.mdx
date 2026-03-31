@@ -20,6 +20,15 @@ icon: "rocket"
 
 ## Setup
 
+<Warning>
+  **Upgrading from before `v5.36.1`?** Run these commands first to clean up your workspace.
+  ```bash
+  openclaw plugins uninstall manifest-provider
+  openclaw plugins uninstall manifest
+  openclaw gateway restart
+  ```
+</Warning>
+
 <Tabs>
   <Tab title="Cloud">
     <Steps>
