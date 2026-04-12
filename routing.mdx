@@ -6,10 +6,12 @@ icon: "split"
 
 ## What is routing?
 
-Instead of sending every request to the same expensive model, Manifest scores each query and routes it to the cheapest model that can handle it.
+Instead of sending every request to the same expensive model, Manifest scores each query and routes it to the cheapest model that can handle it. Each request is classified along two axes:
 
-- Four tiers: **simple**, **standard**, **complex**, **reasoning**.
-- Scoring happens in under 2 ms with zero external calls.
+- **Complexity tier** — how hard the task is. Four tiers: **simple**, **standard**, **complex**, **reasoning**.
+- **Specificity** — what kind of task it is (coding, web browsing, data analysis, image generation, and so on). Nine categories in total.
+
+Scoring happens in under 2 ms with zero external calls.
 
 ## The four tiers
 
@@ -28,9 +30,45 @@ Instead of sending every request to the same expensive model, Manifest scores ea
   </Card>
 </CardGroup>
 
+## Specificities
+
+On top of the complexity tier, Manifest detects **what kind of task** the request is about. Each category can be routed to a model picked specifically for it.
+
+| Category | Covers |
+|---|---|
+| **Coding** | Write, debug, and refactor code |
+| **Web browsing** | Navigate pages, search, and extract content |
+| **Data analysis** | Crunch numbers, run stats, build charts |
+| **Image generation** | Create and edit images, logos, visuals |
+| **Video generation** | Produce clips, animations, and edits |
+| **Social media** | Draft posts, plan content, track engagement |
+| **Email** | Compose, reply, and manage your inbox |
+| **Calendar** | Book meetings, check availability, reschedule |
+| **Trading** | Analyze markets, place trades, track positions |
+
+### How detection works
+
+Two signals feed the detector:
+
+1. **Keyword dimensions.** The same trie scan that feeds the complexity score also counts matches in category-specific dimensions (e.g. `codeGeneration` and `technicalTerms` count toward Coding, `webBrowsing` toward Web browsing, `emailManagement` toward Email).
+2. **Tool names.** When a request includes tool definitions, names with known prefixes boost the matching category — `browser_*` / `playwright_*` → Web browsing, `gmail_*` / `outlook_*` → Email, `gcal_*` / `calendly_*` → Calendar, and so on.
+
+If a category crosses the match threshold, it wins. Otherwise no specificity is assigned and the request routes on complexity alone.
+
+### Overrides per category
+
+In the dashboard **Routing** page, each specificity can be toggled on or off per agent. When active, you can:
+
+- **Pin a model** to the category. All matching requests go to it, regardless of complexity tier.
+- **Set fallbacks.** A fallback list specific to that category, tried in order if the primary model fails.
+
+### Explicit override (header)
+
+Clients can skip detection by sending an `x-manifest-specificity` request header with a category ID (`coding`, `web_browsing`, `data_analysis`, `image_generation`, `video_generation`, `social_media`, `email_management`, `calendar_management`, or `trading`). The header value is used directly, with confidence `1.0`.
+
 ## How scoring works
 
-23 dimensions grouped into three categories:
+23 dimensions grouped into three categories. The same scoring pipeline feeds both the complexity tier and the specificity detector.
 
 **Keyword-based (14)** — Scans the prompt for patterns like "prove", "write function", "what is", etc.
 
@@ -62,19 +100,20 @@ Every response includes these headers:
 
 | Header | Description |
 |--------|-------------|
-| `X-Manifest-Tier` | Assigned tier |
+| `X-Manifest-Tier` | Assigned complexity tier |
+| `X-Manifest-Specificity` | Detected specificity category (only set when one was assigned) |
 | `X-Manifest-Model` | Actual model used |
 | `X-Manifest-Provider` | Provider (anthropic, openai, google, etc.) |
 | `X-Manifest-Confidence` | Scoring confidence (0–1) |
 | `X-Manifest-Reason` | Why this tier was selected |
 
-## Cloud vs Local
+## Cloud vs Self-hosted
 
 <Tabs>
   <Tab title="Cloud">
     Routing is performed server-side. Model mappings are managed by the Manifest team and updated regularly.
   </Tab>
-  <Tab title="Local">
-    Routing runs on your machine inside the embedded server. The model-to-tier mapping is seeded on first boot and can be customized in the dashboard.
+  <Tab title="Self-hosted">
+    Routing runs on your own machine inside the Self-hosted backend. The model-to-tier mapping is seeded on first boot and can be customized in the dashboard.
   </Tab>
 </Tabs>

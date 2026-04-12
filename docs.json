@@ -72,8 +72,7 @@
             "pages": [
               "introduction",
               "get-started",
-              "docker",
-              "cloud-vs-local"
+              "self-hosted"
             ]
           },
           {
@@ -83,13 +82,6 @@
               "routing",
               "fallback",
               "set-limits"
-            ]
-          },
-          {
-            "group": "Reference",
-            "pages": [
-              "configuration",
-              "contributing"
             ]
           }
         ]
@@ -125,10 +117,6 @@
           {
             "label": "Discord",
             "href": "https://discord.gg/FepAked3W7"
-          },
-          {
-            "label": "Contributing",
-            "href": "/contributing"
           }
         ]
       }
@@ -146,6 +134,26 @@
     {
       "source": "/install",
       "destination": "/get-started"
+    },
+    {
+      "source": "/docker",
+      "destination": "/self-hosted"
+    },
+    {
+      "source": "/cloud-vs-local",
+      "destination": "/get-started"
+    },
+    {
+      "source": "/cloud-vs-self-hosted",
+      "destination": "/get-started"
+    },
+    {
+      "source": "/configuration",
+      "destination": "/self-hosted"
+    },
+    {
+      "source": "/contributing",
+      "destination": "https://github.com/mnfst/manifest"
     }
   ]
 }

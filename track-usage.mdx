@@ -41,7 +41,7 @@ Manifest has pricing data for 300+ models across Anthropic, OpenAI, Google, Deep
 Cost = input_tokens × input_price + output_tokens × output_price
 ```
 
-Pricing updates in the background. In local mode, it syncs from OpenRouter.
+Pricing updates in the background. In self-hosted mode, it syncs from OpenRouter.
 
 ## Message log
 
@@ -56,7 +56,7 @@ Every LLM call is recorded. You can browse the log with:
   <Tab title="Cloud">
     PostgreSQL hosted at app.manifest.build. Data persists across devices and is accessible from any browser.
   </Tab>
-  <Tab title="Local">
-    SQLite file at `~/.openclaw/manifest/manifest.db`. Data stays on your machine. The dashboard is only accessible from localhost.
+  <Tab title="Self-hosted">
+    PostgreSQL running alongside the Manifest container (or your own, in standalone mode). Usage metrics and request metadata stay on your server. The request bodies themselves are forwarded to whichever LLM provider you configured and aren't stored.
   </Tab>
 </Tabs>
