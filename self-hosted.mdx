@@ -1,17 +1,21 @@
 ---
-title: "Docker"
-description: "Run Manifest with Docker"
+title: "Self-hosted"
+description: "Run Manifest on your own machine with Docker"
 icon: "docker"
 ---
 
-Run the full Manifest stack with Docker. No Node.js required — just Docker.
+Run the full Manifest stack on your own machine. No Node.js required, just Docker.
+
+<Warning>
+  **The OpenClaw plugin install is deprecated.** If you previously ran `openclaw plugins install manifest` (the [`manifest`](https://www.npmjs.com/package/manifest) npm package), it still works but is no longer recommended. New installs should use the Docker path below.
+</Warning>
 
 ## Quick start
 
 <Steps>
   <Step title="Download the compose file">
     ```bash
-    curl -O https://raw.githubusercontent.com/mnfst/manifest/main/docker-compose.yml
+    curl -O https://raw.githubusercontent.com/mnfst/manifest/main/docker/docker-compose.yml
     ```
   </Step>
   <Step title="Start the services">
@@ -84,15 +88,48 @@ docker run -d \
 
 ## Environment variables
 
+**Core**
+
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
 | `DATABASE_URL` | Yes | — | PostgreSQL connection string |
 | `BETTER_AUTH_SECRET` | Yes | — | Session signing secret (min 32 chars). Generate with `openssl rand -hex 32` |
 | `BETTER_AUTH_URL` | No | `http://localhost:3001` | Public URL of the app. Set when using a custom port |
 | `PORT` | No | `3001` | Internal server port |
+| `BIND_ADDRESS` | No | `127.0.0.1` | Bind address |
 | `NODE_ENV` | No | `production` | Set `development` for auto-migrations |
+| `CORS_ORIGIN` | No | — | Allowed CORS origin |
+| `API_KEY` | No | — | Internal API key |
 | `SEED_DATA` | No | `false` | Seed demo data on startup |
 | `MANIFEST_TRUST_LAN` | No | `false` | Trust private network IPs for auth (required for Docker) |
+
+**Rate limiting**
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `THROTTLE_TTL` | `60000` | Rate limit window in ms |
+| `THROTTLE_LIMIT` | `100` | Max requests per window |
+
+Default: 100 requests per 60-second window.
+
+**Email alerts (Mailgun)**
+
+| Variable | Description |
+|----------|-------------|
+| `MAILGUN_API_KEY` | Mailgun API key |
+| `MAILGUN_DOMAIN` | Mailgun domain |
+| `MAILGUN_FROM` | Sender address for alerts |
+
+**OAuth providers**
+
+| Variable | Description |
+|----------|-------------|
+| `GOOGLE_CLIENT_ID` | Google OAuth client ID |
+| `GOOGLE_CLIENT_SECRET` | Google OAuth client secret |
+| `GITHUB_CLIENT_ID` | GitHub OAuth client ID |
+| `GITHUB_CLIENT_SECRET` | GitHub OAuth client secret |
+| `DISCORD_CLIENT_ID` | Discord OAuth client ID |
+| `DISCORD_CLIENT_SECRET` | Discord OAuth client secret |
 
 ## Stop and clean up
 

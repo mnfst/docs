@@ -30,7 +30,7 @@ Manifest intercepts each OpenClaw request, scores the query in under 2 ms, assig
 |---|---|---|
 | **Open source** | Yes | No |
 | **Self-hostable** | Yes | No |
-| **Privacy** | Metadata only (or 100% local) | Full request proxied |
+| **Privacy** | Metadata only (self-hosted: no middleman) | Full request proxied |
 | **Routing logic** | Transparent, open-source scoring | Black box |
 | **Cost** | Free | Per-token markup |
 | **Dashboard** | Built-in | Separate |
@@ -38,8 +38,10 @@ Manifest intercepts each OpenClaw request, scores the query in under 2 ms, assig
 
 ## Privacy
 
-- **Local:** All data stays on your machine. Nothing is sent anywhere.
-- **Cloud:** Requests are routed through the Manifest proxy. Only model name, token counts, and latency are stored. Message content is not persisted.
+Manifest sits between OpenClaw and your LLM providers. In self-hosted mode that middleman runs on your own machine; in Cloud mode it runs on ours. Either way, the actual LLM requests still go out to the provider you configured (Anthropic, OpenAI, etc.).
+
+- **Self-hosted:** Requests go from OpenClaw to your Manifest container to the LLM provider. No Manifest server ever sees them. Routing decisions, token counts, costs, and dashboard data all live in your own PostgreSQL.
+- **Cloud:** Requests transit through app.manifest.build on their way to the LLM provider. Only the model name, token counts, and latency are stored for the dashboard. Message content is not persisted.
 
 ## Next step
 

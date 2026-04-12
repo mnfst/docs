@@ -8,30 +8,14 @@ icon: "rocket"
 
 <Tabs>
   <Tab title="Cloud">
-    - An OpenClaw installation.
-    - A Manifest account at [app.manifest.build](https://app.manifest.build).
+    None. You'll create your account in the setup step below.
   </Tab>
-  <Tab title="Local">
-    - An OpenClaw installation.
-    - Node.js >= 20.
-    - No account needed.
-  </Tab>
-  <Tab title="Docker">
-    - Docker installed on your machine.
-    - No Node.js or account needed.
+  <Tab title="Self-hosted">
+    Docker installed on your machine.
   </Tab>
 </Tabs>
 
 ## Setup
-
-<Warning>
-  **Upgrading from before `v5.36.1`?** Run these commands first to clean up your workspace.
-  ```bash
-  openclaw plugins uninstall manifest-provider
-  openclaw plugins uninstall manifest
-  openclaw gateway restart
-  ```
-</Warning>
 
 <Tabs>
   <Tab title="Cloud">
@@ -47,33 +31,11 @@ icon: "rocket"
       </Step>
     </Steps>
   </Tab>
-  <Tab title="Local">
-    <Steps>
-      <Step title="Install the plugin">
-        ```bash
-        openclaw plugins install manifest
-        ```
-      </Step>
-      <Step title="Restart the gateway">
-        ```bash
-        openclaw gateway restart
-        ```
-      </Step>
-    </Steps>
-
-    No configuration needed. Local mode works out of the box.
-
-    Optionally change the dashboard port:
-
-    ```bash
-    openclaw config set plugins.entries.manifest.config.port 3000
-    ```
-  </Tab>
-  <Tab title="Docker">
+  <Tab title="Self-hosted">
     <Steps>
       <Step title="Download the compose file">
         ```bash
-        curl -O https://raw.githubusercontent.com/mnfst/manifest/main/docker-compose.yml
+        curl -O https://raw.githubusercontent.com/mnfst/manifest/main/docker/docker-compose.yml
         ```
       </Step>
       <Step title="Start the services">
@@ -86,7 +48,7 @@ icon: "rocket"
       </Step>
     </Steps>
 
-    See the full [Docker guide](/docker) for custom ports, standalone mode, and environment variables.
+    See the full [Self-hosted guide](/self-hosted) for custom ports, standalone mode, and environment variables.
   </Tab>
 </Tabs>
 
@@ -96,10 +58,7 @@ icon: "rocket"
   <Tab title="Cloud">
     Open [app.manifest.build](https://app.manifest.build). Send a message to any agent. It should appear in the dashboard within 30 seconds.
   </Tab>
-  <Tab title="Local">
-    Open [http://127.0.0.1:2099](http://127.0.0.1:2099). Send a message to any agent. It should appear in the dashboard within 10 seconds.
-  </Tab>
-  <Tab title="Docker">
+  <Tab title="Self-hosted">
     Open [http://localhost:3001](http://localhost:3001). Connect a provider on the Routing page, then send a message. It should appear in the dashboard immediately.
   </Tab>
 </Tabs>
