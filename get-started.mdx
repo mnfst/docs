@@ -42,13 +42,15 @@ icon: "rocket"
         ```bash
         docker compose up -d
         ```
+
+        Give it about 30 seconds to boot.
       </Step>
       <Step title="Open the dashboard">
         Go to [http://localhost:3001](http://localhost:3001) and log in with `admin@manifest.build` / `manifest`.
       </Step>
     </Steps>
 
-    See the full [Self-hosted guide](/self-hosted) for custom ports, standalone mode, and environment variables.
+    See the full [Self-hosted guide](/self-hosted) for provider setup, custom ports, and environment variables.
   </Tab>
 </Tabs>
 
@@ -59,7 +61,7 @@ icon: "rocket"
     Open [app.manifest.build](https://app.manifest.build). Send a message to any agent. It should appear in the dashboard within 30 seconds.
   </Tab>
   <Tab title="Self-hosted">
-    Open [http://localhost:3001](http://localhost:3001). Connect a provider on the Routing page, then send a message. It should appear in the dashboard immediately.
+    Open [http://localhost:3001](http://localhost:3001), connect a provider on the [Routing](http://localhost:3001/routing) page, then send a test request. It should appear on the Messages page within seconds. See the [Self-hosted guide](/self-hosted#verify) for the exact verify command.
   </Tab>
 </Tabs>
 
