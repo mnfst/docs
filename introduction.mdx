@@ -1,10 +1,10 @@
 ---
 title: "Manifest"
-description: "Take control of your OpenClaw costs."
+description: "Take control of your personal agent LLM costs."
 icon: "house"
 ---
 
-Manifest is an open-source LLM router for OpenClaw that routes queries to the cheapest model that can handle them. It comes with a dashboard for tracking tokens, costs, and usage.
+Manifest is an open-source LLM router for personal agents that routes queries to the cheapest model that can handle them. It comes with a dashboard for tracking tokens, costs, and usage.
 
 ## Why Manifest
 
@@ -22,7 +22,7 @@ Manifest is an open-source LLM router for OpenClaw that routes queries to the ch
 
 ## How it works
 
-Manifest intercepts each OpenClaw request, scores the query in under 2 ms, assigns a tier (simple / standard / complex / reasoning), and forwards it to the matching model. Token counts, latency, and cost data are captured as requests flow through the router and show up in the dashboard.
+Manifest intercepts each agent request, scores the query in under 2 ms, assigns a tier (simple / standard / complex / reasoning), and forwards it to the matching model. Token counts, latency, and cost data are captured as requests flow through the router and show up in the dashboard.
 
 ## Manifest vs OpenRouter
 
@@ -34,13 +34,12 @@ Manifest intercepts each OpenClaw request, scores the query in under 2 ms, assig
 | **Routing logic** | Transparent, open-source scoring | Black box |
 | **Cost** | Free | Per-token markup |
 | **Dashboard** | Built-in | Separate |
-| **Works with OpenClaw** | Native integration | Requires config |
 
 ## Privacy
 
-Manifest sits between OpenClaw and your LLM providers. In self-hosted mode that middleman runs on your own machine; in Cloud mode it runs on ours. Either way, the actual LLM requests still go out to the provider you configured (Anthropic, OpenAI, etc.).
+Manifest sits between your agent and your LLM providers. In self-hosted mode that middleman runs on your own machine; in Cloud mode it runs on ours. Either way, the actual LLM requests still go out to the provider you configured (Anthropic, OpenAI, etc.).
 
-- **Self-hosted:** Requests go from OpenClaw to your Manifest container to the LLM provider. No Manifest server ever sees them. Routing decisions, token counts, costs, and dashboard data all live in your own PostgreSQL.
+- **Self-hosted:** Requests go from your agent to your Manifest container to the LLM provider. No Manifest server ever sees them. Routing decisions, token counts, costs, and dashboard data all live in your own PostgreSQL.
 - **Cloud:** Requests transit through app.manifest.build on their way to the LLM provider. Only the model name, token counts, and latency are stored for the dashboard. Message content is not persisted.
 
 ## Next step
