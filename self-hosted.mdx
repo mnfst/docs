@@ -6,12 +6,43 @@ icon: "docker"
 
 Run the full Manifest stack on your own machine. No Node.js required, just Docker.
 
-## Quick start
+## Quick install (one command)
+
+```bash
+bash <(curl -sSL https://raw.githubusercontent.com/mnfst/manifest/main/docker/install.sh)
+```
+
+The installer downloads the compose file into `./manifest`, generates a fresh `BETTER_AUTH_SECRET`, brings the stack up, and waits for it to become healthy.
+
+<Tip>
+  Prefer to review before running? Download it first:
+
+  ```bash
+  curl -sSLO https://raw.githubusercontent.com/mnfst/manifest/main/docker/install.sh
+  less install.sh
+  bash install.sh
+  ```
+
+  Useful flags: `--dir /opt/mnfst` to install elsewhere, `--dry-run` to preview, `--yes` to skip the confirmation prompt.
+</Tip>
+
+When the installer finishes, open [http://localhost:3001](http://localhost:3001) — the first visit opens a setup wizard that walks you through creating the admin account. Then head to the [Routing](http://localhost:3001/routing) page to add an LLM provider (OpenAI, Anthropic, Gemini, etc.) with your API key.
+
+## Manual install
+
+If you'd rather drive it by hand:
 
 <Steps>
   <Step title="Download the compose file">
     ```bash
     curl -O https://raw.githubusercontent.com/mnfst/manifest/main/docker/docker-compose.yml
+    ```
+  </Step>
+  <Step title="Set a real BETTER_AUTH_SECRET">
+    The compose file ships with a placeholder. Replace it with a real secret before starting the stack:
+
+    ```bash
+    sed -i.bak "s/change-me-to-a-random-32-char-string!!/$(openssl rand -hex 32)/" docker-compose.yml
     ```
   </Step>
   <Step title="Start the services">
@@ -21,11 +52,8 @@ Run the full Manifest stack on your own machine. No Node.js required, just Docke
 
     This starts Manifest and a PostgreSQL database. Give it about 30 seconds to boot on a cold pull — you can watch startup with `docker compose logs -f manifest`.
   </Step>
-  <Step title="Open the dashboard">
-    Go to [http://localhost:3001](http://localhost:3001) and log in with the demo account:
-
-    - **Email:** `admin@manifest.build`
-    - **Password:** `manifest`
+  <Step title="Create your admin account">
+    Go to [http://localhost:3001](http://localhost:3001). The setup wizard at `/setup` walks you through creating the first admin account (minimum 8-character password).
   </Step>
   <Step title="Connect a provider">
     Open the [Routing](http://localhost:3001/routing) page and add an LLM provider (OpenAI, Anthropic, Gemini, etc.) with your API key.
@@ -33,7 +61,7 @@ Run the full Manifest stack on your own machine. No Node.js required, just Docke
 </Steps>
 
 <Warning>
-  **The default compose file is for local testing only.** It ships with `SEED_DATA=true` (populates a fake `demo-agent` with sample token usage), a placeholder `BETTER_AUTH_SECRET`, and the well-known `admin@manifest.build` / `manifest` credentials. Before exposing this instance beyond localhost, set `SEED_DATA=false`, replace the secret with `openssl rand -hex 32`, and change the admin password.
+  Before exposing this instance beyond localhost, double-check that `BETTER_AUTH_SECRET` is a real secret (not the placeholder), and if you enable email verification, set `BETTER_AUTH_URL` to a reachable public URL so the verification links resolve.
 </Warning>
 
 ## Verify
@@ -72,12 +100,12 @@ docker run -d \
   -e DATABASE_URL=postgresql://user:pass@host:5432/manifest \
   -e BETTER_AUTH_SECRET=$(openssl rand -hex 32) \
   -e BETTER_AUTH_URL=http://localhost:3001 \
-  -e NODE_ENV=development \
+  -e AUTO_MIGRATE=true \
   -e MANIFEST_TRUST_LAN=true \
   manifestdotbuild/manifest
 ```
 
-<Info>`NODE_ENV=development` enables automatic database migrations on startup.</Info>
+<Info>`AUTO_MIGRATE=true` runs database migrations on startup.</Info>
 
 ## Environment variables
 
@@ -90,10 +118,10 @@ docker run -d \
 | `BETTER_AUTH_URL` | No | `http://localhost:3001` | Public URL of the app. Set when using a custom port |
 | `PORT` | No | `3001` | Internal server port |
 | `BIND_ADDRESS` | No | `127.0.0.1` | Bind address |
-| `NODE_ENV` | No | `production` | Set `development` for auto-migrations |
+| `NODE_ENV` | No | `production` | Node environment |
 | `CORS_ORIGIN` | No | — | Allowed CORS origin |
 | `API_KEY` | No | — | Internal API key |
-| `SEED_DATA` | No | `false` | Seed demo data on startup |
+| `AUTO_MIGRATE` | No | `true` | Run database migrations on startup |
 | `MANIFEST_TRUST_LAN` | No | `false` | Trust private network IPs for auth (required for Docker) |
 
 **Rate limiting**

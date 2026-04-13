@@ -33,24 +33,19 @@ icon: "rocket"
   </Tab>
   <Tab title="Self-hosted">
     <Steps>
-      <Step title="Download the compose file">
+      <Step title="Run the installer">
         ```bash
-        curl -O https://raw.githubusercontent.com/mnfst/manifest/main/docker/docker-compose.yml
-        ```
-      </Step>
-      <Step title="Start the services">
-        ```bash
-        docker compose up -d
+        bash <(curl -sSL https://raw.githubusercontent.com/mnfst/manifest/main/docker/install.sh)
         ```
 
-        Give it about 30 seconds to boot.
+        The installer downloads the compose file, generates a secret, and brings up the stack. Give it about 30 seconds to boot.
       </Step>
-      <Step title="Open the dashboard">
-        Go to [http://localhost:3001](http://localhost:3001) and log in with `admin@manifest.build` / `manifest`.
+      <Step title="Create your admin account">
+        Go to [http://localhost:3001](http://localhost:3001). The setup wizard walks you through creating the first admin account.
       </Step>
     </Steps>
 
-    See the full [Self-hosted guide](/self-hosted) for provider setup, custom ports, and environment variables.
+    See the full [Self-hosted guide](/self-hosted) for the manual install path, provider setup, custom ports, and environment variables.
   </Tab>
 </Tabs>
 
