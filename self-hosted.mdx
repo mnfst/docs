@@ -26,7 +26,7 @@ The installer downloads the compose file into `./manifest`, generates a fresh `B
   Useful flags: `--dir /opt/mnfst` to install elsewhere, `--dry-run` to preview, `--yes` to skip the confirmation prompt.
 </Tip>
 
-When the installer finishes, open [http://localhost:3001](http://localhost:3001) — the first visit opens a setup wizard that walks you through creating the admin account. Then head to the [Routing](http://localhost:3001/routing) page to add an LLM provider (OpenAI, Anthropic, Gemini, etc.) with your API key.
+When the installer finishes, open [http://localhost:3001](http://localhost:3001) and sign up for an account — the first account you create on a fresh instance becomes the admin. No demo credentials are seeded; the compose file ships with `SEED_DATA=false`. Then head to the [Routing](http://localhost:3001/routing) page to add an LLM provider (OpenAI, Anthropic, Gemini, etc.) with your API key.
 
 ## Manual install
 
@@ -53,7 +53,7 @@ If you'd rather drive it by hand:
     This starts Manifest and a PostgreSQL database. Give it about 30 seconds to boot on a cold pull — you can watch startup with `docker compose logs -f manifest`.
   </Step>
   <Step title="Create your admin account">
-    Go to [http://localhost:3001](http://localhost:3001). The setup wizard at `/setup` walks you through creating the first admin account (minimum 8-character password).
+    Go to [http://localhost:3001](http://localhost:3001) and sign up. The first account you create becomes the admin — no demo credentials are pre-seeded.
   </Step>
   <Step title="Connect a provider">
     Open the [Routing](http://localhost:3001/routing) page and add an LLM provider (OpenAI, Anthropic, Gemini, etc.) with your API key.
