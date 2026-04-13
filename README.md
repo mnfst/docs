@@ -2,7 +2,7 @@
 
 Source for the [Manifest documentation site](https://manifest.build), built with [Mintlify](https://mintlify.com).
 
-Manifest is an open-source OpenClaw plugin that routes queries to the most cost-effective model and gives you a real-time dashboard to track tokens, costs, and usage.
+Manifest is an open-source LLM router for OpenClaw that routes queries to the most cost-effective model and gives you a real-time dashboard to track tokens, costs, and usage.
 
 ## Local development
 

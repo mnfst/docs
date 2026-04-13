@@ -30,17 +30,6 @@ Run the full Manifest stack on your own machine. No Node.js required, just Docke
   <Step title="Connect a provider">
     Open the [Routing](http://localhost:3001/routing) page and add an LLM provider (OpenAI, Anthropic, Gemini, etc.) with your API key.
   </Step>
-  <Step title="(Optional) Connect OpenClaw">
-    If you use OpenClaw, point it at this Manifest instance from your terminal:
-
-    ```bash
-    openclaw config set plugins.entries.manifest-model-router.config.devMode true
-    openclaw config set plugins.entries.manifest-model-router.config.endpoint http://localhost:3001
-    openclaw gateway restart
-    ```
-
-    Requires the `openclaw` CLI. Skip this step if you don't use OpenClaw — the dashboard works without it.
-  </Step>
 </Steps>
 
 <Warning>
@@ -49,19 +38,16 @@ Run the full Manifest stack on your own machine. No Node.js required, just Docke
 
 ## Verify
 
-After connecting a provider, send a test request and watch it land in the dashboard.
+After connecting a provider, send a test request and watch it land in the dashboard. Grab your Manifest API key from the dashboard (it starts with `mnfst_`) and run:
 
-- **From OpenClaw** (if you completed the optional step above): trigger any agent request. It should appear on the **Messages** page within a few seconds.
-- **From the API directly:** grab your Manifest API key from the dashboard (it starts with `mnfst_`) and run:
+```bash
+curl -X POST http://localhost:3001/v1/chat/completions \
+  -H "Authorization: Bearer mnfst_YOUR_KEY_HERE" \
+  -H "Content-Type: application/json" \
+  -d '{"model": "manifest/auto", "messages": [{"role": "user", "content": "Hello"}]}'
+```
 
-  ```bash
-  curl -X POST http://localhost:3001/v1/chat/completions \
-    -H "Authorization: Bearer mnfst_YOUR_KEY_HERE" \
-    -H "Content-Type: application/json" \
-    -d '{"model": "manifest/auto", "messages": [{"role": "user", "content": "Hello"}]}'
-  ```
-
-  If the response comes back with `[🦚 Manifest] That doesn't look like a Manifest key`, you're still using the placeholder — replace `mnfst_YOUR_KEY_HERE` with the real key from the dashboard.
+If the response comes back with `[🦚 Manifest] That doesn't look like a Manifest key`, you're still using the placeholder — replace `mnfst_YOUR_KEY_HERE` with the real key from the dashboard.
 
 ## Custom port
 
@@ -148,13 +134,3 @@ docker compose down -v    # Stop and delete all data
 ## Docker Hub
 
 The image is available at [manifestdotbuild/manifest](https://hub.docker.com/r/manifestdotbuild/manifest) on Docker Hub.
-
-## Migrating from the OpenClaw plugin
-
-If you previously ran `openclaw plugins install manifest` (the [`manifest`](https://www.npmjs.com/package/manifest) npm package), it still works but is no longer recommended. Switch to the Docker path above, then uninstall the plugin:
-
-```bash
-openclaw plugins uninstall manifest
-openclaw plugins uninstall manifest-provider
-openclaw gateway restart
-```
