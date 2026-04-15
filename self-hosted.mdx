@@ -6,63 +6,117 @@ icon: "docker"
 
 Run the full Manifest stack on your own machine. No Node.js required, just Docker.
 
-## Quick install (one command)
+All three paths end in the same place: a running stack at [http://localhost:3001](http://localhost:3001) where you sign up. The first account you create becomes the admin. No demo credentials are pre-seeded.
 
-```bash
-bash <(curl -sSL https://raw.githubusercontent.com/mnfst/manifest/main/docker/install.sh)
-```
+<Note>
+  The bundled compose file binds port 3001 to `127.0.0.1` only, so the dashboard is reachable on the host machine but not over the LAN. See [Exposing on the LAN](#exposing-on-the-lan) to change this.
+</Note>
 
-The installer downloads the compose file into `./manifest`, generates a fresh `BETTER_AUTH_SECRET`, brings the stack up, and waits for it to become healthy.
+## Installation
 
-<Tip>
-  Prefer to review before running? Download it first:
-
-  ```bash
-  curl -sSLO https://raw.githubusercontent.com/mnfst/manifest/main/docker/install.sh
-  less install.sh
-  bash install.sh
-  ```
-
-  Useful flags: `--dir /opt/mnfst` to install elsewhere, `--dry-run` to preview, `--yes` to skip the confirmation prompt.
-</Tip>
-
-When the installer finishes, open [http://localhost:3001](http://localhost:3001) and sign up for an account — the first account you create on a fresh instance becomes the admin. No demo credentials are seeded; the compose file ships with `SEED_DATA=false`. Then head to the [Routing](http://localhost:3001/routing) page to add an LLM provider (OpenAI, Anthropic, Gemini, etc.) with your API key.
-
-## Manual install
-
-If you'd rather drive it by hand:
-
-<Steps>
-  <Step title="Download the compose file">
-    ```bash
-    curl -O https://raw.githubusercontent.com/mnfst/manifest/main/docker/docker-compose.yml
-    ```
-  </Step>
-  <Step title="Set a real BETTER_AUTH_SECRET">
-    The compose file ships with a placeholder. Replace it with a real secret before starting the stack:
+<Tabs>
+  <Tab title="Quick install (recommended)">
+    One command. The installer downloads the compose file, generates a secret, and brings up the stack. Give it about 30 seconds to boot.
 
     ```bash
-    sed -i.bak "s/change-me-to-a-random-32-char-string!!/$(openssl rand -hex 32)/" docker-compose.yml
+    bash <(curl -sSL https://raw.githubusercontent.com/mnfst/manifest/main/docker/install.sh)
     ```
-  </Step>
-  <Step title="Start the services">
+
+    <Accordion title="Prefer to review the script before running it?">
+      ```bash
+      curl -sSLO https://raw.githubusercontent.com/mnfst/manifest/main/docker/install.sh
+      less install.sh
+      bash install.sh
+      ```
+    </Accordion>
+
+    Useful flags: `--dir <path>` to install elsewhere, `--dry-run` to preview, `--yes` to skip the confirmation prompt.
+
+    When the installer finishes, open [http://localhost:3001](http://localhost:3001) and sign up for an account. Then head to the [Routing](http://localhost:3001/routing) page to add an LLM provider (OpenAI, Anthropic, Gemini, etc.) with your API key.
+  </Tab>
+  <Tab title="Docker Compose">
+    Same underlying flow as the install script, but you drive it yourself so you can edit the config before booting the stack.
+
+    <Steps>
+      <Step title="Download the compose file and the env template">
+        ```bash
+        curl -O https://raw.githubusercontent.com/mnfst/manifest/main/docker/docker-compose.yml
+        curl -O https://raw.githubusercontent.com/mnfst/manifest/main/docker/.env.example
+        cp .env.example .env
+        ```
+      </Step>
+      <Step title="Set a real BETTER_AUTH_SECRET">
+        Open `.env` in your editor and set `BETTER_AUTH_SECRET` to a random string. You can generate one with:
+
+        ```bash
+        openssl rand -hex 32
+        ```
+
+        Optional: to use a stronger database password, set both `POSTGRES_PASSWORD` and `DATABASE_URL` in `.env` — they must agree, and any special characters in the password need to be percent-encoded in the URL.
+      </Step>
+      <Step title="Start the stack">
+        ```bash
+        docker compose up -d
+        ```
+
+        Give it about 30 seconds to boot on a cold pull — you can watch startup with `docker compose logs -f manifest`.
+      </Step>
+      <Step title="Create your admin account">
+        Go to [http://localhost:3001](http://localhost:3001) and sign up. The first account you create becomes the admin.
+      </Step>
+      <Step title="Connect a provider">
+        Open the [Routing](http://localhost:3001/routing) page and add an LLM provider (OpenAI, Anthropic, Gemini, etc.) with your API key.
+      </Step>
+    </Steps>
+
+    <Warning>
+      Before exposing this instance beyond localhost, double-check that `BETTER_AUTH_SECRET` is a real secret (not the placeholder), and if you enable email verification, set `BETTER_AUTH_URL` to a reachable public URL so the verification links resolve.
+    </Warning>
+  </Tab>
+  <Tab title="Docker Run (BYO PostgreSQL)">
+    If you already have a PostgreSQL instance, replace `user`, `pass`, and `host` with your actual database credentials:
+
     ```bash
-    docker compose up -d
+    docker run -d \
+      -p 3001:3001 \
+      -e DATABASE_URL=postgresql://user:pass@host:5432/manifest \
+      -e BETTER_AUTH_SECRET=$(openssl rand -hex 32) \
+      -e BETTER_AUTH_URL=http://localhost:3001 \
+      -e AUTO_MIGRATE=true \
+      manifestdotbuild/manifest
     ```
 
-    This starts Manifest and a PostgreSQL database. Give it about 30 seconds to boot on a cold pull — you can watch startup with `docker compose logs -f manifest`.
-  </Step>
-  <Step title="Create your admin account">
-    Go to [http://localhost:3001](http://localhost:3001) and sign up. The first account you create becomes the admin — no demo credentials are pre-seeded.
-  </Step>
-  <Step title="Connect a provider">
-    Open the [Routing](http://localhost:3001/routing) page and add an LLM provider (OpenAI, Anthropic, Gemini, etc.) with your API key.
-  </Step>
-</Steps>
+    <Accordion title="Windows (PowerShell)">
+      ```powershell
+      $secret = -join ((48..57 + 97..122) | Get-Random -Count 64 | ForEach-Object { [char]$_ })
 
-<Warning>
-  Before exposing this instance beyond localhost, double-check that `BETTER_AUTH_SECRET` is a real secret (not the placeholder), and if you enable email verification, set `BETTER_AUTH_URL` to a reachable public URL so the verification links resolve.
-</Warning>
+      docker run -d `
+        -p 3001:3001 `
+        -e DATABASE_URL=postgresql://user:pass@host:5432/manifest `
+        -e BETTER_AUTH_SECRET=$secret `
+        -e BETTER_AUTH_URL=http://localhost:3001 `
+        -e AUTO_MIGRATE=true `
+        manifestdotbuild/manifest
+      ```
+    </Accordion>
+
+    <Accordion title="Windows (CMD)">
+      Generate a 64-character hex secret with any tool you trust, then:
+
+      ```cmd
+      docker run -d ^
+        -p 3001:3001 ^
+        -e DATABASE_URL=postgresql://user:pass@host:5432/manifest ^
+        -e BETTER_AUTH_SECRET=<your-64-char-secret> ^
+        -e BETTER_AUTH_URL=http://localhost:3001 ^
+        -e AUTO_MIGRATE=true ^
+        manifestdotbuild/manifest
+      ```
+    </Accordion>
+
+    <Info>`AUTO_MIGRATE=true` runs database migrations on first boot.</Info>
+  </Tab>
+</Tabs>
 
 ## Verify
 
@@ -75,37 +129,111 @@ curl -X POST http://localhost:3001/v1/chat/completions \
   -d '{"model": "manifest/auto", "messages": [{"role": "user", "content": "Hello"}]}'
 ```
 
-If the response comes back with `[🦚 Manifest] That doesn't look like a Manifest key`, you're still using the placeholder — replace `mnfst_YOUR_KEY_HERE` with the real key from the dashboard.
+If the response comes back with `That doesn't look like a Manifest key`, you're still using the placeholder — replace `mnfst_YOUR_KEY_HERE` with the real key from the dashboard.
+
+## Verifying the image signature
+
+Published images are signed with cosign keyless signing (Sigstore). Verify before pulling:
+
+```bash
+cosign verify manifestdotbuild/manifest:<version> \
+  --certificate-identity-regexp="^https://github.com/mnfst/manifest/" \
+  --certificate-oidc-issuer="https://token.actions.githubusercontent.com"
+```
 
 ## Custom port
 
-To run on a different port (e.g. 8080), update both the port mapping and `BETTER_AUTH_URL` in `docker-compose.yml`:
-
-```yaml
-ports:
-  - "8080:3001"
-environment:
-  - BETTER_AUTH_URL=http://localhost:8080
-```
-
-<Warning>If you see an "Invalid origin" error on the login page, `BETTER_AUTH_URL` doesn't match the port you're accessing the dashboard on.</Warning>
-
-## Standalone (bring your own PostgreSQL)
-
-If you already have a PostgreSQL instance:
+If port 3001 is taken, change both the mapping and `BETTER_AUTH_URL`:
 
 ```bash
 docker run -d \
-  -p 3001:3001 \
-  -e DATABASE_URL=postgresql://user:pass@host:5432/manifest \
-  -e BETTER_AUTH_SECRET=$(openssl rand -hex 32) \
-  -e BETTER_AUTH_URL=http://localhost:3001 \
-  -e AUTO_MIGRATE=true \
-  -e MANIFEST_TRUST_LAN=true \
-  manifestdotbuild/manifest
+  -p 8080:3001 \
+  -e BETTER_AUTH_URL=http://localhost:8080 \
+  ...
 ```
 
-<Info>`AUTO_MIGRATE=true` runs database migrations on startup.</Info>
+Or in `docker-compose.yml`:
+
+```yaml
+ports:
+  - '127.0.0.1:8080:3001'
+```
+
+...and in `.env`:
+
+```
+BETTER_AUTH_URL=http://localhost:8080
+```
+
+<Warning>If you see an "Invalid origin" error on the login page, `BETTER_AUTH_URL` doesn't match the URL you're accessing the dashboard on. The host matters as much as the port.</Warning>
+
+## Exposing on the LAN
+
+By default the compose file binds port 3001 to `127.0.0.1` only. The dashboard is reachable from the host but not from other machines on the network. To expose it on the LAN:
+
+<Steps>
+  <Step title="Change the port binding">
+    Edit `docker-compose.yml` and change the `ports` line from `"127.0.0.1:3001:3001"` to `"3001:3001"`.
+  </Step>
+  <Step title="Set BETTER_AUTH_URL">
+    In `.env`, set `BETTER_AUTH_URL` to the host you'll reach the dashboard on, e.g. `http://192.168.1.20:3001` or `https://manifest.mydomain.com`. This must match the URL in the browser or Better Auth will reject the login with "Invalid origin".
+  </Step>
+  <Step title="Apply">
+    ```bash
+    docker compose up -d
+    ```
+  </Step>
+</Steps>
+
+## Image tags
+
+Every release is published with the following tags:
+
+| Tag | Example | Description |
+|-----|---------|-------------|
+| `major.minor.patch` | `5.46.0` | Fully pinned |
+| `major.minor` | `5.46` | Latest patch within a minor |
+| `major` | `5` | Latest minor+patch within a major |
+| `latest` | — | Latest stable release |
+| `sha-<short>` | — | Exact commit for rollback |
+
+Images are built for both `linux/amd64` and `linux/arm64`.
+
+## Upgrading
+
+Manifest ships a new image on every release. To upgrade an existing compose install:
+
+```bash
+docker compose pull
+docker compose up -d
+```
+
+Database migrations run automatically on boot, no manual steps. Your data in the `pgdata` volume is preserved across upgrades. Pin to a specific major version (e.g. `manifestdotbuild/manifest:5`) in `docker-compose.yml` if you want control over when major upgrades happen.
+
+## Backup and persistence
+
+All state lives in the `pgdata` named volume mounted at `/var/lib/postgresql/data` in the `postgres` service. Nothing else in the Manifest container is stateful.
+
+Back up (from the host, with the stack running):
+
+```bash
+docker compose exec -T postgres pg_dump -U manifest manifest > manifest-backup-$(date +%F).sql
+```
+
+Restore into a fresh stack:
+
+```bash
+docker compose up -d postgres
+cat manifest-backup.sql | docker compose exec -T postgres psql -U manifest manifest
+docker compose up -d
+```
+
+To list or remove the volume manually:
+
+```bash
+docker volume ls | grep pgdata
+docker compose down -v    # destroys all data
+```
 
 ## Environment variables
 
@@ -114,43 +242,49 @@ docker run -d \
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
 | `DATABASE_URL` | Yes | — | PostgreSQL connection string |
-| `BETTER_AUTH_SECRET` | Yes | — | Session signing secret (min 32 chars). Generate with `openssl rand -hex 32` |
-| `BETTER_AUTH_URL` | No | `http://localhost:3001` | Public URL of the app. Set when using a custom port |
+| `BETTER_AUTH_SECRET` | Yes | — | Session signing secret (min 32 chars) |
+| `BETTER_AUTH_URL` | No | `http://localhost:3001` | Public URL. Set this when using a custom port |
 | `PORT` | No | `3001` | Internal server port |
-| `BIND_ADDRESS` | No | `127.0.0.1` | Bind address |
 | `NODE_ENV` | No | `production` | Node environment |
-| `CORS_ORIGIN` | No | — | Allowed CORS origin |
-| `API_KEY` | No | — | Internal API key |
-| `AUTO_MIGRATE` | No | `true` | Run database migrations on startup |
-| `MANIFEST_TRUST_LAN` | No | `false` | Trust private network IPs for auth (required for Docker) |
+| `SEED_DATA` | No | `false` | Seed demo data on startup |
 
-**Rate limiting**
+<Accordion title="Additional environment variables">
+  **Network and security**
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `THROTTLE_TTL` | `60000` | Rate limit window in ms |
-| `THROTTLE_LIMIT` | `100` | Max requests per window |
+  | Variable | Default | Description |
+  |----------|---------|-------------|
+  | `BIND_ADDRESS` | `127.0.0.1` | Bind address |
+  | `CORS_ORIGIN` | — | Allowed CORS origin |
+  | `API_KEY` | — | Internal API key |
+  | `AUTO_MIGRATE` | `true` | Run database migrations on startup |
 
-Default: 100 requests per 60-second window.
+  **Rate limiting**
 
-**Email alerts (Mailgun)**
+  | Variable | Default | Description |
+  |----------|---------|-------------|
+  | `THROTTLE_TTL` | `60000` | Rate limit window in ms |
+  | `THROTTLE_LIMIT` | `100` | Max requests per window |
 
-| Variable | Description |
-|----------|-------------|
-| `MAILGUN_API_KEY` | Mailgun API key |
-| `MAILGUN_DOMAIN` | Mailgun domain |
-| `MAILGUN_FROM` | Sender address for alerts |
+  Default: 100 requests per 60-second window.
 
-**OAuth providers**
+  **Email alerts (Mailgun)**
 
-| Variable | Description |
-|----------|-------------|
-| `GOOGLE_CLIENT_ID` | Google OAuth client ID |
-| `GOOGLE_CLIENT_SECRET` | Google OAuth client secret |
-| `GITHUB_CLIENT_ID` | GitHub OAuth client ID |
-| `GITHUB_CLIENT_SECRET` | GitHub OAuth client secret |
-| `DISCORD_CLIENT_ID` | Discord OAuth client ID |
-| `DISCORD_CLIENT_SECRET` | Discord OAuth client secret |
+  | Variable | Description |
+  |----------|-------------|
+  | `MAILGUN_API_KEY` | Mailgun API key |
+  | `MAILGUN_DOMAIN` | Mailgun domain |
+  | `MAILGUN_FROM` | Sender address for alerts |
+
+  **OAuth providers**
+
+  | Variable | Description |
+  |----------|-------------|
+  | `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | Google OAuth |
+  | `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` | GitHub OAuth |
+  | `DISCORD_CLIENT_ID` / `DISCORD_CLIENT_SECRET` | Discord OAuth |
+</Accordion>
+
+Full env var reference: [github.com/mnfst/manifest](https://github.com/mnfst/manifest)
 
 ## Stop and clean up
 

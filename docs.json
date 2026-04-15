@@ -8,6 +8,8 @@
     "href": "https://manifest.build"
   },
   "favicon": "/favicon.svg",
+  "css": "/style.css",
+  "js": "/scripts/no-tab-jump.js",
   "colors": {
     "primary": "#0891b2",
     "light": "#22d3ee",
