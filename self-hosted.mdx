@@ -6,17 +6,17 @@ icon: "docker"
 
 Run the full Manifest stack on your own machine. No Node.js required, just Docker.
 
-All three paths end in the same place: a running stack at [http://localhost:3001](http://localhost:3001) where you sign up. The first account you create becomes the admin. No demo credentials are pre-seeded.
+All three paths end in the same place: a running stack at [http://localhost:2099](http://localhost:2099) where you sign up. The first account you create becomes the admin. No demo credentials are pre-seeded.
 
 <Note>
-  The bundled compose file binds port 3001 to `127.0.0.1` only, so the dashboard is reachable on the host machine but not over the LAN. See [Exposing on the LAN](#exposing-on-the-lan) to change this.
+  The bundled compose file binds port 2099 to `127.0.0.1` only, so the dashboard is reachable on the host machine but not over the LAN. See [Exposing on the LAN](#exposing-on-the-lan) to change this.
 </Note>
 
 ## Installation
 
 <Tabs>
   <Tab title="Quick install (recommended)">
-    One command. The installer downloads the compose file, generates a secret, and brings up the stack. Give it about 30 seconds to boot.
+    One command. The installer downloads the compose file into `~/manifest`, generates a secret, and brings up the stack. First boot pulls the app image and Postgres, so give it up to a couple of minutes.
 
     ```bash
     bash <(curl -sSL https://raw.githubusercontent.com/mnfst/manifest/main/docker/install.sh)
@@ -32,7 +32,7 @@ All three paths end in the same place: a running stack at [http://localhost:3001
 
     Useful flags: `--dir <path>` to install elsewhere, `--dry-run` to preview, `--yes` to skip the confirmation prompt.
 
-    When the installer finishes, open [http://localhost:3001](http://localhost:3001) and sign up for an account. Then head to the [Routing](http://localhost:3001/routing) page to add an LLM provider (OpenAI, Anthropic, Gemini, etc.) with your API key.
+    When the installer finishes, open [http://localhost:2099](http://localhost:2099) and sign up for an account. Then head to the [Routing](http://localhost:2099/routing) page to add an LLM provider (OpenAI, Anthropic, Gemini, etc.) with your API key.
   </Tab>
   <Tab title="Docker Compose">
     Same underlying flow as the install script, but you drive it yourself so you can edit the config before booting the stack.
@@ -59,13 +59,13 @@ All three paths end in the same place: a running stack at [http://localhost:3001
         docker compose up -d
         ```
 
-        Give it about 30 seconds to boot on a cold pull — you can watch startup with `docker compose logs -f manifest`.
+        Give it up to a couple of minutes on a cold pull — you can watch startup with `docker compose logs -f manifest`.
       </Step>
       <Step title="Create your admin account">
-        Go to [http://localhost:3001](http://localhost:3001) and sign up. The first account you create becomes the admin.
+        Go to [http://localhost:2099](http://localhost:2099) and sign up. The first account you create becomes the admin.
       </Step>
       <Step title="Connect a provider">
-        Open the [Routing](http://localhost:3001/routing) page and add an LLM provider (OpenAI, Anthropic, Gemini, etc.) with your API key.
+        Open the [Routing](http://localhost:2099/routing) page and add an LLM provider (OpenAI, Anthropic, Gemini, etc.) with your API key.
       </Step>
     </Steps>
 
@@ -78,11 +78,10 @@ All three paths end in the same place: a running stack at [http://localhost:3001
 
     ```bash
     docker run -d \
-      -p 3001:3001 \
+      -p 2099:2099 \
       -e DATABASE_URL=postgresql://user:pass@host:5432/manifest \
       -e BETTER_AUTH_SECRET=$(openssl rand -hex 32) \
-      -e BETTER_AUTH_URL=http://localhost:3001 \
-      -e AUTO_MIGRATE=true \
+      -e BETTER_AUTH_URL=http://localhost:2099 \
       manifestdotbuild/manifest
     ```
 
@@ -91,11 +90,10 @@ All three paths end in the same place: a running stack at [http://localhost:3001
       $secret = -join ((48..57 + 97..122) | Get-Random -Count 64 | ForEach-Object { [char]$_ })
 
       docker run -d `
-        -p 3001:3001 `
+        -p 2099:2099 `
         -e DATABASE_URL=postgresql://user:pass@host:5432/manifest `
         -e BETTER_AUTH_SECRET=$secret `
-        -e BETTER_AUTH_URL=http://localhost:3001 `
-        -e AUTO_MIGRATE=true `
+        -e BETTER_AUTH_URL=http://localhost:2099 `
         manifestdotbuild/manifest
       ```
     </Accordion>
@@ -105,16 +103,13 @@ All three paths end in the same place: a running stack at [http://localhost:3001
 
       ```cmd
       docker run -d ^
-        -p 3001:3001 ^
+        -p 2099:2099 ^
         -e DATABASE_URL=postgresql://user:pass@host:5432/manifest ^
         -e BETTER_AUTH_SECRET=<your-64-char-secret> ^
-        -e BETTER_AUTH_URL=http://localhost:3001 ^
-        -e AUTO_MIGRATE=true ^
+        -e BETTER_AUTH_URL=http://localhost:2099 ^
         manifestdotbuild/manifest
       ```
     </Accordion>
-
-    <Info>`AUTO_MIGRATE=true` runs database migrations on first boot.</Info>
   </Tab>
 </Tabs>
 
@@ -123,7 +118,7 @@ All three paths end in the same place: a running stack at [http://localhost:3001
 After connecting a provider, send a test request and watch it land in the dashboard. Grab your Manifest API key from the dashboard (it starts with `mnfst_`) and run:
 
 ```bash
-curl -X POST http://localhost:3001/v1/chat/completions \
+curl -X POST http://localhost:2099/v1/chat/completions \
   -H "Authorization: Bearer mnfst_YOUR_KEY_HERE" \
   -H "Content-Type: application/json" \
   -d '{"model": "manifest/auto", "messages": [{"role": "user", "content": "Hello"}]}'
@@ -143,11 +138,11 @@ cosign verify manifestdotbuild/manifest:<version> \
 
 ## Custom port
 
-If port 3001 is taken, change both the mapping and `BETTER_AUTH_URL`:
+If port 2099 is taken, change both the mapping and `BETTER_AUTH_URL`:
 
 ```bash
 docker run -d \
-  -p 8080:3001 \
+  -p 8080:2099 \
   -e BETTER_AUTH_URL=http://localhost:8080 \
   ...
 ```
@@ -156,7 +151,7 @@ Or in `docker-compose.yml`:
 
 ```yaml
 ports:
-  - '127.0.0.1:8080:3001'
+  - '127.0.0.1:8080:2099'
 ```
 
 ...and in `.env`:
@@ -167,16 +162,20 @@ BETTER_AUTH_URL=http://localhost:8080
 
 <Warning>If you see an "Invalid origin" error on the login page, `BETTER_AUTH_URL` doesn't match the URL you're accessing the dashboard on. The host matters as much as the port.</Warning>
 
+<Note>
+  **Upgrading from a pre-2099 install?** Your existing stack keeps running on port 3001 with no changes — the backend's own fallback is still `3001`, so the new image works against your old compose file. If you want to refresh your compose file but stay on the legacy port (to avoid reconfiguring OAuth callbacks, reverse proxies, or bookmarks), set `PORT=3001` in `.env` and the bundled compose file will honour it for both the host binding and the internal listener.
+</Note>
+
 ## Exposing on the LAN
 
-By default the compose file binds port 3001 to `127.0.0.1` only. The dashboard is reachable from the host but not from other machines on the network. To expose it on the LAN:
+By default the compose file binds port 2099 to `127.0.0.1` only. The dashboard is reachable from the host but not from other machines on the network. To expose it on the LAN:
 
 <Steps>
   <Step title="Change the port binding">
-    Edit `docker-compose.yml` and change the `ports` line from `"127.0.0.1:3001:3001"` to `"3001:3001"`.
+    Edit `docker-compose.yml` and change the `ports` line from `"127.0.0.1:2099:2099"` to `"2099:2099"`.
   </Step>
   <Step title="Set BETTER_AUTH_URL">
-    In `.env`, set `BETTER_AUTH_URL` to the host you'll reach the dashboard on, e.g. `http://192.168.1.20:3001` or `https://manifest.mydomain.com`. This must match the URL in the browser or Better Auth will reject the login with "Invalid origin".
+    In `.env`, set `BETTER_AUTH_URL` to the host you'll reach the dashboard on, e.g. `http://192.168.1.20:2099` or `https://manifest.mydomain.com`. This must match the URL in the browser or Better Auth will reject the login with "Invalid origin".
   </Step>
   <Step title="Apply">
     ```bash
@@ -243,8 +242,8 @@ docker compose down -v    # destroys all data
 |----------|----------|---------|-------------|
 | `DATABASE_URL` | Yes | — | PostgreSQL connection string |
 | `BETTER_AUTH_SECRET` | Yes | — | Session signing secret (min 32 chars) |
-| `BETTER_AUTH_URL` | No | `http://localhost:3001` | Public URL. Set this when using a custom port |
-| `PORT` | No | `3001` | Internal server port |
+| `BETTER_AUTH_URL` | No | `http://localhost:2099` | Public URL. Set this when using a custom port |
+| `PORT` | No | `2099` | Internal server port |
 | `NODE_ENV` | No | `production` | Node environment |
 | `SEED_DATA` | No | `false` | Seed demo data on startup |
 
@@ -256,7 +255,6 @@ docker compose down -v    # destroys all data
   | `BIND_ADDRESS` | `127.0.0.1` | Bind address |
   | `CORS_ORIGIN` | — | Allowed CORS origin |
   | `API_KEY` | — | Internal API key |
-  | `AUTO_MIGRATE` | `true` | Run database migrations on startup |
 
   **Rate limiting**
 

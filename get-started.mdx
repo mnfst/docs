@@ -38,10 +38,10 @@ icon: "rocket"
         bash <(curl -sSL https://raw.githubusercontent.com/mnfst/manifest/main/docker/install.sh)
         ```
 
-        The installer downloads the compose file, generates a secret, and brings up the stack. Give it about 30 seconds to boot.
+        The installer downloads the compose file into `~/manifest`, generates a secret, and brings up the stack. First boot pulls the app image and Postgres, so give it up to a couple of minutes.
       </Step>
       <Step title="Create your admin account">
-        Go to [http://localhost:3001](http://localhost:3001) and sign up. The first account you create becomes the admin — no demo credentials are pre-seeded.
+        Go to [http://localhost:2099](http://localhost:2099) and sign up. The first account you create becomes the admin — no demo credentials are pre-seeded.
       </Step>
     </Steps>
 
@@ -56,7 +56,7 @@ icon: "rocket"
     Open [app.manifest.build](https://app.manifest.build), connect a provider on the Routing page, then send a test request to your agent. It should appear on the Messages page within seconds.
   </Tab>
   <Tab title="Self-hosted">
-    Open [http://localhost:3001](http://localhost:3001), connect a provider on the Routing page, then send a test request. It should appear on the Messages page within seconds. See the [Self-hosted guide](/self-hosted#verify) for the exact verify command.
+    Open [http://localhost:2099](http://localhost:2099), connect a provider on the Routing page, then send a test request. It should appear on the Messages page within seconds. See the [Self-hosted guide](/self-hosted#verify) for the exact verify command.
   </Tab>
 </Tabs>
 
