@@ -291,6 +291,57 @@ docker compose down       # Stop services (keeps data)
 docker compose down -v    # Stop and delete all data
 ```
 
+## Telemetry
+
+Once a day, each install sends us a small anonymous report. That's how we know whether anyone's actually using the thing, and which providers are popular enough to deserve more work. It's aggregates, never content: no prompts, no messages, no keys, nothing tied to a user. Thirteen fields total.
+
+### What gets sent
+
+| Field | Example | Purpose |
+|-------|---------|---------|
+| `schema_version` | `1` | So the shape can grow without breaking old clients |
+| `install_id` | random UUIDv4 | Count distinct installs. Generated once on first boot, persisted, never rotated |
+| `manifest_version` | `5.47.0` | Version adoption across the fleet |
+| `messages_total` | `1284` | Daily activity per install |
+| `messages_by_provider` | `{"anthropic": 700, "openai": 500}` | Provider mix. Anything we don't recognize collapses to `"custom"`, so self-hosted provider names and URLs stay local |
+| `messages_by_tier` | `{"simple": 800, "standard": 400, ...}` | Routing tier usage |
+| `messages_by_auth_type` | `{"api_key": 1200, "subscription": 84}` | API key vs. paid-subscription usage |
+| `tokens_input_total` | `1_450_000` | Volume-weighted signal |
+| `tokens_output_total` | `890_000` | Same |
+| `agents_total` | `4` | Configuration scale |
+| `agents_by_platform` | `{"openclaw": 3, "hermes": 1}` | Which agent clients people use |
+| `platform` | `linux` / `darwin` / `windows` | OS distribution |
+| `arch` | `x64` / `arm64` | Architecture distribution |
+
+### Never sent
+
+Tenant IDs, user IDs, emails, API keys, prompts, message contents, model names, custom provider URLs, OAuth client IDs, hostnames, raw IPs. The ingest takes a SHA-256 of your IP and throws the original away; we keep the hash so we can rate-limit bad actors without knowing where they actually live.
+
+### When
+
+- Once every 24 hours, per install.
+- The first report is delayed by a random 0–24h offset, so a fleet of containers rebooted together doesn't all hit the endpoint at the same minute.
+- Off by default when `NODE_ENV != production`. Dev machines are never going to accidentally send.
+- If the endpoint is down, we log it and try again on the next hourly tick. Your proxy keeps serving requests — the sender never gets in the way.
+
+### Turning it off
+
+Put this in your `.env` (or `docker-compose.yml`) and restart the container:
+
+```
+MANIFEST_TELEMETRY_DISABLED=1
+```
+
+The sender checks the flag before doing anything else. No database read, no DNS lookup, no request leaves the box.
+
+### Sending it somewhere else
+
+If you'd rather run your own fleet dashboard, point `TELEMETRY_ENDPOINT` at a URL you control:
+
+```
+TELEMETRY_ENDPOINT=https://telemetry.mycompany.internal/v1/report
+```
+
 ## Docker Hub
 
 The image is available at [manifestdotbuild/manifest](https://hub.docker.com/r/manifestdotbuild/manifest) on Docker Hub.
