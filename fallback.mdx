@@ -43,54 +43,21 @@ This includes:
 
 Fallback models are configured **per tier** in the Manifest dashboard. Each tier can have up to **5 fallback models**, tried in order.
 
-<Tabs>
-  <Tab title="Cloud">
-    <Steps>
-      <Step title="Open the dashboard">
-        Go to [app.manifest.build](https://app.manifest.build) and navigate to **Routing**.
-      </Step>
-      <Step title="Select a tier">
-        Click on any tier (Simple, Standard, Complex, or Reasoning).
-      </Step>
-      <Step title="Add fallback models">
-        Add up to 5 fallback models. Drag to reorder — models are tried from top to bottom.
-      </Step>
-    </Steps>
-  </Tab>
-  <Tab title="Self-hosted">
-    <Steps>
-      <Step title="Open the dashboard">
-        Go to [http://localhost:2099](http://localhost:2099) and navigate to **Routing**.
-      </Step>
-      <Step title="Select a tier">
-        Click on any tier to configure its fallback chain.
-      </Step>
-      <Step title="Add fallback models">
-        Add up to 5 fallback models. Drag to reorder priority.
-      </Step>
-    </Steps>
-  </Tab>
-</Tabs>
+<Steps>
+  <Step title="Open Routing in the dashboard">
+    Navigate to **Routing** in the dashboard.
+  </Step>
+  <Step title="Select a tier">
+    Click any tier (Simple, Standard, Complex, or Reasoning).
+  </Step>
+  <Step title="Add fallback models">
+    Add up to 5 fallback models. Drag to reorder — models are tried from top to bottom.
+  </Step>
+</Steps>
 
 ## Response headers
 
-When a fallback succeeds, the response includes the standard routing headers plus two extra ones:
-
-| Header | Description |
-|--------|-------------|
-| `X-Manifest-Tier` | The routing tier |
-| `X-Manifest-Model` | The model that served the response (the fallback model, not the original) |
-| `X-Manifest-Provider` | The provider that handled the request |
-| `X-Manifest-Confidence` | Routing confidence score |
-| `X-Manifest-Reason` | Why this tier was selected |
-| `X-Manifest-Fallback-From` | The primary model that was attempted first |
-| `X-Manifest-Fallback-Index` | Position in the fallback chain (0 = first fallback, 1 = second, etc.) |
-
-When the chain is exhausted:
-
-| Header | Description |
-|--------|-------------|
-| `X-Manifest-Fallback-Exhausted` | Set to `true` when all models failed |
+When a fallback succeeds, the response carries `X-Manifest-Fallback-From` (the primary that failed) and `X-Manifest-Fallback-Index` (its position in the chain) on top of the standard routing headers. When the chain is exhausted, `X-Manifest-Fallback-Exhausted: true` is set and the request returns `424`. Full table: [Headers reference](/reference/headers).
 
 ## Fallback vs routing
 

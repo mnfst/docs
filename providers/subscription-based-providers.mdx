@@ -1,0 +1,85 @@
+---
+title: "Subscription Based Providers"
+sidebarTitle: "Subscription-based"
+description: "Reuse a paid plan you already have. No extra API key needed."
+icon: "credit-card"
+---
+
+If you already pay for ChatGPT Plus, Claude Max, GitHub Copilot, or one of the other plans listed below, Manifest can route through the subscription instead of an API key. Auth is OAuth or a subscription token, depending on the provider.
+
+## Supported subscriptions
+
+| Provider                                              | Auth flow          |
+| ----------------------------------------------------- | ------------------ |
+| [OpenAI](https://openai.com/chatgpt)                  | OAuth (browser)    |
+| [Anthropic](https://www.anthropic.com/claude)         | OAuth (browser)    |
+| [GitHub Copilot](https://github.com/features/copilot) | Device code        |
+| [MiniMax](https://www.minimaxi.com)                   | OAuth (browser)    |
+| [Z.ai (Zhipu)](https://z.ai)                          | Subscription token |
+| [OpenCode](https://opencode.ai)                       | Subscription token |
+| [Ollama Cloud](https://ollama.com)                    | Account login      |
+
+## Connect a subscription
+
+<Steps>
+  <Step title="Open the Routing page">
+    In the dashboard, open **Routing** and click the provider tile.
+  </Step>
+  <Step title="Pick the Subscription tab">
+    Each tile that supports a subscription shows two tabs (**API Key** and
+    **Subscription**). Pick **Subscription**.
+  </Step>
+  <Step title="Complete the auth flow">
+    Manifest opens the provider's OAuth page (or a device-code page for Copilot)
+    in your browser. Sign in to the account that holds the subscription, approve
+    access, and you're back in the dashboard with the connection saved.
+  </Step>
+</Steps>
+
+## How auth works per provider
+
+<Tabs>
+  <Tab title="ChatGPT">
+    Standard OAuth against `auth.openai.com`. Once approved, requests route
+    through the Codex backend at `chatgpt.com/backend-api/codex/responses`
+    rather than the public OpenAI API. Tokens refresh automatically.
+  </Tab>
+  <Tab title="Claude">
+    Standard OAuth. Requests carry the `anthropic-beta: oauth-2025-04-20` header
+    so Anthropic recognizes the subscription token. Available models match what
+    your plan grants in claude.ai.
+  </Tab>
+  <Tab title="GitHub Copilot">
+    GitHub's device-code flow. Manifest gives you a short user code, you visit
+    [github.com/login/device](https://github.com/login/device), paste it, and
+    approve. No API key is ever issued. Requests then go to
+    `api.githubcopilot.com/chat/completions` using a short-lived token Manifest
+    refreshes for you.
+  </Tab>
+  <Tab title="MiniMax">
+    OAuth against MiniMax. Requests use the Anthropic protocol via
+    `api.minimax.io/anthropic` (international) or `api.minimaxi.com/anthropic`
+    (China region). The region is picked from the OAuth response.
+  </Tab>
+  <Tab title="GLM Coding Plan">
+    Paste the subscription token issued by Z.ai. Requests route to
+    `open.bigmodel.cn/api/coding/paas/v4/chat/completions`.
+  </Tab>
+  <Tab title="OpenCode Go">
+    Paste the subscription token from your OpenCode account. Requests use the
+    Anthropic protocol against `opencode.ai/zen/go`, authenticated via the
+    `x-api-key` header.
+  </Tab>
+</Tabs>
+
+<Note>
+  Subscription auth is rate-limited by the provider's plan, not by Manifest. If
+  you hit a plan ceiling, requests fall through to your next
+  [fallback](/fallback) model, usually a different provider on an API key.
+</Note>
+
+## Why mix subscriptions and API keys
+
+A common setup: subscription as the primary (predictable monthly cost), API-key provider as the fallback for when you hit the plan limit or want a model the subscription doesn't include.
+
+Pin your subscription model to a [complexity tier](/routing#complexity) and add API-key models to the [fallback list](/fallback#configuration). Manifest handles the switch.

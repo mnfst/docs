@@ -1,0 +1,102 @@
+---
+title: "Local Models"
+description: "Run any GGUF model on your own hardware. No API costs, no data leaving your machine."
+icon: "server"
+---
+
+Local model providers run entirely on your own hardware. Manifest detects the running server, fetches the model list, and routes requests to `http://localhost:<port>` like any other provider. No API key, no network egress, no per-token cost.
+
+## Supported runtimes
+
+| Runtime                                            | Default port | Install                                                                                        |
+| -------------------------------------------------- | ------------ | ---------------------------------------------------------------------------------------------- |
+| [Ollama](https://ollama.com)                       | `11434`      | [ollama.com/download](https://ollama.com/download)                                             |
+| [LM Studio](https://lmstudio.ai)                   | `1234`       | [lmstudio.ai](https://lmstudio.ai)                                                             |
+| [llama.cpp](https://github.com/ggml-org/llama.cpp) | `8080`       | [llama.cpp build guide](https://github.com/ggml-org/llama.cpp#obtaining-and-quantizing-models) |
+
+All three speak OpenAI-compatible `/v1/chat/completions` and accept any GGUF model file.
+
+## Start the server
+
+<Tabs>
+  <Tab title="Ollama">
+    ```bash
+    ollama pull llama3.1:8b   # then:
+    ollama serve
+    ```
+  </Tab>
+  <Tab title="LM Studio">
+    ```bash
+    lms server start
+    ```
+    Or open the app: **Developer** tab → **Start server**.
+  </Tab>
+  <Tab title="llama.cpp">
+    ```bash
+    llama-server -m <your-model>.gguf --port 8080
+    ```
+    Replace `<your-model>.gguf` with the path to a GGUF file on your machine.
+  </Tab>
+</Tabs>
+
+## Connect to Manifest
+
+<Steps>
+  <Step title="Open the Routing page">
+    In the dashboard, click the runtime tile (Ollama, LM Studio, or llama.cpp).
+  </Step>
+  <Step title="Confirm the server is reachable">
+    Manifest probes `http://localhost:<default-port>/v1/models`. If the probe succeeds, every loaded model appears for routing.
+  </Step>
+  <Step title="Pin a model to a tier">
+    Open any [complexity tier](/routing#complexity) and pick a local model as the primary. You can mix local and cloud models in the same fallback chain.
+  </Step>
+</Steps>
+
+## Running Manifest in Docker
+
+If you self-host Manifest in Docker, the container can't reach a local server bound to `127.0.0.1` on the host. Two of the three runtimes default to loopback and need an explicit override:
+
+<Tabs>
+  <Tab title="LM Studio">
+    Either flip the GUI toggle (**LM Studio → ⚙ Developer → Serve on Local Network**) or rebind from the CLI:
+
+    ```bash
+    lms server start --bind 0.0.0.0 --port 1234 --cors
+    ```
+
+    LM Studio remembers the last `--bind`, so this is one-time setup.
+
+  </Tab>
+  <Tab title="llama.cpp">
+    `llama-server` only listens on `0.0.0.0` if you pass `--host`:
+
+    ```bash
+    llama-server -m <your-model>.gguf --host 0.0.0.0 --port 8080
+    ```
+
+  </Tab>
+  <Tab title="Ollama">
+    Ollama already binds `0.0.0.0` by default. No change needed.
+  </Tab>
+</Tabs>
+
+<Note>
+  Inside the Manifest container, the host is reachable as
+  `host.docker.internal`. Manifest sets this automatically when probing local
+  providers.
+</Note>
+
+## Cost & privacy
+
+| Aspect                | Local                                                          |
+| --------------------- | -------------------------------------------------------------- |
+| **API cost**          | $0. The model runs on your hardware.                           |
+| **Network egress**    | None. Requests never leave the machine.                        |
+| **Cost in dashboard** | Recorded as `0`. Token counts and latency are still tracked.   |
+| **Pricing data**      | Not applicable. Local providers are excluded from pricing sync.|
+
+<Tip>
+  Mix local and cloud in one chain: pin a local model to **simple** for cheap
+  day-to-day calls, fall back to a cloud model when the local server is offline.
+</Tip>

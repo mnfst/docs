@@ -1,0 +1,90 @@
+---
+title: "Environment variables"
+description: "Every variable Manifest reads at startup."
+icon: "settings"
+---
+
+Manifest reads its configuration from environment variables. In the bundled Docker setup these come from `~/manifest/.env`. For `docker run`, pass them with `-e`. For non-Docker installs, export them in the shell before launching the backend.
+
+## Core
+
+| Variable | Required | Default | Description |
+|---|---|---|---|
+| `DATABASE_URL` | Yes | — | PostgreSQL connection string. Format: `postgresql://user:pass@host:5432/dbname` |
+| `BETTER_AUTH_SECRET` | Yes | — | Session signing secret. Min 32 chars. Generate with `openssl rand -hex 32` |
+| `BETTER_AUTH_URL` | No | `http://localhost:2099` | Public URL the dashboard is reachable on. Must match the browser URL |
+| `PORT` | No | `2099` | Internal server port |
+| `NODE_ENV` | No | `production` | Node environment. Telemetry is disabled when this isn't `production` |
+
+## Network & security
+
+| Variable | Default | Description |
+|---|---|---|
+| `BIND_ADDRESS` | `127.0.0.1` | Interface the server binds to. Set to `0.0.0.0` for LAN access |
+| `CORS_ORIGIN` | `http://localhost:3000` | Allowed CORS origin for browser-based dashboard requests |
+| `API_KEY` | — | Internal API key for system endpoints |
+| `THROTTLE_TTL` | `60000` | Rate-limit window in milliseconds |
+| `THROTTLE_LIMIT` | `100` | Max requests per window per agent |
+| `DB_POOL_MAX` | `20` | Max PostgreSQL connections in the pool |
+| `SEED_DATA` | `false` | Seed demo data on first boot |
+
+## Email
+
+Used for both Better Auth transactional emails (signup verification, password reset) **and** [threshold alerts](/set-limits). Set one provider block.
+
+| Variable | Description |
+|---|---|
+| `EMAIL_PROVIDER` | `resend`, `mailgun`, or `sendgrid` |
+| `EMAIL_API_KEY` | API key for the chosen provider |
+| `EMAIL_DOMAIN` | Sending domain (Mailgun only) |
+| `EMAIL_FROM` | From-address for outbound mail |
+
+<Note>
+  Without an email provider, signup verification is waived (users are created as unverified-but-usable) and password reset silently no-ops. Hard-limit blocks still work; alerts just don't email.
+</Note>
+
+### Legacy Mailgun-only
+
+Older deployments used these. Kept for backward compatibility; new installs should use `EMAIL_*` instead.
+
+| Variable | Description |
+|---|---|
+| `MAILGUN_API_KEY` | Mailgun API key |
+| `MAILGUN_DOMAIN` | Mailgun domain |
+| `NOTIFICATION_FROM_EMAIL` | Sender address for alerts |
+
+## OAuth logins
+
+Each provider activates automatically when both `*_CLIENT_ID` and `*_CLIENT_SECRET` are set. Configure the callback URL in the provider's console as `${BETTER_AUTH_URL}/api/auth/callback/<provider>`.
+
+| Variable | Provider |
+|---|---|
+| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | Google |
+| `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` | GitHub |
+| `DISCORD_CLIENT_ID` / `DISCORD_CLIENT_SECRET` | Discord |
+
+Subscription OAuth (ChatGPT, Claude, MiniMax) uses Manifest-side client IDs by default. Override only if you've registered your own app:
+
+| Variable | Description |
+|---|---|
+| `OPENAI_OAUTH_CLIENT_ID` | Custom OpenAI OAuth client ID |
+| `MINIMAX_OAUTH_CLIENT_ID` | Custom MiniMax OAuth client ID |
+
+## Telemetry
+
+| Variable | Default | Description |
+|---|---|---|
+| `MANIFEST_TELEMETRY_DISABLED` | unset | Set to `1` to disable [anonymous telemetry](/self-hosted#telemetry) |
+| `TELEMETRY_ENDPOINT` | `https://telemetry.manifest.build/...` | Send reports to your own endpoint |
+| `MANIFEST_PUBLIC_STATS` | `false` | Expose `/api/v1/public/*` aggregate stats without auth (Cloud only) |
+
+## Postgres bundled volume
+
+When you run the bundled compose file, Manifest brings up its own Postgres container. To use a stronger password than the default, set **both** of these. They must agree, and special characters in the password must be percent-encoded in `DATABASE_URL`:
+
+| Variable | Description |
+|---|---|
+| `POSTGRES_PASSWORD` | Password for the bundled Postgres user |
+| `DATABASE_URL` | Connection string with the matching password |
+
+Special-char encoding: `@` → `%40`, `:` → `%3A`, `/` → `%2F`.

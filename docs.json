@@ -35,6 +35,9 @@
   "icons": {
     "library": "lucide"
   },
+  "contextual": {
+    "options": ["copy", "chatgpt", "claude", "add-mcp", "cursor", "vscode"]
+  },
   "styling": {
     "eyebrows": "breadcrumbs",
     "codeblocks": {
@@ -71,19 +74,28 @@
         "groups": [
           {
             "group": "Getting Started",
-            "pages": [
-              "introduction",
-              "get-started",
-              "self-hosted"
-            ]
+            "pages": ["introduction", "self-hosted"]
           },
           {
             "group": "Features",
+            "pages": ["routing", "fallback", "set-limits"]
+          },
+          {
+            "group": "Providers",
             "pages": [
-              "track-usage",
-              "routing",
-              "fallback",
-              "set-limits"
+              "providers/api-key-providers",
+              "providers/subscription-based-providers",
+              "providers/custom-providers",
+              "providers/local-models"
+            ]
+          },
+          {
+            "group": "Reference",
+            "pages": [
+              "reference/api",
+              "reference/headers",
+              "reference/environment-variables",
+              "reference/glossary"
             ]
           }
         ]

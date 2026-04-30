@@ -1,0 +1,58 @@
+---
+title: "API Key Providers"
+sidebarTitle: "API keys"
+description: "Bring Your Own Key from your providers and connect them to Manifest"
+icon: "key"
+---
+
+Most providers work the standard way: sign up, generate an API key, paste it into Manifest. Routed requests go out with that key as the credential.
+
+## Supported providers
+
+| Provider                                        | Where to get a key                                               |
+| ----------------------------------------------- | ---------------------------------------------------------------- |
+| [OpenAI](https://platform.openai.com)           | [platform.openai.com](https://platform.openai.com)               |
+| [Anthropic](https://www.anthropic.com)          | [console.anthropic.com](https://console.anthropic.com)           |
+| [Google](https://ai.google.dev)                 | [ai.google.dev](https://ai.google.dev)                           |
+| [xAI](https://x.ai)                             | [x.ai/api](https://x.ai/api)                                     |
+| [DeepSeek](https://www.deepseek.com)            | [platform.deepseek.com](https://platform.deepseek.com)           |
+| [Mistral](https://mistral.ai)                   | [console.mistral.ai](https://console.mistral.ai)                 |
+| [Qwen (Alibaba)](https://qwen.ai)               | [bailian.console.aliyun.com](https://bailian.console.aliyun.com) |
+| [Moonshot (Kimi)](https://platform.moonshot.cn) | [platform.moonshot.cn](https://platform.moonshot.cn)             |
+| [MiniMax](https://www.minimaxi.com)             | [platform.minimaxi.com](https://platform.minimaxi.com)           |
+| [Z.ai (Zhipu)](https://z.ai)                    | [bigmodel.cn](https://bigmodel.cn)                               |
+| [OpenRouter](https://openrouter.ai)             | [openrouter.ai/keys](https://openrouter.ai/keys)                 |
+
+## Add a provider
+
+<Steps>
+  <Step title="Open the Routing page">
+    In the dashboard, navigate to **Routing**. You'll see a tile for every
+    supported provider.
+  </Step>
+  <Step title="Click the provider tile">
+    The tile opens a panel where you can paste your API key.
+  </Step>
+  <Step title="Paste the key and save">
+    Manifest validates the key by fetching the provider's model list. If the key
+    is rejected, double-check the prefix below.
+  </Step>
+</Steps>
+
+## Key prefixes
+
+Each provider issues keys with a recognizable prefix. Useful for catching paste mistakes:
+
+| Provider   | Prefix    | Example      |
+| ---------- | --------- | ------------ |
+| OpenAI     | `sk-`     | `sk-...`     |
+| Anthropic  | `sk-ant-` | `sk-ant-...` |
+| xAI        | `xai-`    | `xai-...`    |
+| DeepSeek   | `sk-`     | `sk-...`     |
+| Moonshot   | `sk-`     | `sk-...`     |
+| MiniMax    | `sk-`     | `sk-...`     |
+| Qwen       | `sk-`     | `sk-...`     |
+| OpenRouter | `sk-or-`  | `sk-or-...`  |
+| Google     | none      | API key      |
+| Mistral    | none      | API key      |
+| Z.ai       | none      | API key      |

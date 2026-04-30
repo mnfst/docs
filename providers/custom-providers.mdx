@@ -1,0 +1,62 @@
+---
+title: "Custom Providers"
+sidebarTitle: "Custom"
+description: "Register any OpenAI or Anthropic-compatible endpoint as a provider."
+icon: "plug"
+---
+
+If your endpoint speaks OpenAI or Anthropic, Manifest can route to it. Useful for self-hosted inference servers (vLLM, TGI, LocalAI), internal endpoints behind your VPN, or providers that aren't on the built-in list yet.
+
+## Compatible servers
+
+Any server exposing one of these endpoints works out of the box:
+
+| Format               | Endpoint                    |
+| -------------------- | --------------------------- |
+| OpenAI-compatible    | `POST /v1/chat/completions` |
+| Anthropic-compatible | `POST /v1/messages`         |
+
+Common options that ship with one of these formats: [vLLM](https://github.com/vllm-project/vllm), [TGI](https://github.com/huggingface/text-generation-inference), [LocalAI](https://localai.io), [Xinference](https://github.com/xorbitsai/inference), [OpenLLM](https://github.com/bentoml/OpenLLM).
+
+## Add a custom provider
+
+<Steps>
+  <Step title="Open the Routing page">
+    Navigate to **Routing** in the dashboard and click **Add custom provider**.
+  </Step>
+  <Step title="Enter the base URL">
+    Paste the base URL of your endpoint, e.g. `https://my-vllm.internal:8000/v1`. Manifest normalizes the trailing `/v1` automatically.
+  </Step>
+  <Step title="Pick the protocol">
+    Choose **OpenAI** (`/v1/chat/completions`) or **Anthropic** (`/v1/messages`), whichever your server speaks.
+  </Step>
+  <Step title="Add credentials (optional)">
+    If the endpoint requires authentication, paste an API key. It's sent as `Authorization: Bearer <key>` for OpenAI-format endpoints, or `x-api-key: <key>` for Anthropic-format endpoints.
+  </Step>
+  <Step title="Probe for models">
+    Manifest calls `GET /v1/models` against your base URL and lists every model the endpoint reports. Pin one to a [complexity tier](/routing#complexity) and you're routed.
+  </Step>
+</Steps>
+
+## Model discovery
+
+Manifest discovers models by hitting `GET <base_url>/v1/models` and reading the `data[].id` field. If your server doesn't expose `/v1/models`, you can register models manually from the same panel.
+
+<Note>
+  Older builds of `llama.cpp` (pre-b3800) don't expose `/v1/models`. Either
+  upgrade `llama-server` or register models by hand.
+</Note>
+
+## Security
+
+User-supplied URLs are revalidated on every request to defend against SSRF. Manifest blocks resolution to private IP ranges (`10.x`, `192.168.x`, `127.x`, link-local, etc.) unless the request originates from a self-hosted instance on the same network.
+
+<Warning>
+  Custom providers run with your Manifest instance's network access. If you
+  expose Manifest publicly, anyone with a valid agent key can route requests
+  through any custom provider you've added. Gate access accordingly.
+</Warning>
+
+## Cost tracking
+
+Manifest can't infer pricing for unknown models. Custom-provider requests show up in the dashboard with `cost = 0` and `model = <your-id>`. Token counts and latency are still recorded, so [hard limits](/set-limits) on token volume still work.
