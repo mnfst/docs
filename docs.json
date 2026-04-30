@@ -112,27 +112,8 @@
               "reference/api",
               "reference/headers",
               "reference/environment-variables",
-              "reference/glossary"
-            ]
-          },
-          {
-            "group": "Errors",
-            "pages": [
-              "errors",
-              "errors/M001",
-              "errors/M002",
-              "errors/M003",
-              "errors/M004",
-              "errors/M005",
-              "errors/M100",
-              "errors/M101",
-              "errors/M200",
-              "errors/M201",
-              "errors/M202",
-              "errors/M203",
-              "errors/M300",
-              "errors/M301",
-              "errors/M500"
+              "reference/glossary",
+              "errors"
             ]
           }
         ]
