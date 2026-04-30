@@ -1,10 +1,10 @@
 ---
-title: "M202 — Per-IP rate limit exceeded"
+title: "M202: Per-IP rate limit exceeded"
 sidebarTitle: "M202"
-description: "Too many requests from a single IP, even across different agent keys."
+description: "Manifest error M202 fires when one IP sends more than 500 requests per minute across all agents. Returns HTTP 429. Fix: stagger workers or raise the IP cap."
 icon: "timer"
 keywords:
-  ["M202", "per-IP rate limit", "429", "shared IP", "Manifest limits"]
+  ["M202", "Manifest M202", "per-IP rate limit", "shared IP", "429 Too Many Requests", "IP_RATE_MAX_REQUESTS", "Manifest limits", "abuse protection"]
 ---
 
 ## What you saw
@@ -16,15 +16,18 @@ See https://manifest.build/docs/errors/M202
 
 ## Why it happened
 
-Manifest also enforces a per-IP cap (500 requests per minute by default) on top of the per-user limit. This catches abuse and dev setups where many agents share one IP. You hit it because the source IP made too many requests across all agents in a 60-second window.
+There's a separate per-IP cap (500 requests per minute by default) sitting on top of the per-user limit. It catches abuse, plus dev setups where lots of agents share one IP. You hit it because that IP fired too many requests across all agents in a 60-second window.
 
 ## How to fix it
 
 1. Back off and retry. The window resets after a minute.
-2. If you're running many agents from one machine in dev, stagger their startup so they don't all hit the proxy at once.
-3. On a self-hosted install with a known trusted source, raise `IP_RATE_MAX_REQUESTS` in `proxy-rate-limiter.ts`.
+2. Running many agents from one machine in dev? Stagger their startup so they don't all hammer the proxy at once.
+3. On a self-hosted install where you trust the source, raise `IP_RATE_MAX_REQUESTS` in `proxy-rate-limiter.ts`.
 
 ## Related
 
-- [M201 — Per-user rate limit](/errors/M201)
-- [M203 — Concurrency limit](/errors/M203)
+- [M201: Per-user rate limit](/errors/M201)
+- [M203: Concurrency limit](/errors/M203)
+- [M200: Usage limit exceeded](/errors/M200)
+- [Self-hosted setup](/self-hosted)
+- [All error codes](/errors)

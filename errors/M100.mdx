@@ -1,10 +1,10 @@
 ---
-title: "M100 — Provider API key missing"
+title: "M100: Provider API key missing"
 sidebarTitle: "M100"
-description: "Manifest routed your request to a provider, but you haven't connected an API key for it yet."
+description: "Manifest error M100 fires when routing picks a provider that has no API key for this agent (OpenAI, Anthropic, Gemini, OpenRouter, etc). Fix: add the key in Routing."
 icon: "plug-zap"
 keywords:
-  ["M100", "provider key", "no API key", "OpenAI key", "Anthropic key", "Manifest routing"]
+  ["M100", "Manifest M100", "provider API key missing", "no OpenAI key", "no Anthropic key", "no Gemini key", "OpenRouter key", "Manifest routing", "provider credentials"]
 ---
 
 ## What you saw
@@ -18,16 +18,19 @@ The provider name (`anthropic` in the example) varies based on which provider Ma
 
 ## Why it happened
 
-Routing picked a provider that doesn't have a key on file for this agent. Manifest never falls back silently to a different vendor, so the request stops here.
+Routing picked a provider that has no key on file for this agent. Manifest won't silently swap vendors on you, so the request stops here.
 
 ## How to fix it
 
-1. Open the dashboard link in the error message — it goes straight to the agent's **Routing** page.
-2. Add an API key for the named provider, or remove that provider from your tier configuration so routing doesn't pick it.
+1. Open the dashboard link in the error message. It goes straight to the agent's **Routing** page.
+2. Either add an API key for the named provider, or remove that provider from your tier configuration so routing won't pick it again.
 3. Retry the request.
 
 ## Related
 
-- [M101 — No providers configured](/errors/M101)
+- [M101: No providers configured](/errors/M101)
+- [M003: Invalid key format](/errors/M003)
 - [Routing](/routing)
 - [API key providers](/providers/api-key-providers)
+- [Subscription-based providers](/providers/subscription-based-providers)
+- [All error codes](/errors)

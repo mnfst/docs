@@ -1,10 +1,10 @@
 ---
-title: "M300 — Missing messages array"
+title: "M300: Missing messages array"
 sidebarTitle: "M300"
-description: "Your /v1/chat/completions request body has no messages array."
+description: "Manifest error M300 fires when the /v1/chat/completions body has no messages array (missing, not an array, or empty). Returns HTTP 400."
 icon: "message-square-warning"
 keywords:
-  ["M300", "messages array", "validation", "OpenAI compatible", "Manifest validation"]
+  ["M300", "Manifest M300", "messages array required", "empty messages", "400 Bad Request", "OpenAI compatible API", "chat completions validation", "Manifest validation"]
 ---
 
 ## What you saw
@@ -16,11 +16,11 @@ See https://manifest.build/docs/errors/M300
 
 ## Why it happened
 
-The OpenAI-compatible chat completions API requires a `messages` array with at least one entry. Manifest got a body where `messages` is missing, not an array, or empty.
+The OpenAI-compatible chat completions API requires a `messages` array with at least one entry. Manifest got a body where `messages` was missing, not an array, or empty.
 
 ## How to fix it
 
-Send a body shaped like:
+Send a body shaped like this:
 
 ```json
 {
@@ -31,8 +31,10 @@ Send a body shaped like:
 }
 ```
 
-If you're using the OpenAI SDK, this happens automatically. If you're hand-crafting the request, double-check the JSON before posting.
+The OpenAI SDK handles this for you. If you're hand-rolling the request, eyeball the JSON before posting.
 
 ## Related
 
-- [M301 — Messages array too long](/errors/M301)
+- [M301: Messages array too long](/errors/M301)
+- [API reference](/reference/api)
+- [All error codes](/errors)

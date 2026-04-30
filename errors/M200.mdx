@@ -1,10 +1,10 @@
 ---
-title: "M200 — Usage limit exceeded"
+title: "M200: Usage limit exceeded"
 sidebarTitle: "M200"
-description: "Your agent hit a cost or message-count limit you set in the dashboard."
+description: "Manifest error M200 fires when an agent crosses a cost or message-count cap you configured. Returns HTTP 429. Fix: raise the threshold or wait for the period to reset."
 icon: "gauge"
 keywords:
-  ["M200", "usage limit", "cost limit", "spending cap", "Manifest limits"]
+  ["M200", "Manifest M200", "usage limit exceeded", "cost limit", "spending cap", "budget cap", "monthly budget LLM", "Manifest limits", "429 Too Many Requests"]
 ---
 
 ## What you saw
@@ -18,15 +18,18 @@ The metric (cost or messages), used amount, threshold, and period vary based on 
 
 ## Why it happened
 
-You configured a limit on the agent's [Limits](/set-limits) page — for example "$10/day" or "100 messages/hour" — and the current period's usage just crossed it. Manifest blocks every subsequent request until the period resets or you raise the cap.
+You set a limit on the agent's [Limits](/set-limits) page (say, "$10/day" or "100 messages/hour"), and the current period's usage just crossed it. Manifest blocks every following request until the period resets or you raise the cap.
 
 ## How to fix it
 
-1. Open the dashboard link in the error message — it goes straight to the agent's **Limits** page.
-2. Either raise the threshold, change the period, or wait for the period to reset (the message tells you which period).
+1. Open the dashboard link in the error message. It goes straight to the agent's **Limits** page.
+2. Raise the threshold, change the period, or wait for it to reset. The error message tells you which period was hit.
 3. Retry the request.
 
 ## Related
 
 - [Set limits](/set-limits)
-- [M201 — Per-user rate limit](/errors/M201)
+- [M201: Per-user rate limit](/errors/M201)
+- [M202: Per-IP rate limit](/errors/M202)
+- [M203: Concurrency limit](/errors/M203)
+- [All error codes](/errors)

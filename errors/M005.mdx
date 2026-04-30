@@ -1,10 +1,10 @@
 ---
-title: "M005 — Key not recognized"
+title: "M005: Key not recognized"
 sidebarTitle: "M005"
-description: "Manifest doesn't recognize the API key you sent. It may have been rotated or deleted."
+description: "Manifest error M005 fires when the mnfst_ key has the right shape but no matching agent exists. Often a rotated or deleted key. Returns HTTP 401."
 icon: "key-round"
 keywords:
-  ["M005", "invalid API key", "rotated key", "deleted key", "Manifest auth error"]
+  ["M005", "Manifest M005", "invalid API key", "rotated key", "deleted agent", "401 Unauthorized", "key not found", "Manifest auth error"]
 ---
 
 ## What you saw
@@ -16,15 +16,18 @@ See https://manifest.build/docs/errors/M005
 
 ## Why it happened
 
-The token format looks correct (`mnfst_...`) but no matching agent exists in our records. Either the key was rotated and your client still has the old value, the agent was deleted, or you copied the key from a different workspace.
+The token shape is right (`mnfst_...`) but no matching agent exists. Usually that means the key was rotated and your client still has the old value, or the agent itself was deleted, or you copied a key from a different workspace.
 
 ## How to fix it
 
 1. Open the [dashboard](https://app.manifest.build), find your agent, and copy the current key.
 2. Paste it into your client's config. If the agent is gone, create a new one and copy its key.
-3. If you self-host Manifest, confirm your client is pointing at the right backend URL.
+3. On a self-hosted install, double-check that your client is hitting the right backend URL.
 
 ## Related
 
-- [M003 — Invalid key format](/errors/M003)
-- [M004 — Key expired](/errors/M004)
+- [M003: Invalid key format](/errors/M003)
+- [M004: Key expired](/errors/M004)
+- [M001: Missing Authorization header](/errors/M001)
+- [Self-hosted setup](/self-hosted)
+- [All error codes](/errors)
