@@ -1,0 +1,31 @@
+---
+title: "M003 — Invalid key format"
+sidebarTitle: "M003"
+description: "The Bearer token doesn't have the expected mnfst_ prefix."
+icon: "key-round"
+keywords:
+  ["M003", "invalid key format", "mnfst_", "Manifest auth error"]
+---
+
+## What you saw
+
+```text
+[🦚 Manifest M003] That doesn't look right. Manifest keys start with "mnfst_". Grab yours from the dashboard.
+See https://manifest.build/errors/M003
+```
+
+## Why it happened
+
+Manifest API keys always start with `mnfst_`. The token you sent has a different prefix, which usually means you pasted a provider key (OpenAI, Anthropic, etc.) into the wrong field.
+
+## How to fix it
+
+1. Open the [dashboard](https://app.manifest.build) and copy your agent's key. It will look like `mnfst_xxxxxxxxxxxx`.
+2. Replace the token in your client's config and retry.
+3. Provider keys (e.g. OpenAI's `sk-...`) belong on the **Routing** page, not in the Authorization header.
+
+## Related
+
+- [M001 — Missing Authorization header](/errors/M001)
+- [M005 — Key not recognized](/errors/M005)
+- [M100 — Provider API key missing](/errors/M100)

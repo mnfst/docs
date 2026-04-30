@@ -1,0 +1,30 @@
+---
+title: "M002 — Empty Bearer token"
+sidebarTitle: "M002"
+description: "Manifest received an Authorization header with an empty Bearer token."
+icon: "key-round"
+keywords:
+  ["M002", "empty token", "Bearer", "Manifest auth error"]
+---
+
+## What you saw
+
+```text
+[🦚 Manifest M002] The Bearer token is empty. Paste your Manifest key into it.
+See https://manifest.build/errors/M002
+```
+
+## Why it happened
+
+The `Authorization` header was present but the token after `Bearer ` is blank. Common causes: an env var that didn't expand (`Bearer $MNFST_KEY` with `MNFST_KEY` unset), or a config field saved without a value.
+
+## How to fix it
+
+1. Print the value your client sends just before the request to confirm the token is empty.
+2. Check your env vars or config file for the key. If you don't have one, generate it from the [dashboard](https://app.manifest.build).
+3. Set `Authorization: Bearer mnfst_<your-key>` and retry.
+
+## Related
+
+- [M001 — Missing Authorization header](/errors/M001)
+- [M003 — Invalid key format](/errors/M003)

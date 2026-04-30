@@ -1,0 +1,30 @@
+---
+title: "M005 — Key not recognized"
+sidebarTitle: "M005"
+description: "Manifest doesn't recognize the API key you sent. It may have been rotated or deleted."
+icon: "key-round"
+keywords:
+  ["M005", "invalid API key", "rotated key", "deleted key", "Manifest auth error"]
+---
+
+## What you saw
+
+```text
+[🦚 Manifest M005] I don't recognize this key. It might have been rotated or deleted. Grab the current one from the dashboard.
+See https://manifest.build/errors/M005
+```
+
+## Why it happened
+
+The token format looks correct (`mnfst_...`) but no matching agent exists in our records. Either the key was rotated and your client still has the old value, the agent was deleted, or you copied the key from a different workspace.
+
+## How to fix it
+
+1. Open the [dashboard](https://app.manifest.build), find your agent, and copy the current key.
+2. Paste it into your client's config. If the agent is gone, create a new one and copy its key.
+3. If you self-host Manifest, confirm your client is pointing at the right backend URL.
+
+## Related
+
+- [M003 — Invalid key format](/errors/M003)
+- [M004 — Key expired](/errors/M004)

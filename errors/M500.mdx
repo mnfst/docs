@@ -1,0 +1,29 @@
+---
+title: "M500 — Internal server error"
+sidebarTitle: "M500"
+description: "Something broke on Manifest's side. The original error was masked to avoid leaking internal details."
+icon: "server-crash"
+keywords:
+  ["M500", "internal server error", "5xx", "Manifest server error"]
+---
+
+## What you saw
+
+```text
+[🦚 Manifest M500] Something broke on our end. Try again in a moment.
+See https://manifest.build/errors/M500
+```
+
+## Why it happened
+
+Manifest hit an unexpected error while handling your request — typically a database hiccup, a downstream provider that returned an unparseable response, or a bug. The original error is logged server-side but masked in the response so we don't leak internals.
+
+## How to fix it
+
+1. Retry. Most M500s are transient.
+2. If you self-host Manifest, check the backend logs for the actual stack trace.
+3. If it persists, [open an issue](https://github.com/mnfst/manifest/issues) with the timestamp and your agent name. We can correlate it to the server log.
+
+## Related
+
+- [Self-hosted setup](/self-hosted)

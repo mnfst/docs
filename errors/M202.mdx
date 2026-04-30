@@ -1,0 +1,30 @@
+---
+title: "M202 — Per-IP rate limit exceeded"
+sidebarTitle: "M202"
+description: "Too many requests from a single IP, even across different agent keys."
+icon: "timer"
+keywords:
+  ["M202", "per-IP rate limit", "429", "shared IP", "Manifest limits"]
+---
+
+## What you saw
+
+```text
+[🦚 Manifest M202] Too many requests from this IP — wait a few seconds and retry.
+See https://manifest.build/errors/M202
+```
+
+## Why it happened
+
+Manifest also enforces a per-IP cap (500 requests per minute by default) on top of the per-user limit. This catches abuse and dev setups where many agents share one IP. You hit it because the source IP made too many requests across all agents in a 60-second window.
+
+## How to fix it
+
+1. Back off and retry. The window resets after a minute.
+2. If you're running many agents from one machine in dev, stagger their startup so they don't all hit the proxy at once.
+3. On a self-hosted install with a known trusted source, raise `IP_RATE_MAX_REQUESTS` in `proxy-rate-limiter.ts`.
+
+## Related
+
+- [M201 — Per-user rate limit](/errors/M201)
+- [M203 — Concurrency limit](/errors/M203)

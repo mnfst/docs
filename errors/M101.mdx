@@ -1,0 +1,31 @@
+---
+title: "M101 — No providers configured"
+sidebarTitle: "M101"
+description: "Your agent is authenticated but has no providers connected, so Manifest has nothing to route to."
+icon: "plug-zap"
+keywords:
+  ["M101", "no providers", "first-time setup", "Manifest routing"]
+---
+
+## What you saw
+
+```text
+[🦚 Manifest M101] You're connected, but no providers are set up yet. Add one here: https://app.manifest.build/...
+See https://manifest.build/errors/M101
+```
+
+## Why it happened
+
+This is what you'll usually hit on a fresh agent — your key works, but you haven't added any provider credentials yet (OpenAI, Anthropic, OpenRouter, an Ollama instance, etc.).
+
+## How to fix it
+
+1. Open the dashboard link in the error message.
+2. Connect at least one provider on the **Routing** page. The simplest path is OpenRouter or OpenAI with an API key.
+3. Retry the request.
+
+## Related
+
+- [M100 — Provider API key missing](/errors/M100)
+- [Routing](/routing)
+- [Providers overview](/providers/api-key-providers)

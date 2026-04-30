@@ -1,0 +1,29 @@
+---
+title: "M301 — Messages array too long"
+sidebarTitle: "M301"
+description: "Your messages array exceeds Manifest's maximum length."
+icon: "message-square-warning"
+keywords:
+  ["M301", "messages array", "max messages", "validation", "Manifest validation"]
+---
+
+## What you saw
+
+```text
+[🦚 Manifest M301] `messages` array exceeds maximum length of 1000.
+See https://manifest.build/errors/M301
+```
+
+## Why it happened
+
+Manifest caps the number of messages per request at 1000 to keep scoring and tier resolution fast. Long agent loops that never trim their context window can hit this surprisingly quickly.
+
+## How to fix it
+
+1. Trim your conversation history before sending — keep the last N messages plus the system prompt.
+2. Summarize older turns into a single message instead of sending raw history.
+3. If you genuinely need more, split the work across multiple requests.
+
+## Related
+
+- [M300 — Missing messages array](/errors/M300)
