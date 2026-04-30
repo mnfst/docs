@@ -1,0 +1,31 @@
+---
+title: "M004: Key expired"
+sidebarTitle: "M004"
+description: "Manifest error M004 fires when the API key you sent is past its expiration date. Returns HTTP 401. Fix: rotate the key in the dashboard."
+icon: "key-round"
+keywords:
+  ["M004", "Manifest M004", "API key expired", "key rotation", "401 Unauthorized", "Manifest auth error", "expired token"]
+---
+
+## What you saw
+
+```text
+[🦚 Manifest M004] This key has expired. Generate a new one here
+See https://manifest.build/docs/errors/M004
+```
+
+## Why it happened
+
+Manifest keys can carry an expiration date. Yours is past that date, so it no longer authenticates anything.
+
+## How to fix it
+
+1. Open the [dashboard](https://app.manifest.build) and rotate or generate a new key for this agent.
+2. Update your client's config with the new value.
+3. If you didn't intend the key to expire, edit the agent's settings and clear the date.
+
+## Related
+
+- [M005: Key not recognized](/errors/M005)
+- [M001: Missing Authorization header](/errors/M001)
+- [All error codes](/errors)

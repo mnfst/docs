@@ -1,0 +1,66 @@
+---
+title: "Manifest error codes"
+sidebarTitle: "Errors"
+description: "Reference for every Manifest proxy error code (M001-M500). What you saw, why it happened, and how to fix it. Covers auth, providers, limits, validation."
+icon: "circle-alert"
+keywords:
+  ["Manifest error codes", "M001", "M100", "M200", "M500", "OpenAI compatible errors", "401 Unauthorized", "429 Too Many Requests", "Bearer token error", "chat completions error", "troubleshooting", "proxy errors"]
+---
+
+When Manifest blocks or rejects a request, the response message starts with a code in square brackets:
+
+```text
+[🦚 Manifest M100] No anthropic API key yet. Add one here: https://app.manifest.build/...
+See https://manifest.build/docs/errors/M100
+```
+
+Look up the code below to see what it means and how to fix it.
+
+## Authentication (M001–M005)
+
+These fire when the bearer token on `/v1/chat/completions` is missing or wrong. They surface as HTTP 401 to non-chat clients.
+
+| Code | What |
+|------|------|
+| [M001: Missing Authorization header](/errors/M001) | No `Authorization` header on the request |
+| [M002: Empty Bearer token](/errors/M002) | Header present, token after `Bearer ` is blank |
+| [M003: Invalid key format](/errors/M003) | Token doesn't start with `mnfst_` |
+| [M004: Key expired](/errors/M004) | Key past its expiration date |
+| [M005: Key not recognized](/errors/M005) | No matching agent for this key |
+
+## Providers (M100–M101)
+
+Your key is fine, but no provider credentials are wired up. See [Routing](/routing) and [API key providers](/providers/api-key-providers).
+
+| Code | What |
+|------|------|
+| [M100: Provider API key missing](/errors/M100) | Routing picked a provider you haven't connected |
+| [M101: No providers configured](/errors/M101) | Agent has zero providers connected |
+
+## Limits (M200–M203)
+
+You hit a usage cap or rate limit. They surface as HTTP 429. See [Set limits](/set-limits).
+
+| Code | What |
+|------|------|
+| [M200: Usage limit exceeded](/errors/M200) | Cost or message-count limit you set was crossed |
+| [M201: Per-user rate limit exceeded](/errors/M201) | More than 200 requests/minute from one user |
+| [M202: Per-IP rate limit exceeded](/errors/M202) | More than 500 requests/minute from one IP |
+| [M203: Concurrency limit exceeded](/errors/M203) | More than 10 in-flight requests at once |
+
+## Validation (M300–M301)
+
+The request body is malformed. They surface as HTTP 400.
+
+| Code | What |
+|------|------|
+| [M300: Missing messages array](/errors/M300) | Body has no `messages` array, or it's empty |
+| [M301: Messages array too long](/errors/M301) | More than 1000 messages in a single request |
+
+## Server (M500)
+
+Manifest itself broke. Surfaces as HTTP 500.
+
+| Code | What |
+|------|------|
+| [M500: Internal server error](/errors/M500) | Unhandled error in the proxy pipeline |

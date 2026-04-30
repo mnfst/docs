@@ -1,0 +1,33 @@
+---
+title: "M001: Missing Authorization header"
+sidebarTitle: "M001"
+description: "Manifest error M001 fires when /v1/chat/completions is called without an Authorization header. Returns HTTP 401. Fix: send `Authorization: Bearer mnfst_<key>`."
+icon: "key-round"
+keywords:
+  ["M001", "Manifest M001", "Authorization header missing", "Bearer token", "401 Unauthorized", "OpenAI compatible 401", "Manifest auth error", "chat completions authorization"]
+---
+
+## What you saw
+
+```text
+[🦚 Manifest M001] Missing the Authorization header. Set it to "Bearer mnfst_<your-key>".
+See https://manifest.build/docs/errors/M001
+```
+
+## Why it happened
+
+Your client called `/v1/chat/completions` without an `Authorization` header. Manifest checks an agent API key on every request, so the header has to be there.
+
+## How to fix it
+
+1. Grab your agent's key from the [dashboard](https://app.manifest.build) (Workspace, agent, key).
+2. Add the header to every request: `Authorization: Bearer mnfst_<your-key>`.
+3. If you're using an SDK, set the API key in its config instead of building the header by hand.
+
+## Related
+
+- [M002: Empty Bearer token](/errors/M002)
+- [M003: Invalid key format](/errors/M003)
+- [M004: Key expired](/errors/M004)
+- [M005: Key not recognized](/errors/M005)
+- [All error codes](/errors)

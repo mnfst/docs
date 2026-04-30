@@ -1,0 +1,35 @@
+---
+title: "M201: Per-user rate limit exceeded"
+sidebarTitle: "M201"
+description: "Manifest error M201 fires when one user sends more than 200 requests per minute. Returns HTTP 429. Fix: back off, retry, or raise the cap on self-hosted."
+icon: "timer"
+keywords:
+  ["M201", "Manifest M201", "rate limit", "429 Too Many Requests", "per-user rate limit", "throttling", "exponential backoff", "RATE_MAX_REQUESTS", "Manifest limits"]
+---
+
+## What you saw
+
+```text
+[🦚 Manifest M201] Too many requests — wait a few seconds and retry.
+See https://manifest.build/docs/errors/M201
+```
+
+The HTTP status is `429`, so SDKs that respect retry-after will back off on their own.
+
+## Why it happened
+
+Manifest caps each user at 200 requests per minute by default. The cap is there mostly to keep runaway loops from melting the proxy. Your agent crossed it inside a 60-second window.
+
+## How to fix it
+
+1. Add a small delay or exponential backoff on retry. Most SDKs handle this automatically when they see a `429`.
+2. If parallel workers are hitting Manifest, throttle them so they share the budget.
+3. On a self-hosted install where you need more headroom, raise `RATE_MAX_REQUESTS` in `proxy-rate-limiter.ts`.
+
+## Related
+
+- [M202: Per-IP rate limit](/errors/M202)
+- [M203: Concurrency limit](/errors/M203)
+- [M200: Usage limit exceeded](/errors/M200)
+- [Self-hosted setup](/self-hosted)
+- [All error codes](/errors)

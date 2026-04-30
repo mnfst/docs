@@ -1,0 +1,31 @@
+---
+title: "M500: Internal server error"
+sidebarTitle: "M500"
+description: "Manifest error M500 is a generic 500 fallback for unhandled errors in the proxy. Usually transient. Fix: retry, then check backend logs on self-hosted."
+icon: "server-crash"
+keywords:
+  ["M500", "Manifest M500", "internal server error", "500 Internal Server Error", "5xx", "proxy crash", "Manifest server error", "self-hosted debugging"]
+---
+
+## What you saw
+
+```text
+[🦚 Manifest M500] Something broke on our end. Try again in a moment.
+See https://manifest.build/docs/errors/M500
+```
+
+## Why it happened
+
+Manifest hit an unexpected error while handling your request. Usually that's a database hiccup, a downstream provider returning something unparseable, or a real bug. The actual stack trace is logged server-side, but masked in the response so we don't leak internals.
+
+## How to fix it
+
+1. Retry. Most M500s are transient.
+2. On a self-hosted install, check the backend logs for the real stack trace.
+3. If it sticks around, [open an issue](https://github.com/mnfst/manifest/issues) with the timestamp and your agent name. That's enough for us to correlate it to the server log.
+
+## Related
+
+- [Self-hosted setup](/self-hosted)
+- [Fallback](/fallback)
+- [All error codes](/errors)

@@ -112,7 +112,8 @@
               "reference/api",
               "reference/headers",
               "reference/environment-variables",
-              "reference/glossary"
+              "reference/glossary",
+              "errors"
             ]
           }
         ]
