@@ -1,72 +1,43 @@
 ---
 title: "Routing"
-description: "How Manifest picks the cheapest model that can handle your query"
+description: "How Manifest scores each prompt across 23 dimensions, then sends it to the cheapest model that can handle it."
 icon: "split"
+keywords:
+  ["model routing", "complexity tier", "task-specific routing", "LLM router", "x-manifest-tier", "x-manifest-specificity"]
 ---
 
 ## What is routing?
 
-Instead of sending every request to the same expensive model, Manifest scores each query and routes it to the cheapest model that can handle it. Each request is classified along two axes:
+Instead of sending every request to the same model, use Manifest to route your queries to different models and providers.
 
-- **Complexity tier** — how hard the task is. Four tiers: **simple**, **standard**, **complex**, **reasoning**.
-- **Specificity** — what kind of task it is (coding, web browsing, data analysis, image generation, and so on). Nine categories in total.
-
-Scoring happens in under 2 ms with zero external calls.
-
-## The four tiers
+## The 4 routing types
 
 <CardGroup cols={2}>
-  <Card title="Simple" icon="zap">
-    Greetings, definitions, short factual questions. Routed to the cheapest model.
+  <Card title="Default" icon="route" href="#default">
+    Your default model. Switch easily using Manifest UI.
   </Card>
-  <Card title="Standard" icon="code">
-    General coding help, moderate questions. Good quality at low cost.
+  <Card title="Complexity" icon="gauge" href="#complexity">
+    Redirect queries on-the-fly to tiers based on their complexity.
   </Card>
-  <Card title="Complex" icon="layers">
-    Multi-step tasks, large context, code generation. Best quality models.
+  <Card title="Task-specific" icon="target" href="#task-specific">
+    Detect specific tasks queries on-the-fly (coding, trading, image gen…).
   </Card>
-  <Card title="Reasoning" icon="brain">
-    Formal logic, proofs, math, multi-constraint problems. Reasoning-capable models only.
+  <Card title="Custom" icon="sliders-horizontal" href="#custom">
+    Isolate requests and assign them to tiers based on their HTTP headers.
   </Card>
 </CardGroup>
 
-## Specificities
+On-the-fly routing (complexity and task-specific) happens in under 2 ms with zero external calls and extra cost. Default and custom routing are setup beforehand.
 
-On top of the complexity tier, Manifest detects **what kind of task** the request is about. Each category can be routed to a model picked specifically for it.
+### Default
 
-| Category | Covers |
-|---|---|
-| **Coding** | Write, debug, and refactor code |
-| **Web browsing** | Navigate pages, search, and extract content |
-| **Data analysis** | Crunch numbers, run stats, build charts |
-| **Image generation** | Create and edit images, logos, visuals |
-| **Video generation** | Produce clips, animations, and edits |
-| **Social media** | Draft posts, plan content, track engagement |
-| **Email** | Compose, reply, and manage your inbox |
-| **Calendar** | Book meetings, check availability, reschedule |
-| **Trading** | Analyze markets, place trades, track positions |
+Every agent has a default model — the one Manifest falls back to when no other routing rule applies. You set it once in the dashboard **Routing** page and can swap it at any time without touching your code. All requests that don't match a complexity tier, specificity, or custom header rule are sent here.
 
-### How detection works
+### Complexity
 
-Two signals feed the detector:
+Manifest scores each incoming prompt across 23 dimensions and assigns it to one of four tiers: **simple**, **standard**, **complex**, or **reasoning**. Each tier maps to a different model in the dashboard, so cheap queries go to cheap models and hard queries go to the best ones automatically. Scoring runs in under 2 ms with no external calls.
 
-1. **Keyword dimensions.** The same trie scan that feeds the complexity score also counts matches in category-specific dimensions (e.g. `codeGeneration` and `technicalTerms` count toward Coding, `webBrowsing` toward Web browsing, `emailManagement` toward Email).
-2. **Tool names.** When a request includes tool definitions, names with known prefixes boost the matching category — `browser_*` / `playwright_*` → Web browsing, `gmail_*` / `outlook_*` → Email, `gcal_*` / `calendly_*` → Calendar, and so on.
-
-If a category crosses the match threshold, it wins. Otherwise no specificity is assigned and the request routes on complexity alone.
-
-### Overrides per category
-
-In the dashboard **Routing** page, each specificity can be toggled on or off per agent. When active, you can:
-
-- **Pin a model** to the category. All matching requests go to it, regardless of complexity tier.
-- **Set fallbacks.** A fallback list specific to that category, tried in order if the primary model fails.
-
-### Explicit override (header)
-
-Clients can skip detection by sending an `x-manifest-specificity` request header with a category ID (`coding`, `web_browsing`, `data_analysis`, `image_generation`, `video_generation`, `social_media`, `email_management`, `calendar_management`, or `trading`). The header value is used directly, with confidence `1.0`.
-
-## How scoring works
+#### How scoring works
 
 23 dimensions grouped into three categories. The same scoring pipeline feeds both the complexity tier and the specificity detector.
 
@@ -78,42 +49,49 @@ Clients can skip detection by sending an `x-manifest-specificity` request header
 
 Each dimension has a weight. The weighted sum maps to a tier via threshold boundaries. A confidence score (0–1) indicates how clearly the request fits its tier.
 
-## Session momentum
+#### Session momentum
 
 Manifest remembers the last 5 tier assignments (30-minute TTL).
 
 Short follow-up messages ("yes", "do it") inherit momentum from the conversation, so they don't drop to a cheaper tier unnecessarily.
 
-## Tier overrides
+#### Tier overrides
 
 Some signals force a minimum tier regardless of the score:
 
-| Signal | Minimum tier |
-|--------|-------------|
-| Tools detected | **standard** |
-| Large context (>50k tokens) | **complex** |
-| Formal logic keywords | **reasoning** |
+| Signal                      | Minimum tier  |
+| --------------------------- | ------------- |
+| Tools detected              | **standard**  |
+| Large context (>50k tokens) | **complex**   |
+| Formal logic keywords       | **reasoning** |
 
-## Response headers
+### Task-specific
 
-Every response includes these headers:
+On top of complexity, Manifest detects **what kind of task** the request is about across nine categories (coding, web browsing, data analysis, image generation, video generation, social media, email, calendar, trading). When a category is detected, the request is routed to the model you've pinned for that category, regardless of the complexity tier. You can toggle each category on or off per agent in the dashboard.
 
-| Header | Description |
-|--------|-------------|
-| `X-Manifest-Tier` | Assigned complexity tier |
-| `X-Manifest-Specificity` | Detected specificity category (only set when one was assigned) |
-| `X-Manifest-Model` | Actual model used |
-| `X-Manifest-Provider` | Provider (anthropic, openai, google, etc.) |
-| `X-Manifest-Confidence` | Scoring confidence (0–1) |
-| `X-Manifest-Reason` | Why this tier was selected |
+#### Available tiers
 
-## Cloud vs Self-hosted
+| Category             | Covers                                         |
+| -------------------- | ---------------------------------------------- |
+| **Coding**           | Write, debug, and refactor code                |
+| **Web browsing**     | Navigate pages, search, and extract content    |
+| **Data analysis**    | Crunch numbers, run stats, build charts        |
+| **Image generation** | Create and edit images, logos, visuals         |
+| **Video generation** | Produce clips, animations, and edits           |
+| **Social media**     | Draft posts, plan content, track engagement    |
+| **Email**            | Compose, reply, and manage your inbox          |
+| **Calendar**         | Book meetings, check availability, reschedule  |
+| **Trading**          | Analyze markets, place trades, track positions |
 
-<Tabs>
-  <Tab title="Cloud">
-    Routing is performed server-side. Model mappings are managed by the Manifest team and updated regularly.
-  </Tab>
-  <Tab title="Self-hosted">
-    Routing runs on your own machine inside the Self-hosted backend. The model-to-tier mapping is seeded on first boot and can be customized in the dashboard.
-  </Tab>
-</Tabs>
+#### How detection works
+
+Two signals feed the detector:
+
+1. **Keyword dimensions.** The same trie scan that feeds the complexity score also counts matches in category-specific dimensions (e.g. `codeGeneration` and `technicalTerms` count toward Coding, `webBrowsing` toward Web browsing, `emailManagement` toward Email).
+2. **Tool names.** When a request includes tool definitions, names with known prefixes boost the matching category — `browser_*` / `playwright_*` → Web browsing, `gmail_*` / `outlook_*` → Email, `gcal_*` / `calendly_*` → Calendar, and so on.
+
+If a category crosses the match threshold, it wins. Otherwise no specificity is assigned and the request routes on complexity alone.
+
+### Custom
+
+Send an `x-manifest-tier` or `x-manifest-specificity` HTTP header from your client to force a specific tier or category on any request. Manifest uses the header value directly (confidence `1.0`) and skips automatic scoring. This is useful for isolating agent subtasks, A/B testing models, or integrating with orchestration frameworks that classify requests themselves. See the full [request headers reference](/reference/headers) for accepted values.

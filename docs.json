@@ -35,6 +35,23 @@
   "icons": {
     "library": "lucide"
   },
+  "seo": {
+    "metatags": {
+      "canonical": "https://manifest.build/docs",
+      "og:site_name": "Manifest",
+      "og:type": "website",
+      "twitter:card": "summary_large_image",
+      "twitter:site": "@Manifestforai",
+      "twitter:creator": "@Manifestforai"
+    },
+    "indexing": "all"
+  },
+  "thumbnails": {
+    "background": "#0891b2"
+  },
+  "contextual": {
+    "options": ["copy", "chatgpt", "claude", "add-mcp", "cursor", "vscode"]
+  },
   "styling": {
     "eyebrows": "breadcrumbs",
     "codeblocks": {
@@ -71,19 +88,31 @@
         "groups": [
           {
             "group": "Getting Started",
-            "pages": [
-              "introduction",
-              "get-started",
-              "self-hosted"
-            ]
+            "boost": 3,
+            "pages": ["introduction", "self-hosted"]
           },
           {
             "group": "Features",
+            "boost": 2,
+            "pages": ["routing", "fallback", "set-limits"]
+          },
+          {
+            "group": "Providers",
+            "boost": 2,
             "pages": [
-              "track-usage",
-              "routing",
-              "fallback",
-              "set-limits"
+              "providers/api-key-providers",
+              "providers/subscription-based-providers",
+              "providers/custom-providers",
+              "providers/local-models"
+            ]
+          },
+          {
+            "group": "Reference",
+            "pages": [
+              "reference/api",
+              "reference/headers",
+              "reference/environment-variables",
+              "reference/glossary"
             ]
           }
         ]
@@ -135,7 +164,7 @@
     },
     {
       "source": "/install",
-      "destination": "/get-started"
+      "destination": "/self-hosted"
     },
     {
       "source": "/docker",
@@ -143,11 +172,19 @@
     },
     {
       "source": "/cloud-vs-local",
-      "destination": "/get-started"
+      "destination": "/introduction"
     },
     {
       "source": "/cloud-vs-self-hosted",
-      "destination": "/get-started"
+      "destination": "/introduction"
+    },
+    {
+      "source": "/get-started",
+      "destination": "/introduction"
+    },
+    {
+      "source": "/track-usage",
+      "destination": "/set-limits"
     },
     {
       "source": "/configuration",

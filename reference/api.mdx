@@ -1,0 +1,108 @@
+---
+title: "API"
+description: "The Manifest proxy speaks both OpenAI and Anthropic. Endpoints, auth, streaming, and error responses."
+icon: "code"
+keywords:
+  ["chat completions", "responses API", "Anthropic messages", "manifest/auto", "streaming", "SSE", "Bearer auth", "424 fallback exhausted"]
+---
+
+Manifest exposes both OpenAI and Anthropic-format endpoints on one proxy. Point your client at the Manifest URL, send `manifest/auto` as the model, and routing picks the real model behind the scenes.
+
+## Base URL
+
+| Mode | URL |
+|---|---|
+| Cloud | `https://app.manifest.build` |
+| Self-hosted | `http://localhost:2099` (or your custom port) |
+
+## Authentication
+
+Every request requires a Manifest agent key:
+
+```http
+Authorization: Bearer mnfst_YOUR_KEY_HERE
+```
+
+Generate a key from the dashboard's **Agents** page. Keys always start with `mnfst_`.
+
+## Endpoints
+
+| Method | Path | Format | Use it for |
+|---|---|---|---|
+| `POST` | `/v1/chat/completions` | OpenAI | Most clients (OpenAI SDK, LangChain, Vercel AI SDK, custom HTTP) |
+| `POST` | `/v1/responses` | OpenAI Responses | Codex, `*-pro`, `o1-pro`, deep-research models |
+| `POST` | `/v1/messages` | Anthropic | Anthropic SDK, Claude Code, anything that speaks the Messages API |
+
+The proxy translates between formats internally, so you can send an OpenAI-shaped request and Manifest will reshape it before forwarding to an Anthropic-only model. The reverse works too.
+
+## Chat completions
+
+```bash
+curl -X POST http://localhost:2099/v1/chat/completions \
+  -H "Authorization: Bearer mnfst_YOUR_KEY_HERE" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "manifest/auto",
+    "messages": [
+      {"role": "user", "content": "What is the capital of France?"}
+    ]
+  }'
+```
+
+The body is forwarded verbatim to the resolved provider, with `model` rewritten to the actual model ID. All standard OpenAI fields (`temperature`, `max_tokens`, `tools`, `tool_choice`, `response_format`, `stream`, etc.) pass through.
+
+## Anthropic messages
+
+```bash
+curl -X POST http://localhost:2099/v1/messages \
+  -H "Authorization: Bearer mnfst_YOUR_KEY_HERE" \
+  -H "Content-Type: application/json" \
+  -H "anthropic-version: 2023-06-01" \
+  -d '{
+    "model": "manifest/auto",
+    "max_tokens": 1024,
+    "messages": [
+      {"role": "user", "content": "Hello"}
+    ]
+  }'
+```
+
+## Streaming
+
+Set `"stream": true` to get an SSE stream back. The stream format matches the upstream protocol: OpenAI-style `data: {...}` chunks for `/v1/chat/completions`, Anthropic event blocks for `/v1/messages`.
+
+Routing and fallback both work with streams. If the primary model fails before the first chunk, the request restarts on the fallback. If it fails mid-stream, the connection closes. There's no silent mid-stream retry.
+
+## Errors
+
+The proxy returns a standard JSON error envelope:
+
+```json
+{
+  "error": {
+    "message": "Limit exceeded: cost usage ($1.23) exceeds $1.00 per day",
+    "type": "limit_exceeded",
+    "code": 429
+  }
+}
+```
+
+| Status | Meaning |
+|---|---|
+| `401` | Invalid or missing `Authorization` header |
+| `402` | Provider requires payment / quota exceeded on the upstream |
+| `424` | Fallback chain exhausted (all configured models failed) |
+| `429` | [Hard limit](/set-limits) hit, or Manifest rate limit (`THROTTLE_LIMIT`) tripped |
+| `5xx` | Upstream provider error (triggers [fallback](/fallback)) |
+
+Status `424` is the only one that **does not** trigger a fallback. Manifest returns it itself when the chain is exhausted, so re-routing it would loop forever.
+
+## Rate limits
+
+Self-hosted instances default to **100 requests per 60 seconds** per agent. Override with `THROTTLE_TTL` and `THROTTLE_LIMIT` ([Environment variables](/reference/environment-variables)).
+
+Cloud rate limits are tied to your plan and shown in the dashboard.
+
+## Response headers
+
+Every response carries [routing headers](/reference/headers) so your client can see which model handled the request, the assigned tier, and confidence, without parsing the response body.

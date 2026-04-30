@@ -1,0 +1,73 @@
+---
+title: "Headers"
+description: "Every x-manifest-* request header and X-Manifest-* response header, with what each one does."
+icon: "list"
+keywords:
+  ["X-Manifest-Tier", "X-Manifest-Model", "X-Manifest-Provider", "X-Manifest-Confidence", "X-Manifest-Fallback-From", "x-manifest-specificity", "x-manifest-tier"]
+---
+
+Manifest reads two request headers to override routing decisions, and returns a set of `X-Manifest-*` response headers so clients can see what happened without parsing the response body.
+
+## Request headers
+
+| Header                   | Value                                                                                                                                                                   | Effect                                                                                                            |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `Authorization`          | `Bearer mnfst_<key>`                                                                                                                                                    | **Required.** Authenticates the agent.                                                                            |
+| `Content-Type`           | `application/json`                                                                                                                                                      | **Required.**                                                                                                     |
+| `x-manifest-tier`        | `simple` \| `standard` \| `complex` \| `reasoning`                                                                                                                      | Force the routing tier. Skips scoring.                                                                            |
+| `x-manifest-specificity` | `coding` \| `web_browsing` \| `data_analysis` \| `image_generation` \| `video_generation` \| `social_media` \| `email_management` \| `calendar_management` \| `trading` | Force the [task-specific](/routing#task-specific) routing category. Skips detection. Confidence is `1.0`.        |
+| `anthropic-version`      | `2023-06-01`                                                                                                                                                            | **Required for `/v1/messages`.** Forwarded to the upstream.                                                       |
+
+Header overrides are useful when your agent already knows the task type and doesn't need Manifest to re-detect it.
+
+## Response headers (every request)
+
+| Header                   | Description                                                    | Example                        |
+| ------------------------ | -------------------------------------------------------------- | ------------------------------ |
+| `X-Manifest-Tier`        | Assigned complexity tier                                       | `complex`                      |
+| `X-Manifest-Model`       | Model that actually served the response                        | `claude-sonnet-4-6`            |
+| `X-Manifest-Provider`    | Upstream provider                                              | `anthropic`                    |
+| `X-Manifest-Confidence`  | Scoring confidence (0–1)                                       | `0.87`                         |
+| `X-Manifest-Reason`      | Why the tier was picked                                        | `keyword: "prove" → reasoning` |
+| `X-Manifest-Specificity` | Detected specificity category (only set when one was assigned) | `coding`                       |
+
+## Response headers (fallback only)
+
+When the primary model fails and Manifest succeeds on a fallback, two extra headers are added:
+
+| Header                      | Description                                         | Example |
+| --------------------------- | --------------------------------------------------- | ------- |
+| `X-Manifest-Fallback-From`  | The primary model that was attempted first          | `gpt-5` |
+| `X-Manifest-Fallback-Index` | Position in the fallback chain (0 = first fallback) | `0`     |
+
+When **every** model in the chain fails:
+
+| Header                          | Description                              |
+| ------------------------------- | ---------------------------------------- |
+| `X-Manifest-Fallback-Exhausted` | Set to `true`. Response status is `424`. |
+
+## Reading headers in code
+
+```javascript
+const response = await fetch("http://localhost:2099/v1/chat/completions", {
+  method: "POST",
+  headers: {
+    Authorization: `Bearer ${process.env.MANIFEST_KEY}`,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    model: "manifest/auto",
+    messages: [{ role: "user", content: "Hello" }],
+  }),
+});
+
+console.log(response.headers.get("x-manifest-tier")); // → "simple"
+console.log(response.headers.get("x-manifest-model")); // → "gpt-5-mini"
+console.log(response.headers.get("x-manifest-provider")); // → "openai"
+```
+
+<Tip>
+  Header names are case-insensitive in HTTP, but most browser `fetch`
+  implementations lowercase them when reading. The proxy emits them as
+  `X-Manifest-*`.
+</Tip>
