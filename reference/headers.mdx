@@ -1,7 +1,9 @@
 ---
 title: "Headers"
-description: "Request and response headers used by the Manifest proxy."
+description: "Every x-manifest-* request header and X-Manifest-* response header, with what each one does."
 icon: "list"
+keywords:
+  ["X-Manifest-Tier", "X-Manifest-Model", "X-Manifest-Provider", "X-Manifest-Confidence", "X-Manifest-Fallback-From", "x-manifest-specificity", "x-manifest-tier"]
 ---
 
 Manifest reads two request headers to override routing decisions, and returns a set of `X-Manifest-*` response headers so clients can see what happened without parsing the response body.

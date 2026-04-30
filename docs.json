@@ -35,6 +35,20 @@
   "icons": {
     "library": "lucide"
   },
+  "seo": {
+    "metatags": {
+      "canonical": "https://manifest.build/docs",
+      "og:site_name": "Manifest",
+      "og:type": "website",
+      "twitter:card": "summary_large_image",
+      "twitter:site": "@Manifestforai",
+      "twitter:creator": "@Manifestforai"
+    },
+    "indexing": "all"
+  },
+  "thumbnails": {
+    "background": "#0891b2"
+  },
   "contextual": {
     "options": ["copy", "chatgpt", "claude", "add-mcp", "cursor", "vscode"]
   },
@@ -74,14 +88,17 @@
         "groups": [
           {
             "group": "Getting Started",
+            "boost": 3,
             "pages": ["introduction", "self-hosted"]
           },
           {
             "group": "Features",
+            "boost": 2,
             "pages": ["routing", "fallback", "set-limits"]
           },
           {
             "group": "Providers",
+            "boost": 2,
             "pages": [
               "providers/api-key-providers",
               "providers/subscription-based-providers",
@@ -147,7 +164,7 @@
     },
     {
       "source": "/install",
-      "destination": "/get-started"
+      "destination": "/self-hosted"
     },
     {
       "source": "/docker",
@@ -155,11 +172,19 @@
     },
     {
       "source": "/cloud-vs-local",
-      "destination": "/get-started"
+      "destination": "/introduction"
     },
     {
       "source": "/cloud-vs-self-hosted",
-      "destination": "/get-started"
+      "destination": "/introduction"
+    },
+    {
+      "source": "/get-started",
+      "destination": "/introduction"
+    },
+    {
+      "source": "/track-usage",
+      "destination": "/set-limits"
     },
     {
       "source": "/configuration",

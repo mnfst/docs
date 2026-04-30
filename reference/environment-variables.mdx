@@ -1,7 +1,9 @@
 ---
 title: "Environment variables"
-description: "Every variable Manifest reads at startup."
+description: "Every environment variable Manifest reads at startup, grouped by what it controls: database, auth, rate limiting, email, OAuth, telemetry."
 icon: "settings"
+keywords:
+  ["DATABASE_URL", "BETTER_AUTH_SECRET", "BETTER_AUTH_URL", "PORT", "BIND_ADDRESS", "THROTTLE_LIMIT", "EMAIL_PROVIDER", "Resend", "Mailgun", "SendGrid", "MANIFEST_TELEMETRY_DISABLED"]
 ---
 
 Manifest reads its configuration from environment variables. In the bundled Docker setup these come from `~/manifest/.env`. For `docker run`, pass them with `-e`. For non-Docker installs, export them in the shell before launching the backend.

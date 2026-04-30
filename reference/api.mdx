@@ -1,7 +1,9 @@
 ---
 title: "API"
-description: "HTTP endpoints exposed by the Manifest proxy."
+description: "The Manifest proxy speaks both OpenAI and Anthropic. Endpoints, auth, streaming, and error responses."
 icon: "code"
+keywords:
+  ["chat completions", "responses API", "Anthropic messages", "manifest/auto", "streaming", "SSE", "Bearer auth", "424 fallback exhausted"]
 ---
 
 Manifest exposes both OpenAI and Anthropic-format endpoints on one proxy. Point your client at the Manifest URL, send `manifest/auto` as the model, and routing picks the real model behind the scenes.
