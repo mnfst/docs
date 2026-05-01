@@ -267,6 +267,12 @@ docker compose down -v    # destroys all data
 
   Default: 100 requests per 60-second window.
 
+  **LLM proxy**
+
+  | Variable | Default | Description |
+  |----------|---------|-------------|
+  | `PROVIDER_TIMEOUT_MS` | `180000` | Per-attempt timeout (ms) for upstream provider requests. Set strictly below your client's timeout so the [fallback chain](/fallback) has room to run. Slow local models may need this raised. Non-numeric, zero, or negative values fall back to the default. |
+
   **Email alerts (Mailgun)**
 
   | Variable | Description |

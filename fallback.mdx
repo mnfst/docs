@@ -57,6 +57,12 @@ Fallback models are configured **per tier** in the Manifest dashboard. Each tier
   </Step>
 </Steps>
 
+## Hung providers and the per-attempt timeout
+
+A provider that opens a connection but never returns will eventually trigger a fallback via Manifest's per-attempt timeout (default 180 seconds), which surfaces as a synthetic `504 Gateway Timeout` and triggers the next model in the chain.
+
+If your upstream client (e.g. an agent gateway) has its own timeout that fires at the same time, the client may disconnect first and Manifest will give up before reaching a healthy fallback. On self-hosted installs, lower `PROVIDER_TIMEOUT_MS` strictly below your client's timeout so the fallback chain has room to run within the client's window. See [Self-hosted](/self-hosted) for the env var reference.
+
 ## Response headers
 
 When a fallback succeeds, the response carries `X-Manifest-Fallback-From` (the primary that failed) and `X-Manifest-Fallback-Index` (its position in the chain) on top of the standard routing headers. When the chain is exhausted, `X-Manifest-Fallback-Exhausted: true` is set and the request returns `424`. Full table: [Headers reference](/reference/headers).
