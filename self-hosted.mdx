@@ -301,13 +301,13 @@ docker compose down -v    # Stop and delete all data
 
 ## Telemetry
 
-Once a day, each install sends us a small anonymous report. That's how we know whether anyone's actually using the thing, and which providers are popular enough to deserve more work. It's aggregates, never content: no prompts, no messages, no keys, nothing tied to a user. Thirteen fields total.
+Once a day, each install sends us a small anonymous report. That's how we know whether anyone's actually using the thing, and which providers are popular enough to deserve more work. It's aggregates, never content: no prompts, no messages, no keys, nothing tied to a user. Fifteen fields total.
 
 ### What gets sent
 
 | Field | Example | Purpose |
 |-------|---------|---------|
-| `schema_version` | `1` | So the shape can grow without breaking old clients |
+| `schema_version` | `1` | So the shape can grow without breaking old clients. Stays `1` for additive changes; bumps on breaking ones |
 | `install_id` | random UUIDv4 | Count distinct installs. Generated once on first boot, persisted, never rotated |
 | `manifest_version` | `5.47.0` | Version adoption across the fleet |
 | `messages_total` | `1284` | Daily activity per install |
@@ -316,10 +316,14 @@ Once a day, each install sends us a small anonymous report. That's how we know w
 | `messages_by_auth_type` | `{"api_key": 1200, "subscription": 84}` | API key vs. paid-subscription usage |
 | `tokens_input_total` | `1_450_000` | Volume-weighted signal |
 | `tokens_output_total` | `890_000` | Same |
+| `cost_usd_total` <sup>†</sup> | `47.83` | Sum of `cost_usd` Manifest computed at routing time, rounded to cents. Lets us see real dollar throughput instead of guessing from token counts. `0` for Ollama-only / free-API installs |
+| `cost_usd_by_provider` <sup>†</sup> | `{"anthropic": 30.50, "openai": 17.33}` | Per-provider split of `cost_usd_total`, rounded to cents. Same `"custom"` collapse rule as `messages_by_provider` — admin-configured BYOK pricing is never keyed by the raw provider name |
 | `agents_total` | `4` | Configuration scale |
 | `agents_by_platform` | `{"openclaw": 3, "hermes": 1}` | Which agent clients people use |
 | `platform` | `linux` / `darwin` / `windows` | OS distribution |
 | `arch` | `x64` / `arm64` | Architecture distribution |
+
+<sup>†</sup> *Optional. Installs running older Manifest versions omit these fields; receivers should feature-detect on presence rather than on `schema_version`. Cost values are derived from the same `input_tokens` / `output_tokens` we already ship, multiplied by Manifest's per-model pricing table — no new data leaves the box, just a rolled-up dollar figure for what's already disclosed.*
 
 ### Never sent
 
