@@ -11,6 +11,21 @@ Manifest is a smart model router for agents and AI applications that redirects e
 
 This documentation will help you to get started and use Manifest to use AI efficiently and reduce your inference costs.
 
+## Quick reference
+
+| | |
+|---|---|
+| Cloud base URL | `https://app.manifest.build/v1` |
+| Self-hosted base URL | `http://localhost:2099/v1` |
+| Auth header | `Authorization: Bearer mnfst_<key>` |
+| Get a key | [app.manifest.build](https://app.manifest.build) |
+| Request model | `manifest/auto` (the only accepted value) |
+| OpenAI endpoint | `POST /v1/chat/completions` |
+| Anthropic endpoint | `POST /v1/messages` |
+| Client SDK | None — use the official `openai` or `@anthropic-ai/sdk` packages with `baseURL` set |
+
+The chosen provider model is returned in the response (e.g. `auto→claude-sonnet-4`). Provider-specific names like `gpt-4o-mini` are not accepted as the request model. Full details in the [API reference](/reference/api).
+
 ## Key features
 
 <CardGroup cols={2}>

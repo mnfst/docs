@@ -23,7 +23,11 @@ Every request requires a Manifest agent key:
 Authorization: Bearer mnfst_YOUR_KEY_HERE
 ```
 
-Generate a key from the dashboard's **Agents** page. Keys always start with `mnfst_`.
+To get one:
+
+1. Sign up at [app.manifest.build](https://app.manifest.build).
+2. Create an agent from the dashboard — its key is shown in the setup modal.
+3. Pass the key as `Authorization: Bearer mnfst_<key>`. Keys always start with `mnfst_`; sending a token without that prefix returns error [M003](/errors/M003).
 
 ## Endpoints
 
@@ -37,7 +41,21 @@ The proxy translates between formats internally, so you can send an OpenAI-shape
 
 ## Chat completions
 
+**Model identifier.** Pass `manifest/auto` — it is the only accepted request model. The chosen provider model is returned in the response (e.g. `auto→claude-sonnet-4`). Do not pass provider-specific names like `gpt-4o-mini` or `claude-sonnet-4` as the request model; they are not accepted.
+
 ```bash
+# Cloud (default):
+curl -X POST https://app.manifest.build/v1/chat/completions \
+  -H "Authorization: Bearer mnfst_YOUR_KEY_HERE" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "manifest/auto",
+    "messages": [
+      {"role": "user", "content": "What is the capital of France?"}
+    ]
+  }'
+
+# Self-hosted (Docker on default port):
 curl -X POST http://localhost:2099/v1/chat/completions \
   -H "Authorization: Bearer mnfst_YOUR_KEY_HERE" \
   -H "Content-Type: application/json" \
