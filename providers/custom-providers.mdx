@@ -36,7 +36,7 @@ Common options that ship with one of these formats: [vLLM](https://github.com/vl
     If the endpoint requires authentication, paste an API key. It's sent as `Authorization: Bearer <key>` for OpenAI-format endpoints, or `x-api-key: <key>` for Anthropic-format endpoints.
   </Step>
   <Step title="Probe for models">
-    Manifest calls `GET /v1/models` against your base URL and lists every model the endpoint reports. Pin one to a [complexity tier](/routing#complexity) and you're routed.
+    Manifest calls `GET /v1/models` against your base URL and lists every model the endpoint reports. Pin one to your default or a custom tier and you're routed.
   </Step>
 </Steps>
 

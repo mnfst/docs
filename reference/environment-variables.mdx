@@ -25,10 +25,22 @@ Manifest reads its configuration from environment variables. In the bundled Dock
 | `BIND_ADDRESS` | `127.0.0.1` | Interface the server binds to. Set to `0.0.0.0` for LAN access |
 | `CORS_ORIGIN` | `http://localhost:3000` | Allowed CORS origin for browser-based dashboard requests |
 | `API_KEY` | — | Internal API key for system endpoints |
+| `MANIFEST_ENCRYPTION_KEY` | `BETTER_AUTH_SECRET` | Key used to encrypt stored provider credentials at rest. Falls back to `BETTER_AUTH_SECRET` when unset |
 | `THROTTLE_TTL` | `60000` | Rate-limit window in milliseconds |
 | `THROTTLE_LIMIT` | `100` | Max requests per window per agent |
-| `DB_POOL_MAX` | `20` | Max PostgreSQL connections in the pool |
+| `DB_POOL_MAX` | `30` | Max PostgreSQL connections in the pool |
 | `SEED_DATA` | `false` | Seed demo data on first boot |
+
+## LLM proxy
+
+How Manifest talks to upstream providers.
+
+| Variable | Default | Description |
+|---|---|---|
+| `PROVIDER_TIMEOUT_MS` | `180000` | Per-attempt timeout (ms) for upstream requests. A hung provider surfaces as a synthetic `504` and triggers the next [fallback](/fallback). Set it strictly below your client's own timeout; slow local models may need it raised |
+| `MANIFEST_MAX_MESSAGES` | `1000` | Max messages Manifest forwards per request. Requests over the cap are rejected with error [M301](/errors/M301) |
+| `STREAM_WARMUP_MS` | `15000` | How long to wait for the first streamed chunk before falling back to the next model |
+| `OLLAMA_HOST` | `http://localhost:11434` | Base URL for a local Ollama server. In Docker, set it to `http://host.docker.internal:11434` |
 
 ## Email
 

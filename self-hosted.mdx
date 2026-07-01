@@ -123,7 +123,7 @@ After connecting a provider, send a test request and watch it land in the dashbo
 curl -X POST http://localhost:2099/v1/chat/completions \
   -H "Authorization: Bearer mnfst_YOUR_KEY_HERE" \
   -H "Content-Type: application/json" \
-  -d '{"model": "manifest/auto", "messages": [{"role": "user", "content": "Hello"}]}'
+  -d '{"model": "auto", "messages": [{"role": "user", "content": "Hello"}]}'
 ```
 
 If the response comes back with `That doesn't look like a Manifest key`, you're still using the placeholder — replace `mnfst_YOUR_KEY_HERE` with the real key from the dashboard.
@@ -158,7 +158,7 @@ ports:
 
 ...and in `.env`:
 
-```
+```bash
 BETTER_AUTH_URL=http://localhost:8080
 ```
 
@@ -299,6 +299,12 @@ docker compose down       # Stop services (keeps data)
 docker compose down -v    # Stop and delete all data
 ```
 
+## Data and privacy
+
+Manifest keeps metadata about each request: model, provider, tier, token counts, cost, latency, and a scrubbed error message. It does not keep the message bodies. Prompts and completions are never written to the database, inline image data is stripped out, and error text is scrubbed for secrets before it lands.
+
+Your agents' conversations stay between you and the provider. The usage and cost views in the dashboard are built from that metadata alone.
+
 ## Telemetry
 
 Once a day, each install sends us a small anonymous report. That's how we know whether anyone's actually using the thing, and which providers are popular enough to deserve more work. It's aggregates, never content: no prompts, no messages, no keys, nothing tied to a user. Fifteen fields total.
@@ -312,7 +318,7 @@ Once a day, each install sends us a small anonymous report. That's how we know w
 | `manifest_version` | `5.47.0` | Version adoption across the fleet |
 | `messages_total` | `1284` | Daily activity per install |
 | `messages_by_provider` | `{"anthropic": 700, "openai": 500}` | Provider mix. Anything we don't recognize collapses to `"custom"`, so self-hosted provider names and URLs stay local |
-| `messages_by_tier` | `{"simple": 800, "standard": 400, ...}` | Routing tier usage |
+| `messages_by_tier` | `{"default": 900, "batch": 300, ...}` | Routing tier usage |
 | `messages_by_auth_type` | `{"api_key": 1200, "subscription": 84}` | API key vs. paid-subscription usage |
 | `tokens_input_total` | `1_450_000` | Volume-weighted signal |
 | `tokens_output_total` | `890_000` | Same |
@@ -340,7 +346,7 @@ Tenant IDs, user IDs, emails, API keys, prompts, message contents, model names, 
 
 Put this in your `.env` (or `docker-compose.yml`) and restart the container:
 
-```
+```bash
 MANIFEST_TELEMETRY_DISABLED=1
 ```
 
@@ -350,7 +356,7 @@ The sender checks the flag before doing anything else. No database read, no DNS 
 
 If you'd rather run your own fleet dashboard, point `TELEMETRY_ENDPOINT` at a URL you control:
 
-```
+```bash
 TELEMETRY_ENDPOINT=https://telemetry.mycompany.internal/v1/report
 ```
 

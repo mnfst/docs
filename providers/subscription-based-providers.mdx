@@ -1,25 +1,35 @@
 ---
 title: "Subscription-based providers"
 sidebarTitle: "Subscription-based"
-description: "Reuse a paid plan you already have: ChatGPT Plus, Claude Max, GitHub Copilot, GLM Coding Plan, MiniMax, OpenCode Go, or Ollama Cloud."
+description: "Reuse a paid plan you already have: ChatGPT, Claude, Gemini, Grok, GitHub Copilot, GLM Coding Plan, Kimi, Mistral Vibe, and more."
 icon: "credit-card"
 keywords:
-  ["ChatGPT Plus", "Claude Max", "GitHub Copilot", "GLM Coding Plan", "MiniMax Coding Plan", "OpenCode Go", "Ollama Cloud", "OAuth", "device code"]
+  ["ChatGPT Plus", "Claude Max", "GitHub Copilot", "GLM Coding Plan", "Mistral Vibe", "Gemini", "Grok", "Kimi", "OAuth", "device code"]
 ---
 
 If you already pay for ChatGPT Plus, Claude Max, GitHub Copilot, or one of the other plans listed below, Manifest can route through the subscription instead of an API key. Auth is OAuth or a subscription token, depending on the provider.
 
 ## Supported subscriptions
 
-| Provider                                              | Auth flow          |
-| ----------------------------------------------------- | ------------------ |
-| [OpenAI](https://openai.com/chatgpt)                  | OAuth (browser)    |
-| [Anthropic](https://www.anthropic.com/claude)         | OAuth (browser)    |
-| [GitHub Copilot](https://github.com/features/copilot) | Device code        |
-| [MiniMax](https://www.minimaxi.com)                   | OAuth (browser)    |
-| [Z.ai (Zhipu)](https://z.ai)                          | Subscription token |
-| [OpenCode](https://opencode.ai)                       | Subscription token |
-| [Ollama Cloud](https://ollama.com)                    | Account login      |
+| Provider                                              | Plan                 | Auth flow          |
+| ----------------------------------------------------- | -------------------- | ------------------ |
+| [OpenAI](https://openai.com/chatgpt)                  | ChatGPT Plus/Pro     | OAuth (browser)    |
+| [Anthropic](https://www.anthropic.com/claude)         | Claude Pro/Max       | Subscription token |
+| [Google](https://gemini.google.com)                   | Gemini               | OAuth (browser)    |
+| [xAI](https://x.ai)                                   | Grok                 | OAuth (browser)    |
+| [GitHub Copilot](https://github.com/features/copilot) | Copilot              | Device code        |
+| [MiniMax](https://www.minimaxi.com)                   | Coding Plan          | Device code        |
+| [Kiro](https://kiro.dev)                              | Kiro                 | Device code        |
+| [Z.ai (Zhipu)](https://z.ai)                          | GLM Coding Plan      | Subscription token |
+| [Alibaba Cloud (Qwen)](https://qwen.ai)               | Qwen Token Plan      | Subscription token |
+| [Moonshot](https://platform.moonshot.cn)              | Kimi Coding Plan     | Subscription token |
+| [Mistral](https://mistral.ai)                         | Vibe                 | Subscription token |
+| [BytePlus](https://www.byteplus.com)                  | ModelArk Coding Plan | Subscription token |
+| Xiaomi MiMo                                           | Token Plan           | Subscription token |
+| [NousResearch](https://nousresearch.com)              | Subscription         | Subscription token |
+| Command Code                                          | Subscription         | Subscription token |
+| [OpenCode](https://opencode.ai)                       | OpenCode Go          | Subscription token |
+| [Ollama Cloud](https://ollama.com)                    | Ollama Cloud         | Subscription token |
 
 ## Connect a subscription
 
@@ -47,9 +57,10 @@ If you already pay for ChatGPT Plus, Claude Max, GitHub Copilot, or one of the o
     rather than the public OpenAI API. Tokens refresh automatically.
   </Tab>
   <Tab title="Claude">
-    Standard OAuth. Requests carry the `anthropic-beta: oauth-2025-04-20` header
-    so Anthropic recognizes the subscription token. Available models match what
-    your plan grants in claude.ai.
+    Generate a token with the Claude CLI (`claude setup-token`) and paste it into
+    Manifest. Requests carry the `anthropic-beta: oauth-2025-04-20` header so
+    Anthropic recognizes the subscription token. Available models match what your
+    plan grants in claude.ai.
   </Tab>
   <Tab title="GitHub Copilot">
     GitHub's device-code flow. Manifest gives you a short user code, you visit
@@ -59,9 +70,9 @@ If you already pay for ChatGPT Plus, Claude Max, GitHub Copilot, or one of the o
     refreshes for you.
   </Tab>
   <Tab title="MiniMax">
-    OAuth against MiniMax. Requests use the Anthropic protocol via
-    `api.minimax.io/anthropic` (international) or `api.minimaxi.com/anthropic`
-    (China region). The region is picked from the OAuth response.
+    MiniMax's device-code flow. Manifest gives you a short user code to approve,
+    then requests use the Anthropic protocol via `api.minimax.io/anthropic`
+    (international) or `api.minimaxi.com/anthropic` (China).
   </Tab>
   <Tab title="GLM Coding Plan">
     Paste the subscription token issued by Z.ai. Requests route to
@@ -84,4 +95,4 @@ If you already pay for ChatGPT Plus, Claude Max, GitHub Copilot, or one of the o
 
 A common setup: subscription as the primary (predictable monthly cost), API-key provider as the fallback for when you hit the plan limit or want a model the subscription doesn't include.
 
-Pin your subscription model to a [complexity tier](/routing#complexity) and add API-key models to the [fallback list](/fallback#configuration). Manifest handles the switch.
+Pin your subscription model to your default or a custom tier and add API-key models to the [fallback list](/fallback#configuration). Manifest handles the switch.

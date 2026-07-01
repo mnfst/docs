@@ -51,7 +51,7 @@ All three speak OpenAI-compatible `/v1/chat/completions` and accept any GGUF mod
     Manifest probes `http://localhost:<default-port>/v1/models`. If the probe succeeds, every loaded model appears for routing.
   </Step>
   <Step title="Pin a model to a tier">
-    Open any [complexity tier](/routing#complexity) and pick a local model as the primary. You can mix local and cloud models in the same fallback chain.
+    Open your default or a custom tier and pick a local model as the primary. You can mix local and cloud models in the same fallback chain.
   </Step>
 </Steps>
 
@@ -99,6 +99,6 @@ If you self-host Manifest in Docker, the container can't reach a local server bo
 | **Pricing data**      | Not applicable. Local providers are excluded from pricing sync.|
 
 <Tip>
-  Mix local and cloud in one chain: pin a local model to **simple** for cheap
-  day-to-day calls, fall back to a cloud model when the local server is offline.
+  Mix local and cloud in one chain: set a local model as your default for
+  day-to-day calls, and fall back to a cloud model when the local server is offline.
 </Tip>
