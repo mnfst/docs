@@ -1,9 +1,9 @@
 ---
 title: "Glossary"
-description: "Definitions for agent, tier, specificity, momentum, fallback chain, manifest/auto, scoring, and confidence."
+description: "Definitions for agent, tier, default and custom routing, direct routing, fallback chain, auto, and provider auth types."
 icon: "book"
 keywords:
-  ["agent", "tier", "specificity", "momentum", "fallback chain", "manifest/auto", "scoring", "confidence", "auth type"]
+  ["agent", "tier", "custom tier", "default routing", "direct routing", "fallback chain", "auto", "provider", "auth type"]
 ---
 
 ## Agent
@@ -15,14 +15,22 @@ A configured client that sends requests through Manifest. Each agent has its own
 The credential category Manifest uses to talk to a provider:
 
 - **`api_key`** — classic per-token API key (most providers)
-- **`subscription`** — OAuth or token tied to a paid plan (ChatGPT Plus, Claude Max, GLM Coding, etc.)
-- **`local`** — no credential, server runs on your machine (Ollama, LM Studio, llama.cpp)
+- **`subscription`** — OAuth or a subscription token tied to a paid plan (ChatGPT Plus, Claude Max, GLM Coding Plan, and others)
+- **`local`** — no credential, the server runs on your machine (Ollama, LM Studio, llama.cpp)
 
 Auth type is recorded on every request and shows up in the dashboard's distribution chart.
 
-## Confidence
+## Auto
 
-A score between `0` and `1` indicating how clearly a request fits its assigned [tier](#tier). Returned in the `X-Manifest-Confidence` response header.
+The model ID you send to opt into routing. When Manifest sees `auto`, it applies your routing rules and picks the real model. Send a real model ID instead to skip routing and target one provider directly (see [Direct routing](#direct-routing)).
+
+## Custom tier
+
+A routing rule matched on a request header. You choose the header key and value on the dashboard and pin the tier to its own model and fallback chain. When a request carries that header, it routes to the tier's model instead of the default. See [Routing → Custom](/routing#custom).
+
+## Direct routing
+
+Sending a real model ID (one that `GET /v1/models` lists) instead of `auto`. Manifest forwards the request straight to that provider and skips tiers and fallbacks. The response carries `X-Manifest-Tier: direct`.
 
 ## Fallback
 
@@ -30,41 +38,21 @@ The retry mechanism that kicks in when the primary model fails. Manifest tries t
 
 ## Fallback chain
 
-The ordered list of models tried for a single tier or specificity, primary first. Up to 5 models. When all of them fail, Manifest returns HTTP `424` with `X-Manifest-Fallback-Exhausted: true`.
-
-## Manifest/auto
-
-The model ID clients send to opt into routing. Any other model ID is forwarded as-is to the matching provider. `manifest/auto` is the only string that triggers tier scoring and model selection.
-
-## Momentum
-
-The carry-over rule that prevents a short follow-up ("yes", "do it") from dropping to a cheaper [tier](#tier). See [Routing → Session momentum](/routing#session-momentum).
+The ordered list of models tried for a single tier, primary first. Up to 5 models. When all of them fail, Manifest returns HTTP `424` with `X-Manifest-Fallback-Exhausted: true`.
 
 ## Provider
 
 An upstream LLM service Manifest can route to. There are four kinds:
 
-- [API key](/providers/api-key-providers) — pay-per-token (OpenAI, Anthropic, Google, …)
-- [Subscription](/providers/subscription-based-providers) — flat-rate plan (ChatGPT Plus, Claude Max, …)
+- [API key](/providers/api-key-providers) — pay-per-token (OpenAI, Anthropic, Google, and more)
+- [Subscription](/providers/subscription-based-providers) — a plan you already pay for (ChatGPT Plus, Claude Max, and more)
 - [Local](/providers/local-models) — runs on your hardware (Ollama, LM Studio, llama.cpp)
 - [Custom](/providers/custom-providers) — any OpenAI- or Anthropic-compatible HTTP endpoint
 
 ## Routing
 
-The scoring + selection process that picks which model handles a request. Two axes drive it: [tier](#tier) (how complex) and [specificity](#specificity) (what kind of task). Both happen in under 2 ms with no external calls.
-
-## Scoring
-
-23 weighted dimensions (14 keyword-based, 5 structural, 4 contextual) that produce a single complexity score. Threshold boundaries map the score to a [tier](#tier). Same pipeline feeds the [specificity](#specificity) detector.
-
-## Specificity
-
-The task category Manifest detects from keyword patterns and tool names. Nine categories: `coding`, `web_browsing`, `data_analysis`, `image_generation`, `video_generation`, `social_media`, `email_management`, `calendar_management`, `trading`. When the match crosses the threshold, you can pin a category-specific model that overrides the per-tier choice. See [Routing → Task-specific](/routing#task-specific).
+The step that decides which model handles a request. Manifest checks your custom tiers first, then sends anything that doesn't match to your default model. It runs in-process with no extra network call. See [Routing](/routing).
 
 ## Tier
 
-The complexity bucket a request falls into: `simple`, `standard`, `complex`, or `reasoning`. Each tier maps to a primary model plus a fallback chain. Tier is the main lever Manifest pulls to balance cost against capability. See [Routing → Complexity](/routing#complexity).
-
-## Tier override
-
-Any signal that forces a minimum tier regardless of the computed score. See [Routing → Tier overrides](/routing#tier-overrides).
+A routing lane with its own model and fallback chain. Every agent has a **Default** tier; you can add **Custom** tiers matched on request headers. See [Routing](/routing).

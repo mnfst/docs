@@ -50,7 +50,7 @@ Fallback models are configured **per tier** in the Manifest dashboard. Each tier
     Navigate to **Routing** in the dashboard.
   </Step>
   <Step title="Select a tier">
-    Click any tier (Simple, Standard, Complex, or Reasoning).
+    Click your Default tier or any custom tier.
   </Step>
   <Step title="Add fallback models">
     Add up to 5 fallback models. Drag to reorder — models are tried from top to bottom.
@@ -72,9 +72,9 @@ When a fallback succeeds, the response carries `X-Manifest-Fallback-From` (the p
 | | Routing | Fallback |
 |---|---|---|
 | **When** | Before the request is sent | After the request fails |
-| **Goal** | Pick the cheapest capable model | Recover from a failure |
-| **Speed** | < 2 ms scoring | Adds one extra round-trip per retry |
-| **Tier** | Assigns a tier | Stays within the same tier |
+| **Goal** | Pick the model for the request | Recover from a failure |
+| **Speed** | In-process, no extra call | Adds one extra round-trip per retry |
+| **Tier** | Picks the tier | Stays within the same tier |
 
 Routing picks the model. Fallback catches it if that model is down.
 

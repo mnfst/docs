@@ -3,10 +3,10 @@ title: "API"
 description: "The Manifest proxy speaks both OpenAI and Anthropic. Endpoints, auth, streaming, and error responses."
 icon: "code"
 keywords:
-  ["chat completions", "responses API", "Anthropic messages", "manifest/auto", "streaming", "SSE", "Bearer auth", "424 fallback exhausted"]
+  ["chat completions", "responses API", "Anthropic messages", "auto", "v1/models", "streaming", "SSE", "424 fallback exhausted"]
 ---
 
-Manifest exposes both OpenAI and Anthropic-format endpoints on one proxy. Point your client at the Manifest URL, send `manifest/auto` as the model, and routing picks the real model behind the scenes.
+Manifest exposes both OpenAI and Anthropic-format endpoints on one proxy. Point your client at the Manifest URL, send `auto` as the model, and routing picks the real model behind the scenes.
 
 ## Base URL
 
@@ -32,6 +32,7 @@ Generate a key from the dashboard's **Agents** page. Keys always start with `mnf
 | `POST` | `/v1/chat/completions` | OpenAI | Most clients (OpenAI SDK, LangChain, Vercel AI SDK, custom HTTP) |
 | `POST` | `/v1/responses` | OpenAI Responses | Codex, `*-pro`, `o1-pro`, deep-research models |
 | `POST` | `/v1/messages` | Anthropic | Anthropic SDK, Claude Code, anything that speaks the Messages API |
+| `GET` | `/v1/models` | OpenAI | Listing the models your agent can route to |
 
 The proxy translates between formats internally, so you can send an OpenAI-shaped request and Manifest will reshape it before forwarding to an Anthropic-only model. The reverse works too.
 
@@ -42,7 +43,7 @@ curl -X POST http://localhost:2099/v1/chat/completions \
   -H "Authorization: Bearer mnfst_YOUR_KEY_HERE" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "manifest/auto",
+    "model": "auto",
     "messages": [
       {"role": "user", "content": "What is the capital of France?"}
     ]
@@ -59,13 +60,24 @@ curl -X POST http://localhost:2099/v1/messages \
   -H "Content-Type: application/json" \
   -H "anthropic-version: 2023-06-01" \
   -d '{
-    "model": "manifest/auto",
+    "model": "auto",
     "max_tokens": 1024,
     "messages": [
       {"role": "user", "content": "Hello"}
     ]
   }'
 ```
+
+## Listing models
+
+`GET /v1/models` returns the models your agent can reach, in OpenAI format. The first entry is always `auto` (routing); the rest are the real model IDs from your connected providers.
+
+```bash
+curl http://localhost:2099/v1/models \
+  -H "Authorization: Bearer mnfst_YOUR_KEY_HERE"
+```
+
+Send `auto` to let Manifest route, or send any listed model ID to skip routing and go straight to that provider. See [Routing → Route a specific model](/routing#route-a-specific-model).
 
 ## Streaming
 
@@ -105,4 +117,4 @@ Cloud rate limits are tied to your plan and shown in the dashboard.
 
 ## Response headers
 
-Every response carries [routing headers](/reference/headers) so your client can see which model handled the request, the assigned tier, and confidence, without parsing the response body.
+Every response carries [routing headers](/reference/headers) so your client can see which model and tier handled the request, without parsing the response body.
