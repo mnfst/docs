@@ -1,0 +1,86 @@
+---
+title: "Deploy Manifest on Heroku"
+description: "Deploy Manifest on Heroku with a Deploy to Heroku button, a container-stack web dyno, and Heroku Postgres."
+icon: "box"
+keywords:
+  [
+    "Manifest deployment",
+    "Heroku",
+    "self-hosted Manifest",
+    "PostgreSQL",
+    "Docker",
+  ]
+---
+
+<Card
+  title="Open Heroku deploy"
+  icon="external-link"
+  href="https://www.heroku.com/deploy?template=https://github.com/mnfst/manifest"
+>
+  Deploy-button guide with Heroku Postgres, generated secrets, and one required
+  BETTER_AUTH_URL value.
+</Card>
+
+## Overview
+
+Heroku can deploy Manifest with the repository `app.json` and `heroku.yml`. The deploy button creates a Cedar container-stack app, provisions Heroku Postgres, generates Manifest secrets, and builds a tiny Heroku Dockerfile that uses the public Manifest image.
+
+Heroku still requires one manual value: `BETTER_AUTH_URL`. Set it to the public URL for the Heroku app name you choose.
+
+## Prerequisites
+
+- A Heroku account with billing enabled.
+- Permission to create apps, add-ons, and config vars.
+
+This stack creates paid resources. Heroku no longer provides free dynos or free Heroku Postgres plans.
+
+## Deploy
+
+1. Open the [Heroku deploy link](https://www.heroku.com/deploy?template=https://github.com/mnfst/manifest).
+2. Choose an app name.
+3. Set `BETTER_AUTH_URL` to:
+
+```text
+https://<your-app-name>.herokuapp.com
+```
+
+4. Deploy the app.
+
+Heroku generates `BETTER_AUTH_SECRET` and `MANIFEST_ENCRYPTION_KEY`, provisions Postgres as `DATABASE_URL`, builds `Dockerfile.heroku`, and starts the web dyno.
+
+## Open Manifest
+
+Open the deployed app and create the first admin account. Fresh installs redirect to `/setup`; the first account you create becomes the admin.
+
+Verify the deployment:
+
+```bash
+curl -fsS https://<your-app-name>.herokuapp.com/api/v1/health
+```
+
+View logs:
+
+```bash
+heroku logs --tail -a <your-app-name>
+```
+
+## Production notes
+
+- Heroku sets `PORT` automatically, so the template does not pin a port.
+- `PGSSLMODE=no-verify` enables TLS for Heroku Postgres without editing the managed `DATABASE_URL`.
+- `DB_POOL_MAX=8` and `AUTH_DB_POOL_MAX=4` leave headroom under the Essential-0 connection limit.
+- Use a custom domain before configuring production OAuth callbacks.
+
+## Tearing it down
+
+Destroy the app when testing is done to stop billing:
+
+```bash
+heroku apps:destroy -a <your-app-name>
+```
+
+Relevant Heroku docs:
+
+- [Deploy to Heroku Button](https://devcenter.heroku.com/articles/heroku-button)
+- [app.json schema](https://devcenter.heroku.com/articles/app-json-schema)
+- [Building Docker Images with heroku.yml](https://devcenter.heroku.com/articles/build-docker-images-heroku-yml)

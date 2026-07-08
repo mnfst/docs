@@ -1,0 +1,82 @@
+---
+title: "Deploy Manifest on Fly.io"
+description: "Deploy Manifest on Fly.io from the public Docker image with Fly Postgres, generated secrets, and HTTPS."
+icon: "plane"
+keywords:
+  [
+    "Manifest deployment",
+    "Fly.io",
+    "self-hosted Manifest",
+    "PostgreSQL",
+    "Docker",
+  ]
+---
+
+<Card
+  title="Install flyctl"
+  icon="external-link"
+  href="https://fly.io/docs/flyctl/install/"
+>
+  CLI-based deploy using the public Docker image, Fly Postgres, and generated
+  Manifest secrets.
+</Card>
+
+## Overview
+
+Fly.io runs Manifest as a long-running Docker container close to users, with a Fly Postgres database in the same private network. This is not a browser one-click button. The Manifest repository includes a `deploy/fly/deploy.sh` script that creates the app, creates Postgres, attaches `DATABASE_URL`, sets secrets, and deploys the public Docker image.
+
+## Prerequisites
+
+- A Fly.io account with billing enabled.
+- `flyctl` installed and authenticated with `fly auth login`.
+- Permission to create Fly apps and Postgres apps.
+
+This stack creates paid resources. Review Fly pricing before leaving test apps running.
+
+## Deploy
+
+From the Manifest repository root:
+
+```bash
+FLY_APP_NAME=manifest-demo \
+FLY_REGION=cdg \
+FLY_ORG=personal \
+./deploy/fly/deploy.sh
+```
+
+The script deploys `docker.io/manifestdotbuild/manifest:6`, provisions Fly Postgres, attaches it as `DATABASE_URL`, and generates separate values for `BETTER_AUTH_SECRET` and `MANIFEST_ENCRYPTION_KEY`. Re-running the script keeps existing secrets instead of rotating sessions or encrypted provider credentials.
+
+## Open Manifest
+
+Open the deployed app and create the first admin account:
+
+```text
+https://<your-fly-app>.fly.dev
+```
+
+Verify the deployment:
+
+```bash
+curl -fsS https://<your-fly-app>.fly.dev/api/v1/health
+```
+
+View logs:
+
+```bash
+fly logs --app <your-fly-app>
+```
+
+## Production notes
+
+- The template keeps one Machine running so Manifest is always available for agents.
+- For production, choose a larger Postgres configuration or Fly Managed Postgres instead of the small script default.
+- Add a custom domain before configuring OAuth callback URLs.
+- Set `MANIFEST_TELEMETRY_DISABLED=1` as a Fly secret if you want to disable anonymous self-hosted telemetry.
+- Destroy both the app and database when testing is done.
+
+Relevant Fly docs:
+
+- [Fly app configuration](https://fly.io/docs/reference/configuration/)
+- [Deploy an existing Docker image](https://fly.io/docs/reference/configuration/#specify-a-docker-image)
+- [Create Postgres](https://fly.io/docs/python/do-more/add-postgres/)
+- [Attach Postgres](https://fly.io/docs/postgres/managing/attach-detach/)

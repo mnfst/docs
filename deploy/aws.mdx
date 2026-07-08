@@ -1,0 +1,90 @@
+---
+title: "Deploy Manifest on AWS"
+description: "Deploy Manifest on AWS with CloudFormation, ECS Fargate, RDS PostgreSQL, Secrets Manager, and an Application Load Balancer."
+icon: "server"
+keywords:
+  ["Manifest deployment", "AWS", "self-hosted Manifest", "PostgreSQL", "Docker"]
+---
+
+<Card
+  title="Open AWS quick-create"
+  icon="external-link"
+  href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/quickcreate?stackName=manifest&templateURL=https%3A%2F%2Fmnfst-manifest-deploy-templates.s3.us-east-1.amazonaws.com%2Fmanifest.yaml"
+>
+  CloudFormation quick-create for ECS Fargate, RDS PostgreSQL, Secrets Manager,
+  and ALB.
+</Card>
+
+## Overview
+
+The AWS template deploys Manifest with ECS Fargate, RDS PostgreSQL, Secrets Manager, CloudWatch Logs, and an Application Load Balancer. It is a good fit when you want Manifest in your own AWS account.
+
+## Prerequisites
+
+- An AWS account with billing enabled.
+- Permission to create CloudFormation stacks, IAM roles, VPC resources, ECS, RDS, Elastic Load Balancing, CloudWatch Logs, and Secrets Manager secrets.
+- AWS CloudShell or a local shell with `aws` and `git` installed.
+
+This stack creates paid resources, including an Application Load Balancer, ECS Fargate tasks, and RDS PostgreSQL.
+
+## Deploy
+
+Open [AWS CloudShell](https://console.aws.amazon.com/cloudshell/home), choose the region you want to deploy into, then run:
+
+```bash
+git clone https://github.com/mnfst/manifest.git
+cd manifest
+AWS_REGION=us-east-1 ./deploy/aws/deploy.sh
+```
+
+Change `AWS_REGION` if you deploy outside `us-east-1`.
+
+You can also use the [CloudFormation quick-create link](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/quickcreate?stackName=manifest&templateURL=https%3A%2F%2Fmnfst-manifest-deploy-templates.s3.us-east-1.amazonaws.com%2Fmanifest.yaml).
+
+The first deploy usually takes 10-15 minutes because RDS needs time to provision.
+
+## Configuration
+
+The deploy script exposes common settings as environment variables:
+
+```bash
+STACK_NAME=manifest \
+SERVICE_NAME=manifest \
+AWS_REGION=us-east-1 \
+IMAGE_URL=docker.io/manifestdotbuild/manifest:6 \
+DATABASE_INSTANCE_CLASS=db.t4g.micro \
+DESIRED_COUNT=1 \
+./deploy/aws/deploy.sh
+```
+
+The CloudFormation template generates:
+
+- `DATABASE_URL`.
+- `BETTER_AUTH_SECRET`.
+- `MANIFEST_ENCRYPTION_KEY`.
+
+Manifest runs with `PORT=2099`, `BIND_ADDRESS=0.0.0.0`, and `MANIFEST_MODE=selfhosted`.
+
+## Open Manifest
+
+After deployment, the script prints `ServiceUrl` and `HealthCheckUrl`.
+
+Verify the deployment:
+
+```bash
+curl -fsS http://<load-balancer-dns-name>/api/v1/health
+```
+
+Open `ServiceUrl` and create the first account. The first account becomes the admin.
+
+## Production notes
+
+- The default template exposes Manifest over HTTP on the generated load balancer DNS name.
+- Configure TLS with your own domain and ACM certificate before using the deployment for production authentication traffic.
+- Set database deletion protection if you want to avoid accidental RDS deletion.
+
+Relevant AWS docs:
+
+- [AWS CloudFormation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html)
+- [Amazon ECS on Fargate](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/AWS_Fargate.html)
+- [Amazon RDS for PostgreSQL](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_PostgreSQL.html)

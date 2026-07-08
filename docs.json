@@ -92,6 +92,23 @@
             "pages": ["introduction", "self-hosted"]
           },
           {
+            "group": "Deployment",
+            "boost": 2,
+            "pages": [
+              "deploy",
+              "deploy/railway",
+              "deploy/render",
+              "deploy/digitalocean",
+              "deploy/aws",
+              "deploy/gcp",
+              "deploy/fly",
+              "deploy/coolify",
+              "deploy/easypanel",
+              "deploy/heroku",
+              "deploy/koyeb"
+            ]
+          },
+          {
             "group": "Features",
             "boost": 2,
             "pages": ["routing", "fallback", "set-limits"]
