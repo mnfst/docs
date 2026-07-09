@@ -1,0 +1,64 @@
+---
+title: "Deploy Manifest on Railway"
+sidebarTitle: "Railway"
+description: "Deploy Manifest on Railway with the published template, including the Manifest service and PostgreSQL."
+icon: "/icons/deploy/railway.svg"
+keywords:
+  [
+    "Manifest deployment",
+    "Railway",
+    "self-hosted Manifest",
+    "PostgreSQL",
+    "Docker",
+  ]
+---
+
+<Card
+  title="Open Railway template"
+  icon="external-link"
+  href="https://railway.com/deploy/wild-wild"
+>
+  Best one-click path for most users. The template provisions Manifest and
+  PostgreSQL.
+</Card>
+
+## Overview
+
+Railway is the fastest hosted path for Manifest. Use the published Manifest template to create a project with the Manifest app and PostgreSQL database, then open the generated domain and create the first admin account.
+
+## Prerequisites
+
+- A Railway account.
+- A Railway workspace with permission to create projects and services.
+- Billing enabled if your usage exceeds the free included resources.
+
+## Deploy
+
+1. Open the [Manifest Railway template](https://railway.com/deploy/wild-wild).
+2. Choose the Railway workspace and project where you want to deploy Manifest.
+3. Review the services that will be created.
+4. Deploy the template.
+5. Wait for the Manifest service and PostgreSQL database to finish provisioning.
+
+The template includes the app service and database, so you do not need to create PostgreSQL separately.
+
+## Open Manifest
+
+Open the generated Railway domain and create the first account. The first account becomes the admin.
+
+Verify the deployment:
+
+```bash
+curl -fsS https://<your-railway-domain>/api/v1/health
+```
+
+## Notes
+
+- Use a custom domain before configuring production OAuth callbacks.
+- Keep PostgreSQL backups enabled for production data.
+- Use the Railway service logs when debugging failed boots or database connection issues.
+
+Relevant Railway links:
+
+- [Railway templates](https://railway.com/templates)
+- [Manifest Railway template](https://railway.com/deploy/wild-wild)

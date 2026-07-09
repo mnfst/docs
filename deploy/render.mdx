@@ -1,0 +1,71 @@
+---
+title: "Deploy Manifest on Render"
+sidebarTitle: "Render"
+description: "Deploy Manifest on Render with the repository Blueprint, including a web service and Render PostgreSQL."
+icon: "/icons/deploy/render.svg"
+keywords:
+  [
+    "Manifest deployment",
+    "Render",
+    "self-hosted Manifest",
+    "PostgreSQL",
+    "Docker",
+  ]
+---
+
+<Card
+  title="Open Render deploy"
+  icon="external-link"
+  href="https://render.com/deploy?repo=https://github.com/mnfst/manifest"
+>
+  Blueprint-based deploy using the public Docker image, generated secrets, and
+  Render PostgreSQL.
+</Card>
+
+## Overview
+
+Render can deploy Manifest from the repository Blueprint. The Blueprint creates a web service from the public Manifest Docker image and a Render PostgreSQL database, then wires the runtime environment variables.
+
+## Prerequisites
+
+- A Render account.
+- Permission to create web services and PostgreSQL databases.
+- Billing enabled if you select paid plans or outgrow free resources.
+
+## Deploy
+
+1. Open the [Render deploy link](https://render.com/deploy?repo=https://github.com/mnfst/manifest).
+2. Review the Blueprint resources.
+3. Choose the region and plans that fit your deployment.
+4. Deploy the Blueprint.
+5. Wait for the web service and PostgreSQL database to finish provisioning.
+
+The repository `render.yaml` sets:
+
+- `PORT=2099`.
+- `DATABASE_URL` from Render PostgreSQL.
+- Generated `BETTER_AUTH_SECRET`.
+- Generated `MANIFEST_ENCRYPTION_KEY`.
+- `BETTER_AUTH_URL` from the Render external service URL.
+- `MANIFEST_MODE=selfhosted`.
+
+## Open Manifest
+
+Open the Render service URL and create the first account. The first account becomes the admin.
+
+Verify the deployment:
+
+```bash
+curl -fsS https://<your-render-service>.onrender.com/api/v1/health
+```
+
+## Notes
+
+- Render PostgreSQL connection strings are wired by the Blueprint.
+- Use a custom domain before configuring production OAuth callbacks.
+- If the instance is sleeping on a free plan, the first request can take longer.
+
+Relevant Render docs:
+
+- [Blueprints](https://render.com/docs/blueprint-spec)
+- [PostgreSQL on Render](https://render.com/docs/databases)

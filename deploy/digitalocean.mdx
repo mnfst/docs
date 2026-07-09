@@ -1,0 +1,73 @@
+---
+title: "Deploy Manifest on DigitalOcean"
+sidebarTitle: "DigitalOcean"
+description: "Deploy Manifest on DigitalOcean App Platform with the Deploy to DigitalOcean flow and a Dev PostgreSQL database."
+icon: "/icons/deploy/digitalocean.svg"
+keywords:
+  [
+    "Manifest deployment",
+    "DigitalOcean",
+    "self-hosted Manifest",
+    "PostgreSQL",
+    "Docker",
+  ]
+---
+
+<Card
+  title="Open DigitalOcean deploy"
+  icon="external-link"
+  href="https://cloud.digitalocean.com/apps/new?repo=https://github.com/mnfst/manifest/tree/main"
+>
+  App Platform deploy from the public repository with Manifest and a Dev
+  PostgreSQL database.
+</Card>
+
+## Overview
+
+DigitalOcean App Platform can create a Manifest app from the public repository template. The template uses the public Manifest Docker image and provisions a Dev PostgreSQL database.
+
+## Prerequisites
+
+- A DigitalOcean account with billing enabled.
+- Access to App Platform in the selected region.
+
+This stack creates paid resources, including an App Platform service and Dev PostgreSQL database.
+
+## Deploy
+
+1. Open the [DigitalOcean deploy link](https://cloud.digitalocean.com/apps/new?repo=https://github.com/mnfst/manifest/tree/main).
+2. Review the app spec.
+3. Generate two separate secret values:
+
+```bash
+openssl rand -hex 32
+openssl rand -hex 32
+```
+
+4. Paste one value into `BETTER_AUTH_SECRET`.
+5. Paste the other value into `MANIFEST_ENCRYPTION_KEY`.
+6. Create the app.
+
+DigitalOcean reads `.do/deploy.template.yaml` from the Manifest repository. The template includes the Manifest service and a Dev PostgreSQL database.
+
+## Open Manifest
+
+After App Platform finishes deploying, open the app URL and create the first account. The first account becomes the admin.
+
+Verify the deployment:
+
+```bash
+curl -fsS https://<your-app-url>/api/v1/health
+```
+
+## Notes
+
+- The template appends `uselibpqcompat=true` to DigitalOcean's PostgreSQL URL so Node `pg` handles the platform's `sslmode=require` connection string correctly.
+- Upgrade the Dev Database to a managed database for production data.
+- Use a custom domain before configuring production OAuth callbacks.
+
+Relevant DigitalOcean docs:
+
+- [Deploy to DigitalOcean button](https://docs.digitalocean.com/products/app-platform/how-to/add-deploy-do-button/)
+- [App Platform app spec](https://docs.digitalocean.com/products/app-platform/reference/app-spec/)
+- [Bindable environment variables](https://docs.digitalocean.com/products/app-platform/how-to/use-environment-variables/#using-bindable-variables-within-environment-variables)

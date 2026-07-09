@@ -1,0 +1,89 @@
+---
+title: "Deploy Manifest on GCP"
+sidebarTitle: "GCP"
+description: "Deploy Manifest on Google Cloud with Cloud Run, Cloud SQL for PostgreSQL, Secret Manager, and the Cloud Shell DeployStack flow."
+icon: "/icons/deploy/gcp.svg"
+keywords:
+  ["Manifest deployment", "GCP", "self-hosted Manifest", "PostgreSQL", "Docker"]
+---
+
+<Card
+  title="Open GCP Cloud Shell"
+  icon="external-link"
+  href="https://ssh.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fmnfst%2Fmanifest&cloudshell_workspace=deploy%2Fgcp&cloudshell_tutorial=TUTORIAL.md&cloudshell_image=gcr.io%2Fds-artifacts-cloudshell%2Fdeploystack_custom_image&shellonly=true"
+>
+  Cloud Shell guided deploy for Cloud Run, Cloud SQL PostgreSQL, and Secret
+  Manager.
+</Card>
+
+## Overview
+
+The Google Cloud deploy path uses Cloud Shell and DeployStack to run Terraform. It provisions Cloud Run for the Manifest container, Cloud SQL for PostgreSQL, and Secret Manager for runtime secrets.
+
+## Prerequisites
+
+- A Google Cloud project.
+- Billing enabled on the selected project.
+- Permission to enable APIs and create Cloud Run, Cloud SQL, IAM, and Secret Manager resources.
+
+This stack creates paid resources, including Cloud SQL.
+
+## Deploy
+
+Open the [GCP Cloud Shell guided deploy](https://ssh.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fmnfst%2Fmanifest&cloudshell_workspace=deploy%2Fgcp&cloudshell_tutorial=TUTORIAL.md&cloudshell_image=gcr.io%2Fds-artifacts-cloudshell%2Fdeploystack_custom_image&shellonly=true).
+
+The walkthrough prompts for:
+
+- Google Cloud project.
+- Region.
+- Cloud Run service name.
+- Manifest image URL.
+- Cloud SQL machine tier.
+- Maximum Cloud Run instances.
+- Cloud SQL deletion protection.
+
+Enable the required APIs:
+
+```bash
+gcloud services enable \
+  iam.googleapis.com \
+  run.googleapis.com \
+  sqladmin.googleapis.com \
+  secretmanager.googleapis.com
+```
+
+Run the installer:
+
+```bash
+deploystack install
+```
+
+The first deploy usually takes 10-15 minutes because Cloud SQL needs time to provision. The Terraform config patches `BETTER_AUTH_URL` to the final Cloud Run URL after the service is created.
+
+## Open Manifest
+
+Print the service URL:
+
+```bash
+terraform output service_url
+```
+
+Open the URL and create the first account. The first account becomes the admin.
+
+Verify the deployment:
+
+```bash
+curl -fsS "$(terraform output -raw health_check_url)"
+```
+
+## Production notes
+
+- Cloud SQL deletion protection is enabled by default.
+- Configure a custom domain before using OAuth callbacks in production.
+- Keep Secret Manager access limited to the Cloud Run service account.
+
+Relevant Google Cloud docs:
+
+- [Cloud Run](https://cloud.google.com/run/docs)
+- [Cloud SQL for PostgreSQL](https://cloud.google.com/sql/docs/postgres)
+- [Secret Manager](https://cloud.google.com/secret-manager/docs)

@@ -92,6 +92,38 @@
             "pages": ["introduction", "self-hosted"]
           },
           {
+            "group": "Deployment",
+            "boost": 2,
+            "pages": [
+              "deploy",
+              {
+                "group": "Managed platforms",
+                "icon": "cloud",
+                "expanded": false,
+                "pages": [
+                  "deploy/railway",
+                  "deploy/render",
+                  "deploy/digitalocean",
+                  "deploy/fly",
+                  "deploy/heroku",
+                  "deploy/koyeb"
+                ]
+              },
+              {
+                "group": "Cloud providers",
+                "icon": "server",
+                "expanded": false,
+                "pages": ["deploy/aws", "deploy/gcp"]
+              },
+              {
+                "group": "Self-hosted panels",
+                "icon": "panel-top",
+                "expanded": false,
+                "pages": ["deploy/coolify", "deploy/easypanel"]
+              }
+            ]
+          },
+          {
             "group": "Features",
             "boost": 2,
             "pages": ["routing", "fallback", "set-limits"]

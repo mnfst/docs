@@ -1,0 +1,68 @@
+---
+title: "Deployment guides"
+description: "Deploy Manifest on Railway, Render, DigitalOcean, AWS, GCP, Fly.io, Coolify, Easypanel, Heroku, and Koyeb."
+icon: "rocket"
+keywords:
+  [
+    "Manifest deployment",
+    "self-hosted Manifest",
+    "Railway",
+    "Render",
+    "AWS",
+    "GCP",
+    "Fly.io",
+    "Easypanel",
+    "Coolify",
+  ]
+---
+
+Use these guides to deploy Manifest with hosted platforms, cloud providers, or self-hosted PaaS tools. For local Docker installs, use the [self-hosted guide](/self-hosted).
+
+<CardGroup cols={2}>
+  <Card title="Railway" icon="arrow-up-right" href="/deploy/railway">
+    Best one-click path for most users. The template provisions Manifest and
+    PostgreSQL.
+  </Card>
+  <Card title="Render" icon="arrow-up-right" href="/deploy/render">
+    Blueprint-based deploy using the public Docker image, generated secrets, and
+    Render PostgreSQL.
+  </Card>
+  <Card title="DigitalOcean" icon="arrow-up-right" href="/deploy/digitalocean">
+    App Platform deploy from the public repository with Manifest and a Dev
+    PostgreSQL database.
+  </Card>
+  <Card title="AWS" icon="arrow-up-right" href="/deploy/aws">
+    CloudFormation quick-create for ECS Fargate, RDS PostgreSQL, Secrets
+    Manager, and ALB.
+  </Card>
+  <Card title="GCP" icon="arrow-up-right" href="/deploy/gcp">
+    Cloud Shell guided deploy for Cloud Run, Cloud SQL PostgreSQL, and Secret
+    Manager.
+  </Card>
+  <Card title="Fly.io" icon="arrow-up-right" href="/deploy/fly">
+    CLI-based deploy using the public Docker image, Fly Postgres, and generated
+    Manifest secrets.
+  </Card>
+  <Card title="Coolify" icon="arrow-up-right" href="/deploy/coolify">
+    Self-hosted PaaS path using Docker Compose, Coolify magic variables, and
+    PostgreSQL.
+  </Card>
+  <Card title="Easypanel" icon="arrow-up-right" href="/deploy/easypanel">
+    Self-hosted PaaS guide using Easypanel app services, PostgreSQL, and the
+    Manifest Docker image.
+  </Card>
+  <Card title="Heroku" icon="arrow-up-right" href="/deploy/heroku">
+    Deploy-button guide with Heroku Postgres, generated secrets, and one
+    required BETTER_AUTH_URL value.
+  </Card>
+  <Card title="Koyeb" icon="arrow-up-right" href="/deploy/koyeb">
+    Deploy-button guide for Koyeb using the public Docker image, manual Postgres
+    URL, and runtime secrets.
+  </Card>
+</CardGroup>
+
+## Before you deploy
+
+Most hosted deployments create paid resources. Review each provider's pricing before leaving test apps running.
+
+For public deployments, make sure `BETTER_AUTH_URL` matches the exact browser URL. If it does not, Better Auth can reject login with an invalid-origin error.
