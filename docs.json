@@ -96,16 +96,31 @@
             "boost": 2,
             "pages": [
               "deploy",
-              "deploy/railway",
-              "deploy/render",
-              "deploy/digitalocean",
-              "deploy/aws",
-              "deploy/gcp",
-              "deploy/fly",
-              "deploy/coolify",
-              "deploy/easypanel",
-              "deploy/heroku",
-              "deploy/koyeb"
+              {
+                "group": "Managed platforms",
+                "icon": "cloud",
+                "expanded": false,
+                "pages": [
+                  "deploy/railway",
+                  "deploy/render",
+                  "deploy/digitalocean",
+                  "deploy/fly",
+                  "deploy/heroku",
+                  "deploy/koyeb"
+                ]
+              },
+              {
+                "group": "Cloud providers",
+                "icon": "server",
+                "expanded": false,
+                "pages": ["deploy/aws", "deploy/gcp"]
+              },
+              {
+                "group": "Self-hosted panels",
+                "icon": "panel-top",
+                "expanded": false,
+                "pages": ["deploy/coolify", "deploy/easypanel"]
+              }
             ]
           },
           {
