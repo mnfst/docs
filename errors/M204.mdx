@@ -1,0 +1,33 @@
+---
+title: "M204: Monthly request limit reached"
+sidebarTitle: "M204"
+description: "Manifest error M204 fires when a Manifest Cloud Free workspace uses all monthly requests. Returns HTTP 402 with PLAN_LIMIT_REQUESTS. Fix: upgrade to Pro or wait for the monthly reset."
+icon: "badge-alert"
+keywords:
+  ["M204", "Manifest M204", "PLAN_LIMIT_REQUESTS", "monthly request limit", "free plan request limit", "Manifest billing", "402 Payment Required", "upgrade to Pro"]
+---
+
+## What you saw
+
+```text
+[🦚 Manifest M204] You've used all 10000 requests included this month on the Free plan. Upgrade to Pro for unlimited requests: https://app.manifest.build/upgrade?reason=requests
+See https://manifest.build/docs/errors/M204
+```
+
+SDK and tool callers receive an HTTP 402 JSON error with `error.code` set to `PLAN_LIMIT_REQUESTS`.
+
+## Why it happened
+
+Your Manifest Cloud workspace reached the Free plan monthly request quota. This is a Manifest plan restriction, not a provider error and not a limit you configured on an agent.
+
+## How to fix it
+
+1. Upgrade to Pro from the dashboard link in the error message.
+2. Or wait for the monthly request quota to reset.
+3. Retry the request after the plan changes or the quota resets.
+
+## Related
+
+- [Upgrade dashboard](https://app.manifest.build/upgrade?reason=requests)
+- [M200: Usage limit exceeded](/errors/M200)
+- [All error codes](/errors)
