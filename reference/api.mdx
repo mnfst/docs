@@ -102,9 +102,9 @@ The proxy returns a standard JSON error envelope:
 | Status | Meaning |
 |---|---|
 | `401` | Invalid or missing `Authorization` header |
-| `402` | Provider requires payment / quota exceeded on the upstream |
+| `402` | Manifest Free plan quota reached (`error.code = PLAN_LIMIT_REQUESTS`, [M204](/errors/M204)), or provider billing/quota error from the upstream |
 | `424` | Fallback chain exhausted (all configured models failed) |
-| `429` | [Hard limit](/set-limits) hit, or Manifest rate limit (`THROTTLE_LIMIT`) tripped |
+| `429` | [Hard limit](/set-limits) hit ([M200](/errors/M200)), or Manifest rate limit (`THROTTLE_LIMIT`) tripped |
 | `5xx` | Upstream provider error (triggers [fallback](/fallback)) |
 
 Status `424` is the only one that **does not** trigger a fallback. Manifest returns it itself when the chain is exhausted, so re-routing it would loop forever.
