@@ -77,7 +77,7 @@ curl http://localhost:2099/v1/models \
   -H "Authorization: Bearer mnfst_YOUR_KEY_HERE"
 ```
 
-Send `auto` to let Manifest route, or send any listed model ID to skip routing and go straight to that provider. See [Routing → Route a specific model](/routing#route-a-specific-model).
+Send `auto` to let Manifest route, or send any listed model ID to skip routing and go straight to that provider. If you send a model ID that is not in this agent-specific list, Manifest returns [M302: Model not available](/errors/M302). See [Routing → Route a specific model](/routing#route-a-specific-model).
 
 ## Streaming
 

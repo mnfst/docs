@@ -1,0 +1,43 @@
+---
+title: "M302: Model not available"
+sidebarTitle: "M302"
+description: "Manifest error M302 fires when an explicit model ID is not available for the authenticated agent. Fix: use GET /v1/models or make the provider available for this agent."
+icon: "message-square-warning"
+keywords:
+  ["M302", "Manifest M302", "model not available", "model not found", "GET /v1/models", "direct model routing", "provider not connected", "provider not enabled", "agent-visible models", "Manifest validation"]
+---
+
+## What you saw
+
+```text
+[🦚 Manifest M302] Model "openai/gpt-4o" is not available for this agent. Use GET /v1/models to list available model IDs, or make the provider available for this agent here: https://app.manifest.build/...
+See https://manifest.build/docs/errors/M302
+```
+
+The model name varies based on the `model` value your client sent.
+
+## Why it happened
+
+You sent a concrete model ID instead of `auto` to an OpenAI-format endpoint, but that model is not available to this agent.
+
+This can happen when:
+
+1. The model ID is misspelled or retired.
+2. The provider is not connected yet, or it is connected but not enabled for this agent.
+3. You used a provider-native name when Manifest expects the exact ID returned by `GET /v1/models`.
+4. Manifest refuses the request instead of falling back to automatic routing.
+
+## How to fix it
+
+1. Call `GET /v1/models` with the same Manifest agent key.
+2. Use `auto` to let Manifest route, or copy one of the listed model IDs exactly.
+3. If the model should be available, open the dashboard link in the error and enable or connect that provider for this agent.
+4. Retry the request.
+
+## Related
+
+- [Routing: Route a specific model](/routing#route-a-specific-model)
+- [API reference: Listing models](/reference/api#listing-models)
+- [M300: Missing messages array](/errors/M300)
+- [M301: Messages array too long](/errors/M301)
+- [All error codes](/errors)

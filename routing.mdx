@@ -65,3 +65,5 @@ curl -X POST https://app.manifest.build/v1/chat/completions \
 ```
 
 The response comes back with `X-Manifest-Tier: direct`, so you can tell a direct call from a routed one. Direct model IDs work on the OpenAI-format endpoints (`/v1/chat/completions` and `/v1/responses`). Requests to the Anthropic `/v1/messages` endpoint always route through your default or custom tiers.
+
+The model list is scoped to the agent key. A model may be missing because its provider is not connected yet, or because the provider exists in your workspace but is not enabled for this agent. If you send an unlisted model ID, Manifest returns [M302: Model not available](/errors/M302). Send `auto` to use routing.
