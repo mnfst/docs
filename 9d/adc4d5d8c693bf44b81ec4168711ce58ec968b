@@ -1,0 +1,19 @@
+reference/api.mdx
+  s_481ec57e999739::t_bbb711a6be45a1 82-127
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "9dadc4d5d8c693bf44b81ec4168711ce58ec968b",
+  "prompts": {},
+  "sessions": {
+    "s_481ec57e999739": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f805b-afb5-7132-8849-018ea286b156",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Guillaume Gay <guillaume.gay@protonmail.com>"
+    }
+  }
+}
