@@ -79,6 +79,52 @@ curl http://localhost:2099/v1/models \
 
 Send `auto` to let Manifest route, or send any listed model ID to skip routing and go straight to that provider. If you send a model ID that is not in this agent-specific list, Manifest returns [M302: Model not available](/errors/M302). See [Routing → Route a specific model](/routing#route-a-specific-model).
 
+### Inspect model capabilities
+
+Add `?capabilities=true` to include known capability metadata for each concrete model. Without this query parameter, the response keeps the standard OpenAI model-list shape.
+
+```bash
+curl "http://localhost:2099/v1/models?capabilities=true" \
+  -H "Authorization: Bearer mnfst_YOUR_KEY_HERE"
+```
+
+```json
+{
+  "object": "list",
+  "data": [
+    {
+      "id": "auto",
+      "object": "model",
+      "created": 0,
+      "owned_by": "manifest"
+    },
+    {
+      "id": "openai/gpt-5.4-mini-subscription",
+      "object": "model",
+      "created": 0,
+      "owned_by": "openai",
+      "capabilities": {
+        "input_modalities": ["text", "image"],
+        "output_modalities": ["text"],
+        "features": ["stream", "tools"],
+        "supported_endpoints": ["/responses"]
+      }
+    }
+  ]
+}
+```
+
+| Field | Meaning |
+|---|---|
+| `input_modalities` | Input types the model accepts, such as `text` or `image` |
+| `output_modalities` | Output types the model can produce |
+| `features` | Known feature support: `stream` and `tools` |
+| `supported_endpoints` | API endpoint formats the model supports |
+
+Capability fields are optional. A missing field means that support is unknown, not that the model does not support it. Manifest omits the entire `capabilities` object when it has no known metadata for a model.
+
+The synthetic `auto` model never includes capabilities because it can resolve to a different model for each request. Concrete model IDs remain directly routable exactly as listed, including IDs with the `-subscription` suffix.
+
 ## Streaming
 
 Set `"stream": true` to get an SSE stream back. The stream format matches the upstream protocol: OpenAI-style `data: {...}` chunks for `/v1/chat/completions`, Anthropic event blocks for `/v1/messages`.
