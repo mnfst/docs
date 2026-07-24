@@ -125,6 +125,58 @@ Capability fields are optional. A missing field means that support is unknown, n
 
 The synthetic `auto` model never includes capabilities because it can resolve to a different model for each request. Concrete model IDs remain directly routable exactly as listed, including IDs with the `-subscription` suffix.
 
+### Inspect model costs
+
+Add `?cost=true` to include known token prices for each concrete model. Prices are in USD per million tokens. Without this query parameter, the response keeps the standard OpenAI model-list shape.
+
+```bash
+curl "http://localhost:2099/v1/models?cost=true" \
+  -H "Authorization: Bearer mnfst_YOUR_KEY_HERE"
+```
+
+```json
+{
+  "object": "list",
+  "data": [
+    {
+      "id": "auto",
+      "object": "model",
+      "created": 0,
+      "owned_by": "manifest"
+    },
+    {
+      "id": "openai/gpt-5.4-mini-subscription",
+      "object": "model",
+      "created": 0,
+      "owned_by": "openai",
+      "cost": {
+        "input": 0.25,
+        "output": 2
+      }
+    },
+    {
+      "id": "openrouter/example-free-model",
+      "object": "model",
+      "created": 0,
+      "owned_by": "openrouter",
+      "cost": {
+        "input": 0,
+        "output": 0
+      }
+    }
+  ]
+}
+```
+
+| Field | Meaning |
+|---|---|
+| `input` | USD per million input tokens |
+| `output` | USD per million output tokens |
+
+A zero value means the model has no per-token charge, as with some free or subscription-backed routes. If one price is unknown, Manifest omits only that field. If both prices are unknown, Manifest omits the entire `cost` object.
+
+The synthetic `auto` model never includes cost because its concrete model is selected for each request. To inspect both metadata types in one response, combine the query parameters: `?capabilities=true&cost=true`.
+
 ## Streaming
 
 Set `"stream": true` to get an SSE stream back. The stream format matches the upstream protocol: OpenAI-style `data: {...}` chunks for `/v1/chat/completions`, Anthropic event blocks for `/v1/messages`.
