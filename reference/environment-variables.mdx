@@ -26,9 +26,18 @@ Manifest reads its configuration from environment variables. In the bundled Dock
 | `CORS_ORIGIN` | `http://localhost:3000` | Allowed CORS origin for browser-based dashboard requests |
 | `API_KEY` | — | Internal API key for system endpoints |
 | `MANIFEST_ENCRYPTION_KEY` | `BETTER_AUTH_SECRET` | Key used to encrypt stored provider credentials at rest. Falls back to `BETTER_AUTH_SECRET` when unset |
+| `WINGMAN_CORS_ORIGINS` | — | Extra browser origins allowed to call the gateway, comma-separated. The hosted gateway tester at `wingman.manifest.build` is always allowed |
 | `THROTTLE_TTL` | `60000` | Rate-limit window in milliseconds |
 | `THROTTLE_LIMIT` | `100` | Max requests per window per agent |
-| `DB_POOL_MAX` | `30` | Max PostgreSQL connections in the pool |
+
+## Database
+
+| Variable | Default | Description |
+|---|---|---|
+| `DB_POOL_MAX` | `30` | Max PostgreSQL connections in the main pool |
+| `AUTH_DB_POOL_MAX` | `10` | Separate pool used by Better Auth. Counted on top of `DB_POOL_MAX` when sizing your server's `max_connections` |
+| `RUN_MIGRATIONS_ON_BOOT` | `true` | Run pending migrations at startup. Set `false` on multi-replica deploys so only one instance migrates |
+| `DB_TUNE_SESSION` | `true` | Apply Manifest's planner defaults at boot. Set `false` on managed Postgres where your role can't `ALTER ROLE` itself |
 | `SEED_DATA` | `false` | Seed demo data on first boot |
 
 ## LLM proxy
@@ -37,14 +46,13 @@ How Manifest talks to upstream providers.
 
 | Variable | Default | Description |
 |---|---|---|
-| `PROVIDER_TIMEOUT_MS` | `180000` | Per-attempt timeout (ms) for upstream requests. A hung provider surfaces as a synthetic `504` and triggers the next [fallback](/fallback). Set it strictly below your client's own timeout; slow local models may need it raised |
-| `MANIFEST_MAX_MESSAGES` | `1000` | Max messages Manifest forwards per request. Requests over the cap are rejected with error [M301](/errors/M301) |
+| `PROVIDER_TIMEOUT_MS` | `180000` | Per-attempt timeout (ms) for upstream requests. A hung provider surfaces as a synthetic `504` and triggers the next [fallback](/llm-gateway#fallback). Set it strictly below your client's own timeout; slow local models may need it raised |
 | `STREAM_WARMUP_MS` | `15000` | How long to wait for the first streamed chunk before falling back to the next model |
 | `OLLAMA_HOST` | `http://localhost:11434` | Base URL for a local Ollama server. In Docker, set it to `http://host.docker.internal:11434` |
 
 ## Email
 
-Used for both Better Auth transactional emails (signup verification, password reset) **and** [threshold alerts](/set-limits). Set one provider block.
+Used for both Better Auth transactional emails (signup verification, password reset) **and** [threshold alerts](/observability#spend-alerts). Set one provider block.
 
 | Variable | Description |
 |---|---|
@@ -91,6 +99,22 @@ Subscription OAuth (ChatGPT, Claude, MiniMax) uses Manifest-side client IDs by d
 | `MANIFEST_TELEMETRY_DISABLED` | unset | Set to `1` to disable [anonymous telemetry](/self-hosted#telemetry) |
 | `TELEMETRY_ENDPOINT` | `https://telemetry.manifest.build/...` | Send reports to your own endpoint |
 | `MANIFEST_PUBLIC_STATS` | `false` | Expose `/api/v1/public/*` aggregate stats without auth (Cloud only) |
+
+## Error monitoring
+
+Sentry is opt-in and stays off unless you give it a DSN.
+
+| Variable | Default | Description |
+|---|---|---|
+| `SENTRY_DSN` | unset | Your Sentry project DSN. Leave it unset to disable Sentry entirely |
+| `SENTRY_ENVIRONMENT` | `NODE_ENV` | Environment tag on reported events |
+| `SENTRY_RELEASE` | unset | Release tag on reported events |
+
+## Operations
+
+| Variable | Default | Description |
+|---|---|---|
+| `SHUTDOWN_DRAIN_MS` | `10000` | How long the server keeps serving traffic after a termination signal while reporting unhealthy, so a load balancer can deregister it first. Set `0` to shut down immediately |
 
 ## Postgres bundled volume
 

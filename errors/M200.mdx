@@ -18,7 +18,7 @@ The metric (cost, tokens, or messages), used amount, threshold, and period vary 
 
 ## Why it happened
 
-You set a limit on the agent's [Limits](/set-limits) page (say, "$10/day" or "100 messages/hour"), and the current period's usage just crossed it. Manifest blocks every following request until the period resets or you raise the cap.
+You set a limit on the agent's [Limits](/observability#spend-alerts) page (say, "$10/day" or "100 messages/hour"), and the current period's usage just crossed it. Manifest blocks every following request until the period resets or you raise the cap.
 
 This is different from [M204](/errors/M204), which is the Manifest Cloud Free plan monthly request quota, and different from provider 402 errors such as "insufficient credits" from OpenRouter.
 
@@ -30,7 +30,8 @@ This is different from [M204](/errors/M204), which is the Manifest Cloud Free pl
 
 ## Related
 
-- [Set limits](/set-limits)
+- [Spend alerts](/observability#spend-alerts)
+- [Hard limits](/llm-gateway#hard-limits)
 - [M201: Per-user rate limit](/errors/M201)
 - [M202: Per-IP rate limit](/errors/M202)
 - [M203: Concurrency limit](/errors/M203)

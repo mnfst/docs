@@ -126,7 +126,7 @@
           {
             "group": "Features",
             "boost": 2,
-            "pages": ["routing", "fallback", "set-limits"]
+            "pages": ["llm-gateway", "autofix", "observability"]
           },
           {
             "group": "Providers",
@@ -166,8 +166,8 @@
             "href": "https://app.manifest.build"
           },
           {
-            "label": "Routing",
-            "href": "/routing"
+            "label": "LLM Gateway",
+            "href": "/llm-gateway"
           }
         ]
       },
@@ -217,7 +217,23 @@
     },
     {
       "source": "/track-usage",
-      "destination": "/set-limits"
+      "destination": "/observability"
+    },
+    {
+      "source": "/routing",
+      "destination": "/llm-gateway"
+    },
+    {
+      "source": "/fallback",
+      "destination": "/llm-gateway"
+    },
+    {
+      "source": "/set-limits",
+      "destination": "/observability"
+    },
+    {
+      "source": "/errors/M301",
+      "destination": "/errors"
     },
     {
       "source": "/configuration",

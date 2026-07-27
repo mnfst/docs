@@ -30,7 +30,7 @@ These fire when the bearer token on `/v1/chat/completions` is missing or wrong. 
 
 ## Providers (M100–M101)
 
-Your key is fine, but no provider credentials are wired up. See [Routing](/routing) and [API key providers](/providers/api-key-providers).
+Your key is fine, but no provider credentials are wired up. See [Routing](/llm-gateway) and [API key providers](/providers/api-key-providers).
 
 | Code | What |
 |------|------|
@@ -49,15 +49,21 @@ You hit a usage cap, rate limit, or Free plan request quota. M200-M203 surface a
 | [M203: Concurrency limit exceeded](/errors/M203) | More than 10 in-flight requests at once |
 | [M204: Monthly request limit reached](/errors/M204) | Free plan monthly request quota was exhausted |
 
-## Request validation and model selection (M300–M302)
+## Request validation and model selection (M300–M303)
 
-M300-M301 mean the request body is malformed and surface as HTTP 400. M302 means the request named a direct model that is not available for this agent; Manifest returns it as a friendly proxy message.
+M300 means the request body is malformed and surfaces as HTTP 400. M302 and M303 mean Manifest can't reach the model the request asked for; both come back as a friendly proxy message.
 
 | Code | What |
 |------|------|
 | [M300: Missing messages array](/errors/M300) | Body has no `messages` array, or it's empty |
-| [M301: Messages array too long](/errors/M301) | More than 1000 messages in a single request |
 | [M302: Model not available](/errors/M302) | Explicit model ID is not available for this agent |
+| [M303: Local provider unavailable on Manifest Cloud](/errors/M303) | Routed to Ollama, LM Studio, or llama.cpp on Cloud |
+
+<Note>
+  M301 is missing from that list on purpose. It capped requests at 1000
+  messages, and the cap was removed. If an older self-hosted build still
+  returns it, upgrade and the limit goes away.
+</Note>
 
 ## Server (M500)
 
