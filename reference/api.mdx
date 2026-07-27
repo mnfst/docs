@@ -202,7 +202,7 @@ The proxy returns a standard JSON error envelope:
 | `401` | Invalid or missing `Authorization` header |
 | `402` | Manifest Free plan quota reached (`error.code = PLAN_LIMIT_REQUESTS`, [M204](/errors/M204)), or provider billing/quota error from the upstream |
 | `424` | Fallback chain exhausted (all configured models failed) |
-| `429` | [Hard limit](/llm-gateway#hard-limits) hit ([M200](/errors/M200)), or Manifest rate limit (`THROTTLE_LIMIT`) tripped |
+| `429` | [Hard limit](/llm-gateway#hard-limits) hit ([M200](/errors/M200)), or Manifest rate limit tripped |
 | `5xx` | Upstream provider error (triggers [fallback](/llm-gateway#fallback)) |
 
 Status `424` is the only one that **does not** trigger a fallback. Manifest returns it itself when the chain is exhausted, so re-routing it would loop forever.
