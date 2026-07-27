@@ -89,13 +89,14 @@
           {
             "group": "Getting Started",
             "boost": 3,
-            "pages": ["introduction", "self-hosted"]
+            "pages": ["introduction"]
           },
           {
-            "group": "Deployment",
+            "group": "Self-hosting",
             "boost": 2,
             "pages": [
               "deploy",
+              "self-hosted",
               {
                 "group": "Managed platforms",
                 "icon": "cloud",
@@ -116,7 +117,7 @@
                 "pages": ["deploy/aws", "deploy/gcp"]
               },
               {
-                "group": "Self-hosted panels",
+                "group": "Server panels",
                 "icon": "panel-top",
                 "expanded": false,
                 "pages": ["deploy/coolify", "deploy/easypanel"]
@@ -144,8 +145,9 @@
               "reference/api",
               "reference/headers",
               "reference/environment-variables",
-              "reference/glossary",
-              "errors"
+              "reference/telemetry",
+              "errors",
+              "reference/glossary"
             ]
           }
         ]
@@ -202,6 +204,14 @@
     {
       "source": "/docker",
       "destination": "/self-hosted"
+    },
+    {
+      "source": "/telemetry",
+      "destination": "/reference/telemetry"
+    },
+    {
+      "source": "/privacy",
+      "destination": "/reference/telemetry"
     },
     {
       "source": "/cloud-vs-local",

@@ -30,8 +30,19 @@ You choose which model handles each request. Add fallbacks so a rate limit or a 
 
 ## Cloud or self-hosted?
 
-Manifest is an open source project that comes in 2 ways: cloud and self-hosted. We recommend the [cloud version](https://app.manifest.build) for newcomers and the [self-hosted version](./self-hosted) for advanced users.
+Manifest is open source and runs two ways. Both speak the same API, so pointing a client at one or the other is a URL change.
 
-The key difference is that the cloud version runs on our servers, whereas the self-hosted version must be installed on your local machine or infrastructure.
+<CardGroup cols={2}>
+  <Card title="Manifest Cloud" icon="cloud" href="https://app.manifest.build">
+    Runs on our servers. Sign up, connect a provider, and you're routing.
+    Recommended if you're starting out.
+  </Card>
+  <Card title="Self-hosting" icon="server" href="/deploy">
+    Runs on infrastructure you control: Docker on your own machine, a managed
+    platform like Railway, your AWS or GCP account, or a server panel.
+  </Card>
+</CardGroup>
 
 On the cloud there is nothing to install and nothing to configure on a server. You sign up, connect your providers, point your harness at the gateway URL, and everything else — routing, limits, [Auto-fix](/autofix), alerts — is a setting in the dashboard. The [environment variables](/reference/environment-variables) throughout these docs apply only to a Manifest instance you run yourself.
+
+Cloud is also subject to [plan limits](/errors/M204) and can't reach [local models](/providers/local-models) running on your machine. A self-hosted instance has neither restriction.
