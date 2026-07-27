@@ -1,0 +1,164 @@
+---
+title: "LLM Gateway"
+description: "Every request passes through the gateway: limits check it, routing picks the model, and fallback catches it when that model fails."
+icon: "split"
+keywords:
+  ["LLM gateway", "model routing", "LLM router", "fallback chain", "hard limit", "custom tier", "default model", "424 fallback exhausted", "429 too many requests"]
+---
+
+Point your client at Manifest instead of a provider, and every request goes through the gateway. Three things happen there: limits decide whether the request runs at all, routing picks the model, and fallback steps in when that model fails.
+
+## How a request flows
+
+<Steps>
+  <Step title="Authentication">
+    The `Authorization: Bearer mnfst_...` header resolves to one of your agents. A bad or missing key stops here with a [401](/errors).
+  </Step>
+  <Step title="Limits">
+    If a hard limit for this agent is already over its threshold, the request is blocked with [M200](/errors/M200) before any provider is called. Nothing is spent.
+  </Step>
+  <Step title="Routing">
+    A custom tier matches on a request header, or the request goes to your default tier. Send a real model ID instead of `auto` to skip this entirely.
+  </Step>
+  <Step title="Forward">
+    Manifest calls the resolved provider with your credentials and streams the response back.
+  </Step>
+  <Step title="Recovery">
+    If the provider returns an error, [Auto-fix](/autofix) may repair and resend the request once. Anything still failing moves down the fallback chain.
+  </Step>
+</Steps>
+
+Routing runs in-process. There's no extra network call and no added latency.
+
+## Routing
+
+Instead of hard-coding one model into every client, you point your client at Manifest and let it pick. Send `auto` as the model, and Manifest resolves the real model based on the rules you set on the dashboard **Routing** page.
+
+<CardGroup cols={2}>
+  <Card title="Default" icon="route" href="#default-tier">
+    One model plus up to 5 fallbacks. Every request lands here unless a custom tier matches.
+  </Card>
+  <Card title="Custom" icon="sliders-horizontal" href="#custom-tiers">
+    Match a request header to a tier you define, and route it to its own model.
+  </Card>
+</CardGroup>
+
+### Default tier
+
+Every agent has a default tier: one model plus up to five fallbacks. You set it on the **Routing** page and can change it anytime without touching your code. Send `auto` as the model, and any request that doesn't match a custom tier goes to your default.
+
+### Custom tiers
+
+Custom tiers route by request header. You create a tier on the dashboard, give it a header key and value, and pin it to a model with its own fallbacks. When an incoming request carries that header, Manifest sends it to that tier's model instead of the default.
+
+The header key is yours to choose (lowercase letters, numbers, and hyphens). A few names are reserved and rejected, including `authorization`, `cookie`, and `x-api-key`. Send the header from your client like any other:
+
+```ts
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  baseURL: "https://app.manifest.build/v1",
+  apiKey: "mnfst_YOUR_KEY",
+  defaultHeaders: { "x-manifest-tier": "batch" }, // your tier's key and value
+});
+
+const response = await client.chat.completions.create({
+  model: "auto",
+  messages: [{ role: "user", content: "Summarize this report." }],
+});
+```
+
+Create as many tiers as you need, each with its own model and parameters. This is handy for isolating an agent's subtasks, A/B testing two models, or letting an orchestration layer decide the tier itself.
+
+### Route a specific model
+
+To skip routing for a single request, send a real model ID instead of `auto`. Manifest forwards it straight to that model's provider, with no tier lookup and no fallbacks. Call [`GET /v1/models`](/reference/api#listing-models) to list the model IDs your agent can reach.
+
+```bash
+curl -X POST https://app.manifest.build/v1/chat/completions \
+  -H "Authorization: Bearer mnfst_YOUR_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "openai/gpt-4o",
+    "messages": [{"role": "user", "content": "Hello"}]
+  }'
+```
+
+The response comes back with `X-Manifest-Tier: direct`, so you can tell a direct call from a routed one. Direct model IDs work on the OpenAI-format endpoints (`/v1/chat/completions` and `/v1/responses`). Requests to the Anthropic `/v1/messages` endpoint always route through your default or custom tiers.
+
+The model list is scoped to the agent key. A model may be missing because its provider is not connected yet, or because the provider exists in your workspace but is not enabled for this agent. If you send an unlisted model ID, Manifest returns [M302: Model not available](/errors/M302). Send `auto` to use routing.
+
+## Fallback
+
+When a model fails (provider outage, rate limit, bad request), Manifest retries with a backup model from the same tier. Your agent gets a response instead of an error.
+
+### What triggers a fallback
+
+Any HTTP status code **>= 400** triggers a fallback, with one exception: **424 (Failed Dependency)** does not, since that's the status Manifest itself returns when the entire chain is exhausted. Retrying it would loop forever.
+
+| Status | Example |
+|--------|---------|
+| **400** | Bad request |
+| **401** | Authentication error |
+| **403** | Forbidden |
+| **429** | Rate limited |
+| **500** | Internal server error |
+| **502** | Bad gateway |
+| **503** | Service unavailable |
+| **529** | Provider overloaded |
+
+### Configuration
+
+Fallback models are configured **per tier**. Each tier holds up to **5 fallback models**, tried in order.
+
+<Steps>
+  <Step title="Open Routing in the dashboard">
+    Navigate to **Routing** in the dashboard.
+  </Step>
+  <Step title="Select a tier">
+    Click your Default tier or any custom tier.
+  </Step>
+  <Step title="Add fallback models">
+    Add up to 5 fallback models. Drag to reorder, since models are tried from top to bottom.
+  </Step>
+</Steps>
+
+<Tip>
+  Connect at least two providers. With a single provider, fallback can only switch between that provider's models.
+</Tip>
+
+### Hung providers and the per-attempt timeout
+
+A provider that opens a connection but never returns eventually triggers a fallback via Manifest's per-attempt timeout (default 180 seconds), which surfaces as a synthetic `504 Gateway Timeout` and moves to the next model in the chain.
+
+If your upstream client has its own timeout that fires at the same time, the client may disconnect first and Manifest will give up before reaching a healthy fallback. On self-hosted installs, lower [`PROVIDER_TIMEOUT_MS`](/reference/environment-variables) strictly below your client's timeout so the chain has room to run inside the client's window.
+
+### Response headers
+
+When a fallback succeeds, the response carries `X-Manifest-Fallback-From` (the primary that failed) and `X-Manifest-Fallback-Index` (its position in the chain) on top of the standard routing headers. When the chain is exhausted, `X-Manifest-Fallback-Exhausted: true` is set and the request returns `424`. Full table: [Headers reference](/reference/headers).
+
+## Hard limits
+
+A limit rule can block requests as well as email you. When a rule's action includes blocking and the agent is over its threshold for the current period, the gateway rejects the request with [M200](/errors/M200) and HTTP `429`:
+
+```text
+[🦚 Manifest M200] You hit your cost limit: $12.50 used, $10.00/day allowed. Adjust it here: https://app.manifest.build/...
+```
+
+The check runs before any provider is contacted, so a blocked request costs nothing. The block clears on its own at the start of the next period, or immediately if you raise the threshold.
+
+<Note>
+  On Manifest Cloud, running out of the Free plan's monthly requests is a
+  different thing entirely: that returns [M204](/errors/M204) with HTTP `402`
+  and isn't something you configured.
+</Note>
+
+Rules are defined per agent, with a metric, a threshold, and a period. See [Spend alerts](/observability#spend-alerts) for how to create one and how the alerting half works.
+
+## Related
+
+- [Auto-fix](/autofix) — repair a failing request before fallback runs
+- [Observability](/observability) — what the gateway records, and spend alerts
+- [API reference](/reference/api)
+- [Headers reference](/reference/headers)
+- [Error codes](/errors)

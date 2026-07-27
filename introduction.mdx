@@ -17,14 +17,14 @@ You choose which model handles each request. Add fallbacks so a rate limit or a 
   <Card title="All your providers" icon="layers" href="/providers/api-key-providers">
     Connect API keys, subscriptions you already pay for, local models, or any custom endpoint.
   </Card>
-  <Card title="Routing" icon="split" href="/routing">
-    Send each request to your default model, or match a request header to a custom tier.
+  <Card title="LLM Gateway" icon="split" href="/llm-gateway">
+    Route each request to the model you pick, with fallbacks when one fails and limits that cap what it can spend.
   </Card>
-  <Card title="Fallbacks" icon="life-buoy" href="/fallback">
-    Fall back to another model when one fails, so your agent keeps working.
+  <Card title="Auto-fix" icon="wrench" href="/autofix">
+    Repair a malformed request and resend it, instead of failing on something a retry can't fix.
   </Card>
-  <Card title="Set limits" icon="shield-alert" href="/set-limits">
-    Get email alerts or block requests when spending crosses a threshold.
+  <Card title="Observability" icon="activity" href="/observability">
+    See what every agent spent, which models served it, and what failed.
   </Card>
 </CardGroup>
 

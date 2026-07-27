@@ -249,48 +249,9 @@ docker compose down -v    # destroys all data
 | `NODE_ENV` | No | `production` | Node environment |
 | `SEED_DATA` | No | `false` | Seed demo data on startup |
 
-<Accordion title="Additional environment variables">
-  **Network and security**
+Only the first two are required, and the installer generates both for you, so a default install boots without you setting anything.
 
-  | Variable | Default | Description |
-  |----------|---------|-------------|
-  | `BIND_ADDRESS` | `127.0.0.1` | Bind address |
-  | `CORS_ORIGIN` | — | Allowed CORS origin |
-  | `API_KEY` | — | Internal API key |
-
-  **Rate limiting**
-
-  | Variable | Default | Description |
-  |----------|---------|-------------|
-  | `THROTTLE_TTL` | `60000` | Rate limit window in ms |
-  | `THROTTLE_LIMIT` | `100` | Max requests per window |
-
-  Default: 100 requests per 60-second window.
-
-  **LLM proxy**
-
-  | Variable | Default | Description |
-  |----------|---------|-------------|
-  | `PROVIDER_TIMEOUT_MS` | `180000` | Per-attempt timeout (ms) for upstream provider requests. Set strictly below your client's timeout so the [fallback chain](/fallback) has room to run. Slow local models may need this raised. Non-numeric, zero, or negative values fall back to the default. |
-
-  **Email alerts (Mailgun)**
-
-  | Variable | Description |
-  |----------|-------------|
-  | `MAILGUN_API_KEY` | Mailgun API key |
-  | `MAILGUN_DOMAIN` | Mailgun domain |
-  | `MAILGUN_FROM` | Sender address for alerts |
-
-  **OAuth providers**
-
-  | Variable | Description |
-  |----------|-------------|
-  | `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | Google OAuth |
-  | `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` | GitHub OAuth |
-  | `DISCORD_CLIENT_ID` / `DISCORD_CLIENT_SECRET` | Discord OAuth |
-</Accordion>
-
-Full env var reference: [github.com/mnfst/manifest](https://github.com/mnfst/manifest)
+Everything else is optional: bind address and CORS, rate limits, provider timeouts, email delivery for alerts and password resets, OAuth logins, connection-pool sizing, and Sentry. See [Environment variables](/reference/environment-variables) for the full list with defaults.
 
 ## Stop and clean up
 

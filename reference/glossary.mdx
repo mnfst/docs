@@ -26,7 +26,7 @@ The model ID you send to opt into routing. When Manifest sees `auto`, it applies
 
 ## Custom tier
 
-A routing rule matched on a request header. You choose the header key and value on the dashboard and pin the tier to its own model and fallback chain. When a request carries that header, it routes to the tier's model instead of the default. See [Routing → Custom](/routing#custom).
+A routing rule matched on a request header. You choose the header key and value on the dashboard and pin the tier to its own model and fallback chain. When a request carries that header, it routes to the tier's model instead of the default. See [Routing → Custom](/llm-gateway#custom-tiers).
 
 ## Direct routing
 
@@ -34,7 +34,7 @@ Sending a real model ID (one that `GET /v1/models` lists) instead of `auto`. Man
 
 ## Fallback
 
-The retry mechanism that kicks in when the primary model fails. Manifest tries the next model in the tier's fallback list, then the next, until one succeeds or the list is exhausted. See [Fallback](/fallback) for triggers and config.
+The retry mechanism that kicks in when the primary model fails. Manifest tries the next model in the tier's fallback list, then the next, until one succeeds or the list is exhausted. See [Fallback](/llm-gateway#fallback) for triggers and config.
 
 ## Fallback chain
 
@@ -51,8 +51,8 @@ An upstream LLM service Manifest can route to. There are four kinds:
 
 ## Routing
 
-The step that decides which model handles a request. Manifest checks your custom tiers first, then sends anything that doesn't match to your default model. It runs in-process with no extra network call. See [Routing](/routing).
+The step that decides which model handles a request. Manifest checks your custom tiers first, then sends anything that doesn't match to your default model. It runs in-process with no extra network call. See [Routing](/llm-gateway).
 
 ## Tier
 
-A routing lane with its own model and fallback chain. Every agent has a **Default** tier; you can add **Custom** tiers matched on request headers. See [Routing](/routing).
+A routing lane with its own model and fallback chain. Every agent has a **Default** tier; you can add **Custom** tiers matched on request headers. See [Routing](/llm-gateway).

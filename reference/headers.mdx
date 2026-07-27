@@ -15,10 +15,10 @@ Manifest reads a few request headers, and returns a set of `X-Manifest-*` respon
 | `Authorization`         | `Bearer mnfst_<key>` | **Required.** Authenticates the agent.                                                                                                             |
 | `Content-Type`          | `application/json`   | **Required.**                                                                                                                                      |
 | `anthropic-version`     | `2023-06-01`         | **Required for `/v1/messages`.** Forwarded to the upstream.                                                                                        |
-| Your custom tier header | your value           | Routes the request to a [custom tier](/routing#custom). You set the key and value when you create the tier, so the exact header name is up to you. |
+| Your custom tier header | your value           | Routes the request to a [custom tier](/llm-gateway#custom-tiers). You set the key and value when you create the tier, so the exact header name is up to you. |
 | `x-session-key`         | any string           | Groups requests into a session. Manifest keeps a session on the same upstream where the provider supports it, for sticky routing and prompt caching. |
 
-The custom tier header is the only one that changes routing: send the header you configured on a tier and the request goes to that tier's model. See [Routing → Custom](/routing#custom).
+The custom tier header is the only one that changes routing: send the header you configured on a tier and the request goes to that tier's model. See [Routing → Custom](/llm-gateway#custom-tiers).
 
 ## Response headers (every request)
 

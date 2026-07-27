@@ -1,10 +1,10 @@
 ---
 title: "API key providers"
 sidebarTitle: "API keys"
-description: "Bring your own API key for OpenAI, Anthropic, Google, xAI, DeepSeek, Mistral, Qwen, Moonshot, MiniMax, Z.ai, or OpenRouter."
+description: "Bring your own API key for OpenAI, Anthropic, Google, xAI, DeepSeek, Mistral, Groq, Cerebras, AWS Bedrock, NVIDIA NIM, OpenRouter, and more."
 icon: "key"
 keywords:
-  ["OpenAI", "Anthropic", "Google Gemini", "xAI", "DeepSeek", "Mistral", "Qwen", "Moonshot", "MiniMax", "Z.ai", "OpenRouter", "API key"]
+  ["OpenAI", "Anthropic", "Google Gemini", "xAI", "DeepSeek", "Mistral", "Qwen", "Moonshot", "MiniMax", "Z.ai", "OpenRouter", "Groq", "Cerebras", "Fireworks", "AWS Bedrock", "NVIDIA NIM", "Xiaomi MiMo", "API key"]
 ---
 
 Most providers work the standard way: sign up, generate an API key, paste it into Manifest. Routed requests go out with that key as the credential.
@@ -29,11 +29,19 @@ Most providers work the standard way: sign up, generate an API key, paste it int
 | [Fireworks AI](https://fireworks.ai)              | [fireworks.ai](https://fireworks.ai)                             |
 | [NVIDIA NIM](https://build.nvidia.com)            | [build.nvidia.com](https://build.nvidia.com)                     |
 | [AWS Bedrock](https://aws.amazon.com/bedrock)     | [aws.amazon.com/bedrock](https://aws.amazon.com/bedrock)         |
-| [BytePlus](https://www.byteplus.com)              | [byteplus.com](https://www.byteplus.com)                         |
-| [NousResearch](https://nousresearch.com)          | [nousresearch.com](https://nousresearch.com)                     |
-| [OpenCode](https://opencode.ai)                   | [opencode.ai](https://opencode.ai)                               |
+| [OpenCode Zen](https://opencode.ai)               | [opencode.ai/auth](https://opencode.ai/auth)                     |
+| [Xiaomi MiMo](https://platform.xiaomimimo.com)    | [platform.xiaomimimo.com](https://platform.xiaomimimo.com/console/api-keys) |
+| [Kilo](https://kilo.ai)                           | [app.kilo.ai](https://app.kilo.ai)                               |
+| [Pioneer](https://pioneer.ai)                     | [pioneer.ai](https://pioneer.ai)                                 |
 
-Manifest also connects Kilo, Pioneer, Command Code, and Xiaomi MiMo. New providers are added often, so the **Routing** page always shows the current list of tiles.
+New providers are added often, so the **Routing** page always shows the current list of tiles.
+
+<Note>
+  BytePlus, NousResearch, Command Code, ClinePass, Kiro, GitHub Copilot, Ollama
+  Cloud, and OpenCode Go connect through a plan rather than an API key, so they
+  have no API Keys tab. See
+  [Subscription-based providers](/providers/subscription-based-providers).
+</Note>
 
 ## Add a provider
 
@@ -71,10 +79,9 @@ Each provider issues keys with a recognizable prefix. Useful for catching paste 
 | Fireworks  | `fw_`     | `fw_...`     |
 | Groq       | `gsk_`    | `gsk_...`    |
 | Pioneer    | `pio_sk_` | `pio_sk_...` |
-| Command Code | `user_` | `user_...`   |
 | Xiaomi MiMo | `sk-`    | `sk-...`     |
 
-Providers not listed here (Cerebras, NVIDIA NIM, AWS Bedrock, BytePlus, NousResearch, OpenCode) issue keys with no fixed prefix.
+Providers not listed here (Cerebras, NVIDIA NIM, AWS Bedrock, Kilo, OpenCode Zen) issue keys with no fixed prefix.
 
 ## Regional providers
 

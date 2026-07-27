@@ -1,0 +1,123 @@
+---
+title: "Observability"
+description: "See what every agent spent, which models served it, and what failed. Set email alerts when spending crosses a threshold."
+icon: "activity"
+keywords:
+  ["LLM observability", "AI cost tracking", "token usage", "spend alerts", "request log", "LLM analytics", "cost per agent", "provider errors"]
+---
+
+Every request through the gateway is recorded: which model served it, what it cost, how long it took, and what failed. The dashboard is built on that record, and you can query the same numbers from your own code.
+
+## Requests and provider attempts
+
+Manifest tracks two things, and the difference matters once fallback is involved:
+
+| | What it is | When you get more than one |
+|---|---|---|
+| **Request** | One call from your agent to Manifest | Never. One call in, one Request. |
+| **Provider attempt** | One call from Manifest to a provider | Every fallback step and every [Auto-fix](/autofix) retry adds another |
+
+A request that succeeds on the first try is one Request with one attempt. A request that fails twice before succeeding is still one Request, with three attempts. A request Manifest blocked itself, like a [hard limit](/llm-gateway#hard-limits) or a malformed body, is one Request with **zero** attempts, since no provider was ever called.
+
+This is why the request count and the provider call count don't match, and why cost is attributed to attempts: a failed attempt can still burn tokens.
+
+## The dashboard
+
+<CardGroup cols={2}>
+  <Card title="Overview" icon="layout-dashboard">
+    Spend, tokens, and request volume over time, across all agents or one. Includes the provider and model mix.
+  </Card>
+  <Card title="Requests" icon="list">
+    The full log, newest first. Filter it, then open any row for the request body, every provider attempt, and the routing decision.
+  </Card>
+  <Card title="Providers" icon="layers">
+    Per-provider usage, spend, and error rates. Useful for spotting one provider degrading.
+  </Card>
+  <Card title="Limits" icon="shield-alert">
+    Threshold rules per agent, plus email provider setup.
+  </Card>
+</CardGroup>
+
+### What's on each request
+
+Opening a request in the log shows the whole story: the tier that routed it, the model and provider that served it, input and output tokens, computed cost, latency, the auth type used ([API key, subscription, or local](/reference/glossary#auth-type)), and every fallback hop with its own status. Failures carry an error code, so a Manifest rejection like [M100](/errors/M100) reads differently from a provider's own 500.
+
+<Tip>
+  Local models record `cost = 0` with real token counts and latency, since
+  nothing was billed. Custom providers do the same, because Manifest can't
+  infer pricing for a model it doesn't know.
+</Tip>
+
+## Spend alerts
+
+A limit rule watches one metric for one agent over a rolling period, and acts when the threshold is crossed.
+
+| Field | Options |
+|---|---|
+| **Metric** | Tokens or cost |
+| **Threshold** | The number to watch for |
+| **Period** | Hour, day, week, or month |
+| **Action** | Email you, block further requests, or both |
+
+Blocking is the gateway half of this and is covered in [hard limits](/llm-gateway#hard-limits). The rest of this section is the alerting half.
+
+<Steps>
+  <Step title="Open the Limits page">
+    Navigate to your agent's **Limits** page in the dashboard.
+  </Step>
+  <Step title="Create a rule">
+    Click **+ Create rule**.
+  </Step>
+  <Step title="Configure it">
+    Pick the metric, threshold, period, and whether it should notify, block, or both.
+  </Step>
+  <Step title="Save">
+    The rule takes effect immediately.
+  </Step>
+</Steps>
+
+Alerts are evaluated hourly, so an email can lag the threshold by up to an hour. Blocking is not: it's checked on every request. Each rule emails once per period, so a rule that stays over its threshold won't flood your inbox.
+
+### Email delivery
+
+<Tabs>
+  <Tab title="Cloud">
+    Alerts go to your account email. Check it's current in your profile settings.
+  </Tab>
+  <Tab title="Self-hosted">
+    Configure a provider on the **Limits** page: Resend, Mailgun, or SendGrid.
+    Enter the API key, domain, and notification address, then save. You can set
+    the same thing with the [`EMAIL_*` environment
+    variables](/reference/environment-variables).
+
+    Without an email provider, alerts are skipped. Blocking rules still work,
+    since they don't need to send anything.
+  </Tab>
+</Tabs>
+
+## Reading usage from your own code
+
+Agents can query their own numbers with their `mnfst_` key, which is useful for showing a budget in your own UI or stopping work before a limit blocks you.
+
+```bash
+curl https://app.manifest.build/api/v1/agent/usage \
+  -H "Authorization: Bearer mnfst_YOUR_KEY"
+```
+
+| Endpoint | Returns |
+|---|---|
+| `GET /api/v1/agent/usage` | Token usage for the calling agent |
+| `GET /api/v1/agent/costs` | Cost data for the calling agent |
+
+Self-hosted installs swap the base URL for their own host.
+
+## Anonymous telemetry
+
+Separately from your dashboard, each self-hosted install sends a small daily report so the project can see version adoption and which providers deserve attention. It's aggregates only, never prompts or content, and one environment variable turns it off. Full field list and opt-out: [Self-hosted → Telemetry](/self-hosted#telemetry).
+
+## Related
+
+- [LLM Gateway](/llm-gateway) — routing, fallback, and hard limits
+- [Auto-fix](/autofix)
+- [Error codes](/errors)
+- [Glossary](/reference/glossary)

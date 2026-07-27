@@ -1,0 +1,102 @@
+---
+title: "Auto-fix"
+description: "Repair a malformed request and resend it once, before the fallback chain runs. Turn it on per agent."
+icon: "wrench"
+keywords:
+  ["auto-fix", "self-healing", "LLM request repair", "malformed request", "400 bad request", "422 unprocessable", "model not found", "agent debugging"]
+---
+
+Some requests fail because of the request, not the model. A parameter the provider doesn't accept, a tool schema in the wrong shape, a model name that moved. Switching to a fallback model doesn't help, because the next model rejects the same body.
+
+Auto-fix handles that case. When a request fails with a repairable error, Manifest sends the failed request and the provider's error to a healing service, gets a corrected request back, and sends it once more. It runs **before** the fallback chain, so fallback is still the safety net if the repair doesn't land.
+
+## When it runs
+
+Auto-fix only touches request-side 4xx errors, where the provider is telling you the request was wrong:
+
+| Status | Meaning                                        |
+| ------ | ---------------------------------------------- |
+| `400`  | Bad request, usually a malformed parameter     |
+| `404`  | Not found, usually a model name that moved     |
+| `422`  | Unprocessable, usually a schema the API rejects |
+
+It deliberately skips `401`, `403`, `429`, and every `5xx`. A bad key, a rate limit, or a provider outage isn't something a rewritten body can fix, so those go straight to [fallback](/llm-gateway#fallback).
+
+A request that names a model your agent can't reach ([M302](/errors/M302)) is also eligible. Auto-fix treats it like the 404 a provider would have returned, so a patch that corrects the model name re-resolves routing and serves the request.
+
+## How it works
+
+<Steps>
+  <Step title="The request fails">
+    A provider returns a repairable 4xx. Manifest normalizes the error into a
+    message, type, and parameter.
+  </Step>
+  <Step title="Manifest asks for a patch">
+    The failed request and the normalized error go to the healing service,
+    which returns a corrected request body.
+  </Step>
+  <Step title="One retry">
+    Manifest sends the patched request. There is no retry budget: it tries
+    exactly once.
+  </Step>
+  <Step title="Fallback if it still fails">
+    If the patched request fails too, Manifest reports the outcome and hands
+    off to your fallback chain as normal.
+  </Step>
+</Steps>
+
+Auto-fix covers non-streaming responses, and streaming responses that fail before the first byte reaches your client. Once bytes are on the wire there's nothing to rewrite.
+
+## Turning it on
+
+Auto-fix is a single toggle on each agent's **Settings** page in the dashboard.
+
+<Tabs>
+  <Tab title="Cloud">
+    On by default for new agents. Flip the toggle off on any agent that should
+    never have its requests rewritten.
+  </Tab>
+  <Tab title="Self-hosted">
+    Off by default, and it needs a healing service to talk to. Point
+    `AUTOFIX_HEALING_URL` at your [Phoenix](https://github.com/mnfst/phoenix)
+    deployment and set `AUTOFIX_HEALING_API_KEY`. Without a URL configured,
+    Auto-fix stays inert and never touches your traffic.
+  </Tab>
+</Tabs>
+
+Self-hosted deployments have a few more knobs:
+
+| Variable                      | Default       | Description                                            |
+| ----------------------------- | ------------- | ------------------------------------------------------ |
+| `AUTOFIX_HEALING_URL`         | unset         | Base URL of the healing service. Unset disables Auto-fix |
+| `AUTOFIX_HEALING_API_KEY`     | unset         | Sent as `x-api-key`. Required by a production healer   |
+| `AUTOFIX_GLOBAL_ENABLED`      | `true`        | Set `false` to disable Auto-fix for every agent at once |
+| `AUTOFIX_TIMEOUT_MS`          | `10000`       | Per heal call                                          |
+| `AUTOFIX_REPAIRABLE_STATUSES` | `400,404,422` | Which statuses are eligible                            |
+
+## Guardrails
+
+Auto-fix is built to stay out of the way when it isn't working:
+
+- **One attempt.** A patched request is sent once. It never loops.
+- **Failures degrade quietly.** If the healing service errors or times out, your agent gets the original provider error. Auto-fix never turns a provider's 400 into a Manifest 500.
+- **A slow healer stops being asked.** After three consecutive transport failures, Manifest stops calling it for 30 seconds so a down service doesn't add latency to every failing request. One successful call clears the streak.
+- **Fallback still runs.** Auto-fix sits in front of the chain, it doesn't replace it.
+
+## Seeing what it did
+
+Open any request in the dashboard's request log. Requests that went through Auto-fix carry a panel showing what changed and whether the retry succeeded. Only a successful patched retry counts as recovered by Auto-fix.
+
+<Note>
+  When Auto-fix is on, the failing request body is sent to the healing service
+  so it can be repaired. Secrets are scrubbed and Manifest stores nothing extra,
+  but if your prompts are sensitive and you'd rather they never leave the
+  request path, leave the toggle off for that agent.
+</Note>
+
+## Related
+
+- [LLM Gateway](/llm-gateway) — where Auto-fix sits in the request flow
+- [Observability](/observability) — finding failing requests in the log
+- [M302: Model not available](/errors/M302)
+- [Error codes](/errors)

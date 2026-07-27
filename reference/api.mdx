@@ -77,7 +77,7 @@ curl http://localhost:2099/v1/models \
   -H "Authorization: Bearer mnfst_YOUR_KEY_HERE"
 ```
 
-Send `auto` to let Manifest route, or send any listed model ID to skip routing and go straight to that provider. If you send a model ID that is not in this agent-specific list, Manifest returns [M302: Model not available](/errors/M302). See [Routing → Route a specific model](/routing#route-a-specific-model).
+Send `auto` to let Manifest route, or send any listed model ID to skip routing and go straight to that provider. If you send a model ID that is not in this agent-specific list, Manifest returns [M302: Model not available](/errors/M302). See [Routing → Route a specific model](/llm-gateway#route-a-specific-model).
 
 ### Inspect model capabilities
 
@@ -202,8 +202,8 @@ The proxy returns a standard JSON error envelope:
 | `401` | Invalid or missing `Authorization` header |
 | `402` | Manifest Free plan quota reached (`error.code = PLAN_LIMIT_REQUESTS`, [M204](/errors/M204)), or provider billing/quota error from the upstream |
 | `424` | Fallback chain exhausted (all configured models failed) |
-| `429` | [Hard limit](/set-limits) hit ([M200](/errors/M200)), or Manifest rate limit (`THROTTLE_LIMIT`) tripped |
-| `5xx` | Upstream provider error (triggers [fallback](/fallback)) |
+| `429` | [Hard limit](/llm-gateway#hard-limits) hit ([M200](/errors/M200)), or Manifest rate limit (`THROTTLE_LIMIT`) tripped |
+| `5xx` | Upstream provider error (triggers [fallback](/llm-gateway#fallback)) |
 
 Status `424` is the only one that **does not** trigger a fallback. Manifest returns it itself when the chain is exhausted, so re-routing it would loop forever.
 
