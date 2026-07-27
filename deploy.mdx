@@ -1,11 +1,13 @@
 ---
-title: "Deployment guides"
-description: "Deploy Manifest on Railway, Render, DigitalOcean, AWS, GCP, Fly.io, Coolify, Easypanel, Heroku, and Koyeb."
+title: "Self-hosting Manifest"
+sidebarTitle: "Overview"
+description: "Every way to run your own Manifest instance: Docker on your machine, a managed platform like Railway, your own AWS or GCP account, or a server panel like Coolify."
 icon: "rocket"
 keywords:
   [
-    "Manifest deployment",
     "self-hosted Manifest",
+    "Manifest deployment",
+    "Docker",
     "Railway",
     "Render",
     "AWS",
@@ -16,7 +18,19 @@ keywords:
   ]
 ---
 
-Use these guides to deploy Manifest with hosted platforms, cloud providers, or self-hosted PaaS tools. For local Docker installs, use the [self-hosted guide](/self-hosted).
+Everything on this page runs the same open-source Manifest image on infrastructure you control, with your own PostgreSQL database. Pick the path that matches where you want it to live. If you'd rather not run anything yourself, [Manifest Cloud](https://app.manifest.build) is the hosted alternative.
+
+## Your own machine
+
+<Card title="Docker" icon="arrow-up-right" href="/self-hosted">
+  The most direct path. One install command, or docker-compose if you want to
+  edit the config first. Also covers upgrades, backups, and bringing your own
+  PostgreSQL.
+</Card>
+
+## Managed platforms
+
+Someone else runs the infrastructure. Usually a one-click template or deploy button.
 
 <CardGroup cols={2}>
   <Card title="Railway" icon="arrow-up-right" href="/deploy/railway">
@@ -31,25 +45,9 @@ Use these guides to deploy Manifest with hosted platforms, cloud providers, or s
     App Platform deploy from the public repository with Manifest and a Dev
     PostgreSQL database.
   </Card>
-  <Card title="AWS" icon="arrow-up-right" href="/deploy/aws">
-    CloudFormation quick-create for ECS Fargate, RDS PostgreSQL, Secrets
-    Manager, and ALB.
-  </Card>
-  <Card title="GCP" icon="arrow-up-right" href="/deploy/gcp">
-    Cloud Shell guided deploy for Cloud Run, Cloud SQL PostgreSQL, and Secret
-    Manager.
-  </Card>
   <Card title="Fly.io" icon="arrow-up-right" href="/deploy/fly">
     CLI-based deploy using the public Docker image, Fly Postgres, and generated
     Manifest secrets.
-  </Card>
-  <Card title="Coolify" icon="arrow-up-right" href="/deploy/coolify">
-    Self-hosted PaaS path using Docker Compose, Coolify magic variables, and
-    PostgreSQL.
-  </Card>
-  <Card title="Easypanel" icon="arrow-up-right" href="/deploy/easypanel">
-    Self-hosted PaaS guide using Easypanel app services, PostgreSQL, and the
-    Manifest Docker image.
   </Card>
   <Card title="Heroku" icon="arrow-up-right" href="/deploy/heroku">
     Deploy-button guide with Heroku Postgres, generated secrets, and one
@@ -61,8 +59,39 @@ Use these guides to deploy Manifest with hosted platforms, cloud providers, or s
   </Card>
 </CardGroup>
 
+## Cloud providers
+
+Your own cloud account, provisioned with the provider's own infrastructure tooling.
+
+<CardGroup cols={2}>
+  <Card title="AWS" icon="arrow-up-right" href="/deploy/aws">
+    CloudFormation quick-create for ECS Fargate, RDS PostgreSQL, Secrets
+    Manager, and ALB.
+  </Card>
+  <Card title="GCP" icon="arrow-up-right" href="/deploy/gcp">
+    Cloud Shell guided deploy for Cloud Run, Cloud SQL PostgreSQL, and Secret
+    Manager.
+  </Card>
+</CardGroup>
+
+## Server panels
+
+A PaaS you run on your own server, so you get deploy buttons on hardware you own.
+
+<CardGroup cols={2}>
+  <Card title="Coolify" icon="arrow-up-right" href="/deploy/coolify">
+    Docker Compose stack using Coolify magic variables and a private PostgreSQL
+    container.
+  </Card>
+  <Card title="Easypanel" icon="arrow-up-right" href="/deploy/easypanel">
+    Easypanel app service using PostgreSQL and the Manifest Docker image.
+  </Card>
+</CardGroup>
+
 ## Before you deploy
 
 Most hosted deployments create paid resources. Review each provider's pricing before leaving test apps running.
 
 For public deployments, make sure `BETTER_AUTH_URL` matches the exact browser URL. If it does not, Better Auth can reject login with an invalid-origin error.
+
+Whichever path you pick, [Environment variables](/reference/environment-variables) is the full configuration list, and [Data and telemetry](/reference/telemetry) covers what your instance stores and what it reports back.
