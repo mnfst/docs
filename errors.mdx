@@ -4,7 +4,7 @@ sidebarTitle: "Errors"
 description: "Reference for every Manifest proxy error code (M001-M500). What you saw, why it happened, and how to fix it. Covers auth, providers, limits, validation."
 icon: "circle-alert"
 keywords:
-  ["Manifest error codes", "M001", "M100", "M200", "M204", "M302", "M500", "OpenAI compatible errors", "401 Unauthorized", "402 Payment Required", "429 Too Many Requests", "Bearer token error", "chat completions error", "model not available", "troubleshooting", "proxy errors"]
+  ["Manifest error codes", "M001", "M100", "M102", "M200", "M204", "M302", "M500", "OpenAI compatible errors", "401 Unauthorized", "402 Payment Required", "429 Too Many Requests", "Bearer token error", "chat completions error", "model not available", "troubleshooting", "proxy errors"]
 ---
 
 When Manifest blocks or rejects a request, the response message starts with a code in square brackets:
@@ -28,14 +28,15 @@ These fire when the bearer token on `/v1/chat/completions` is missing or wrong. 
 | [M004: Key expired](/errors/M004) | Key past its expiration date |
 | [M005: Key not recognized](/errors/M005) | No matching agent for this key |
 
-## Providers (M100–M101)
+## Providers (M100–M102)
 
-Your key is fine, but no provider credentials are wired up. See [Routing](/llm-gateway) and [API key providers](/providers/api-key-providers).
+Your Manifest key is fine, but provider credentials are missing or unusable. See [Routing](/llm-gateway), [API key providers](/providers/api-key-providers), and [Subscription-based providers](/providers/subscription-based-providers).
 
 | Code | What |
 |------|------|
 | [M100: Provider API key missing](/errors/M100) | Routing picked a provider you haven't connected |
 | [M101: No providers configured](/errors/M101) | Agent has zero providers connected |
+| [M102: Provider subscription credentials unusable](/errors/M102) | Subscription OAuth/token exists but cannot be refreshed |
 
 ## Limits (M200–M204)
 
