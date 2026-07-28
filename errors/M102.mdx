@@ -1,0 +1,57 @@
+---
+title: "M102: Provider subscription credentials unusable"
+sidebarTitle: "M102"
+description: "Manifest error M102 fires when routing picks a subscription provider whose OAuth or refresh credentials cannot be used. Fix: reconnect the subscription on Routing."
+icon: "plug-zap"
+keywords:
+  [
+    "M102",
+    "Manifest M102",
+    "subscription credentials unusable",
+    "OAuth refresh failed",
+    "ChatGPT OAuth",
+    "Claude subscription",
+    "dead refresh token",
+    "Manifest routing",
+    "reconnect OAuth",
+  ]
+---
+
+## What you saw
+
+```text
+[🦚 Manifest M102] openai subscription credentials could not be refreshed. Reconnect OAuth here: https://app.manifest.build/...
+See https://manifest.build/docs/errors/M102
+```
+
+The provider name (`openai` in the example) varies based on which subscription route Manifest selected.
+
+## Why it happened
+
+Routing elected a **subscription** connection (ChatGPT OAuth, Claude Max token, Copilot device code, and similar), and Manifest still has a stored credential blob for it — but that credential cannot produce a usable access token.
+
+Typical causes:
+
+- The OAuth **refresh token expired**, was revoked, or the user signed out of the provider account
+- A pasted subscription token is no longer valid
+- Provider-side session invalidation after a password change or security reset
+
+This is different from [M100](/errors/M100): M100 means there is no key on file. M102 means a subscription row exists and was elected, but the unwrap/refresh step failed.
+
+When fallback routes are configured, Manifest records the M102 hop and continues the chain. You only see a terminal M102 response when no usable fallback remains.
+
+## How to fix it
+
+1. Open the dashboard link in the error message. It goes straight to the agent's **Routing** page.
+2. On the provider tile, open the **Subscription** tab and reconnect (re-run OAuth, device code, or paste a fresh token).
+3. Optionally add a working [API key](/providers/api-key-providers) or another [subscription](/providers/subscription-based-providers) as a fallback so a dead primary does not block traffic.
+4. Retry the request.
+
+## Related
+
+- [M100: Provider API key missing](/errors/M100)
+- [M101: No providers configured](/errors/M101)
+- [Subscription-based providers](/providers/subscription-based-providers)
+- [API key providers](/providers/api-key-providers)
+- [Routing](/llm-gateway)
+- [All error codes](/errors)
