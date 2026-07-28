@@ -8,6 +8,12 @@ keywords:
 
 Manifest reads its configuration from environment variables. In the bundled Docker setup these come from `~/manifest/.env`. For `docker run`, pass them with `-e`. For non-Docker installs, export them in the shell before launching the backend.
 
+<Note>
+  This page is for [self-hosted](/self-hosted) instances only. On [Manifest
+  Cloud](https://app.manifest.build) there is no server to configure and no
+  `.env` to edit — everything you can change lives in the dashboard.
+</Note>
+
 ## Core
 
 | Variable | Required | Default | Description |
@@ -97,9 +103,9 @@ Subscription OAuth (ChatGPT, Claude, MiniMax) uses Manifest-side client IDs by d
 
 | Variable | Default | Description |
 |---|---|---|
-| `MANIFEST_TELEMETRY_DISABLED` | unset | Set to `1` to disable [anonymous telemetry](/self-hosted#telemetry) |
+| `MANIFEST_TELEMETRY_DISABLED` | unset | Set to `1` to disable [anonymous telemetry](/reference/telemetry) |
 | `TELEMETRY_ENDPOINT` | `https://telemetry.manifest.build/...` | Send reports to your own endpoint |
-| `MANIFEST_PUBLIC_STATS` | `false` | Expose `/api/v1/public/*` aggregate stats without auth (Cloud only) |
+| `MANIFEST_PUBLIC_STATS` | `false` | Set `true` to expose `/api/v1/public/*` aggregate stats without auth |
 
 ## Error monitoring
 

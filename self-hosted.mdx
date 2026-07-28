@@ -1,12 +1,15 @@
 ---
-title: "Self-hosted"
-description: "Run Manifest on your own machine with Docker. Covers the quick installer, docker-compose, bringing your own PostgreSQL, signed images, and telemetry opt-out."
+title: "Self-hosting with Docker"
+sidebarTitle: "Docker"
+description: "Run Manifest on your own machine with Docker. Covers the quick installer, docker-compose, bringing your own PostgreSQL, signed images, upgrades, and backups."
 icon: "docker"
 keywords:
-  ["self-hosted LLM router", "Docker", "docker-compose", "PostgreSQL", "BETTER_AUTH_SECRET", "telemetry"]
+  ["self-hosted LLM router", "Docker", "docker-compose", "PostgreSQL", "BETTER_AUTH_SECRET", "docker run", "upgrade", "backup"]
 ---
 
 Run the full Manifest stack on your own machine. No Node.js required, just Docker.
+
+To run Manifest somewhere other than your own machine, see the [other self-hosting paths](/deploy).
 
 All three paths end in the same place: a running stack at [http://localhost:2099](http://localhost:2099) where you sign up. The first account you create becomes the admin. No demo credentials are pre-seeded.
 
@@ -18,7 +21,7 @@ All three paths end in the same place: a running stack at [http://localhost:2099
 
 <Tabs>
   <Tab title="Quick install (recommended)">
-    One command. The installer downloads the compose file into `~/manifest`, generates a secret, and brings up the stack. First boot pulls the app image and Postgres, so give it up to a couple of minutes.
+    One command. The installer downloads the compose file into `~/manifest`, generates the secrets, and brings up the stack. First boot pulls the app image and Postgres, so give it up to a couple of minutes.
 
     ```bash
     bash <(curl -sSL https://raw.githubusercontent.com/mnfst/manifest/main/docker/install.sh)
@@ -32,7 +35,9 @@ All three paths end in the same place: a running stack at [http://localhost:2099
       ```
     </Accordion>
 
-    Useful flags: `--dir <path>` to install elsewhere, `--dry-run` to preview, `--yes` to skip the confirmation prompt.
+    Useful flags: `--dir <path>` to install elsewhere, `--port <n>` to serve on a port other than 2099, `--dry-run` to preview, `--yes` to skip the confirmation prompt.
+
+    Re-running the installer against an existing install directory resumes it. The compose file and your generated secrets are left untouched.
 
     When the installer finishes, open [http://localhost:2099](http://localhost:2099) and sign up for an account. Then connect a provider and send your first request — see [First request](#first-request).
   </Tab>
@@ -297,70 +302,13 @@ docker compose down -v    # Stop and delete all data
 
 ## Data and privacy
 
-Manifest keeps metadata about each request: model, provider, tier, token counts, cost, latency, and a scrubbed error message. It does not keep the message bodies. Prompts and completions are never written to the database, inline image data is stripped out, and error text is scrubbed for secrets before it lands.
-
-Your agents' conversations stay between you and the provider. The usage and cost views in the dashboard are built from that metadata alone.
+Manifest keeps metadata about each request — model, provider, tier, token counts, cost, latency — and never the message bodies. Prompts and completions are not written to the database.
 
 ## Telemetry
 
-Once a day, each install sends us a small anonymous report. That's how we know whether anyone's actually using the thing, and which providers are popular enough to deserve more work. It's aggregates, never content: no prompts, no messages, no keys, nothing tied to a user. Fifteen fields total.
+Once a day, each install sends an anonymous aggregate report: version, provider mix, token and cost totals. Never prompts, keys, or anything tied to a user. Set `MANIFEST_TELEMETRY_DISABLED=1` in your `.env` to turn it off.
 
-### What gets sent
-
-| Field | Example | Purpose |
-|-------|---------|---------|
-| `schema_version` | `1` | So the shape can grow without breaking old clients. Stays `1` for additive changes; bumps on breaking ones |
-| `install_id` | random UUIDv4 | Count distinct installs. Generated once on first boot, persisted, never rotated |
-| `manifest_version` | `5.47.0` | Version adoption across the fleet |
-| `messages_total` | `1284` | Daily activity per install |
-| `messages_by_provider` | `{"anthropic": 700, "openai": 500}` | Provider mix. Anything we don't recognize collapses to `"custom"`, so self-hosted provider names and URLs stay local |
-| `messages_by_tier` | `{"default": 900, "simple": 300, ...}` | Routing tier usage |
-| `messages_by_auth_type` | `{"api_key": 1200, "subscription": 84}` | API key vs. paid-subscription usage |
-| `tokens_input_total` | `1_450_000` | Volume-weighted signal |
-| `tokens_output_total` | `890_000` | Same |
-| `cost_usd_total` <sup>†</sup> | `47.83` | Sum of `cost_usd` Manifest computed at routing time, rounded to cents. Lets us see real dollar throughput instead of guessing from token counts. `0` for Ollama-only / free-API installs |
-| `cost_usd_by_provider` <sup>†</sup> | `{"anthropic": 30.50, "openai": 17.33}` | Per-provider split of `cost_usd_total`, rounded to cents. Same `"custom"` collapse rule as `messages_by_provider` — admin-configured BYOK pricing is never keyed by the raw provider name |
-| `agents_total` | `4` | Configuration scale |
-| `agents_by_platform` | `{"openclaw": 3, "hermes": 1}` | Which agent clients people use |
-| `platform` | `linux` / `darwin` / `windows` | OS distribution |
-| `arch` | `x64` / `arm64` | Architecture distribution |
-
-<sup>†</sup> *Optional. Installs running older Manifest versions omit these fields; receivers should feature-detect on presence rather than on `schema_version`. Cost values are derived from the same `input_tokens` / `output_tokens` we already ship, multiplied by Manifest's per-model pricing table — no new data leaves the box, just a rolled-up dollar figure for what's already disclosed.*
-
-### Never sent
-
-Tenant IDs, user IDs, emails, API keys, prompts, message contents, model names, custom provider URLs, OAuth client IDs, hostnames, raw IPs. The ingest takes a SHA-256 of your IP and throws the original away; we keep the hash so we can rate-limit bad actors without knowing where they actually live.
-
-### When
-
-- Once every 24 hours, per install.
-- The first report is delayed by a random 0–24h offset, so a fleet of containers rebooted together doesn't all hit the endpoint at the same minute.
-- Off by default when `NODE_ENV != production`. Dev machines are never going to accidentally send.
-- If the endpoint is down, we log it and try again on the next hourly tick. Your proxy keeps serving requests — the sender never gets in the way.
-
-### Turning it off
-
-Put this in your `.env` (or `docker-compose.yml`) and restart the container:
-
-```bash
-MANIFEST_TELEMETRY_DISABLED=1
-```
-
-The sender checks the flag before doing anything else. No database read, no DNS lookup, no request leaves the box.
-
-### Sending it somewhere else
-
-If you'd rather run your own fleet dashboard, point `TELEMETRY_ENDPOINT` at a URL you control. Add it to `.env` next to your compose file and restart:
-
-```bash
-TELEMETRY_ENDPOINT=https://telemetry.mycompany.internal/v1/report
-```
-
-```bash
-docker compose up -d
-```
-
-Your collector receives the same payload documented above, and nothing is sent to `telemetry.manifest.build`.
+Full field list, what's never sent, and how to point it at your own endpoint: [Data and telemetry](/reference/telemetry).
 
 ## Docker Hub
 

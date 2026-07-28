@@ -49,22 +49,13 @@ Auto-fix covers non-streaming responses, and streaming responses that fail befor
 
 ## Turning it on
 
-Auto-fix is a single toggle on each agent's **Settings** page in the dashboard.
+Auto-fix is a single toggle on each agent's **Settings** page in the dashboard. It's on by default for new agents. Flip it off on any agent that should never have its requests rewritten.
 
-<Tabs>
-  <Tab title="Cloud">
-    On by default for new agents. Flip the toggle off on any agent that should
-    never have its requests rewritten.
-  </Tab>
-  <Tab title="Self-hosted">
-    Off by default, and it needs a healing service to talk to. Point
-    `AUTOFIX_HEALING_URL` at your [Phoenix](https://github.com/mnfst/phoenix)
-    deployment and set `AUTOFIX_HEALING_API_KEY`. Without a URL configured,
-    Auto-fix stays inert and never touches your traffic.
-  </Tab>
-</Tabs>
+That toggle is the whole setup: there's nothing to install and nothing to configure.
 
-Self-hosted deployments have a few more knobs:
+### Self-hosted
+
+Self-hosting adds one prerequisite. The per-agent toggle works the same way, but it's off by default and Auto-fix needs a healing service to talk to. Point `AUTOFIX_HEALING_URL` at your [Phoenix](https://github.com/mnfst/phoenix) deployment and set `AUTOFIX_HEALING_API_KEY`. Without a URL configured, Auto-fix stays inert and never touches your traffic.
 
 | Variable                      | Default       | Description                                            |
 | ----------------------------- | ------------- | ------------------------------------------------------ |
@@ -73,6 +64,8 @@ Self-hosted deployments have a few more knobs:
 | `AUTOFIX_GLOBAL_ENABLED`      | `true`        | Set `false` to disable Auto-fix for every agent at once |
 | `AUTOFIX_TIMEOUT_MS`          | `10000`       | Per heal call                                          |
 | `AUTOFIX_REPAIRABLE_STATUSES` | `400,404,422` | Which statuses are eligible                            |
+
+These are [environment variables](/reference/environment-variables), so they only apply to a Manifest instance you run yourself.
 
 ## Guardrails
 
