@@ -21,17 +21,18 @@ Manifest reads its configuration from environment variables. In the bundled Dock
 | `DATABASE_URL` | Yes | — | PostgreSQL connection string. Format: `postgresql://user:pass@host:5432/dbname` |
 | `BETTER_AUTH_SECRET` | Yes | — | Session signing secret. Min 32 chars. Generate with `openssl rand -hex 32` |
 | `BETTER_AUTH_URL` | No | `http://localhost:2099` | Public URL the dashboard is reachable on. Must match the browser URL |
-| `PORT` | No | `2099` | Internal server port |
-| `NODE_ENV` | No | `production` | Node environment. Telemetry is disabled when this isn't `production` |
+| `PORT` | No | `2099` | Dashboard port. Under the bundled compose file this sets both the published host port and the internal listener, and `BETTER_AUTH_URL` follows it |
+| `NODE_ENV` | No | `production` | Node environment. Telemetry is disabled when this isn't `production`. Fixed to `production` by the bundled compose file — the image is a production artifact |
 
 ## Network & security
 
 | Variable | Default | Description |
 |---|---|---|
-| `BIND_ADDRESS` | `127.0.0.1` | Interface the server binds to. Set to `0.0.0.0` for LAN access |
-| `CORS_ORIGIN` | `http://localhost:3000` | Allowed CORS origin for browser-based dashboard requests |
+| `BIND_ADDRESS` | `127.0.0.1` | Interface the server binds to. Set to `0.0.0.0` for LAN access. The Docker image already sets `0.0.0.0`; restrict a container with the compose `ports` line instead |
+| `CORS_ORIGIN` | `http://localhost:3000` | Allowed CORS origin for browser-based dashboard requests. Development only — production uses the built-in allowlist plus `WINGMAN_CORS_ORIGINS` |
 | `API_KEY` | — | Internal API key for system endpoints |
-| `MANIFEST_ENCRYPTION_KEY` | `BETTER_AUTH_SECRET` | Key used to encrypt stored provider credentials at rest. Falls back to `BETTER_AUTH_SECRET` when unset |
+| `MANIFEST_ENCRYPTION_KEY` | `BETTER_AUTH_SECRET` | Key used to encrypt stored provider credentials at rest. Falls back to `BETTER_AUTH_SECRET` when unset — set a separate 32+ char value so a session-cookie leak doesn't also decrypt every stored provider key. Set it before first boot |
+| `MANIFEST_DISABLE_HSTS` | — | Set `1` to silence the boot warning about HSTS being unavailable on a plain-HTTP deployment. Prefer an `https://` `BETTER_AUTH_URL` anywhere reachable from the internet |
 | `WINGMAN_CORS_ORIGINS` | — | Extra browser origins allowed to call the gateway, comma-separated. The hosted gateway tester at `wingman.manifest.build` is always allowed |
 | `THROTTLE_TTL` | `60000` | Rate-limit window in milliseconds |
 | `THROTTLE_LIMIT` | `100` | Max requests per window per agent |
@@ -44,7 +45,7 @@ Manifest reads its configuration from environment variables. In the bundled Dock
 | `AUTH_DB_POOL_MAX` | `10` | Separate pool used by Better Auth. Counted on top of `DB_POOL_MAX` when sizing your server's `max_connections` |
 | `RUN_MIGRATIONS_ON_BOOT` | `true` | Run pending migrations at startup. Set `false` on multi-replica deploys so only one instance migrates |
 | `DB_TUNE_SESSION` | `true` | Apply Manifest's planner defaults at boot. Set `false` on managed Postgres where your role can't `ALTER ROLE` itself |
-| `SEED_DATA` | `false` | Seed demo data on first boot |
+| `SEED_DATA` | `false` | Seed demo data on first boot. Development only — the seeder refuses to run under `NODE_ENV=production`, so it has no effect on a Docker self-host. Use the first-run setup wizard to create your admin account |
 
 ## LLM proxy
 
