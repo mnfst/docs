@@ -41,7 +41,7 @@ Once a day, each self-hosted install sends us a small anonymous report. That's h
 | `manifest_version` | `5.47.0` | Version adoption across the fleet |
 | `messages_total` | `1284` | Daily activity per install |
 | `messages_by_provider` | `{"anthropic": 700, "openai": 500}` | Provider mix. Anything we don't recognize collapses to `"custom"`, so self-hosted provider names and URLs stay local |
-| `messages_by_tier` | `{"default": 900, "batch": 300, ...}` | Routing tier usage |
+| `messages_by_tier` | `{"default": 900, "simple": 300, ...}` | Routing tier usage |
 | `messages_by_auth_type` | `{"api_key": 1200, "subscription": 84}` | API key vs. paid-subscription usage |
 | `tokens_input_total` | `1_450_000` | Volume-weighted signal |
 | `tokens_output_total` | `890_000` | Same |
@@ -77,11 +77,17 @@ The sender checks the flag before doing anything else. No database read, no DNS 
 
 ### Sending it somewhere else
 
-If you'd rather run your own fleet dashboard, point `TELEMETRY_ENDPOINT` at a URL you control:
+If you'd rather run your own fleet dashboard, point `TELEMETRY_ENDPOINT` at a URL you control. Add it to `.env` next to your compose file and restart:
 
 ```bash
 TELEMETRY_ENDPOINT=https://telemetry.mycompany.internal/v1/report
 ```
+
+```bash
+docker compose up -d
+```
+
+Your collector receives the same payload documented above, and nothing is sent to `telemetry.manifest.build`.
 
 ## Related
 
