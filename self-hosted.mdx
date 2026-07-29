@@ -216,7 +216,14 @@ Database migrations run automatically on boot, no manual steps. Your data in the
 
 ## Backup and persistence
 
-All state lives in the `pgdata` named volume mounted at `/var/lib/postgresql/data` in the `postgres` service. Nothing else in the Manifest container is stateful.
+The stack uses two named volumes:
+
+| Volume | Mounted at | Holds |
+|---|---|---|
+| `manifest_pgdata` | `/var/lib/postgresql/data` in `postgres` | Everything: accounts, agents, provider credentials, the request log |
+| `manifest_request_recordings` | `/data/request-recordings` in `manifest` | Stored [message recording](/message-recording) bodies |
+
+The database volume is the one to back up. Losing the recordings volume costs you stored message bodies and nothing else, and those expire on a retention schedule regardless.
 
 Back up (from the host, with the stack running):
 
@@ -235,7 +242,7 @@ docker compose up -d
 To list or remove the volume manually:
 
 ```bash
-docker volume ls | grep pgdata
+docker volume ls | grep manifest_
 docker compose down -v    # destroys all data
 ```
 
@@ -254,7 +261,7 @@ docker compose down -v    # destroys all data
 
 Only the first two are required, and the installer generates both for you, so a default install boots without you setting anything.
 
-Everything else is optional: bind address and CORS, rate limits, provider timeouts, email delivery for alerts and password resets, OAuth logins, connection-pool sizing, and Sentry. See [Environment variables](/reference/environment-variables) for the full list with defaults.
+Everything else is optional: bind address and CORS, rate limits, provider timeouts, email delivery for alerts and password resets, OAuth logins, connection-pool sizing, recording storage and retention, Auto-fix, and Sentry. See [Environment variables](/reference/environment-variables) for the full list with defaults.
 
 ## Stop and clean up
 
@@ -265,7 +272,7 @@ docker compose down -v    # Stop and delete all data
 
 ## Data and privacy
 
-Manifest keeps metadata about each request — model, provider, tier, token counts, cost, latency — and never the message bodies. Prompts and completions are not written to the database.
+Manifest always keeps metadata about each request — model, provider, tier, token counts, cost, latency. Message bodies are separate and optional: with [message recording](/message-recording) on for an agent, prompts and completions are stored too, in the recordings volume rather than the database. New agents have it enabled. See [Data and telemetry](/reference/telemetry).
 
 ## Telemetry
 

@@ -56,6 +56,41 @@ How Manifest talks to upstream providers.
 | `STREAM_WARMUP_MS` | `15000` | How long to wait for the first streamed chunk before falling back to the next model |
 | `OLLAMA_HOST` | `http://localhost:11434` | Base URL for a local Ollama server. In Docker, set it to `http://host.docker.internal:11434` |
 
+## Request recordings
+
+Storage and retention for [message recording](/message-recording). The bundled Docker setup already sets the filesystem path and mounts a volume for it, so a default install needs none of these.
+
+| Variable | Default | Description |
+|---|---|---|
+| `REQUEST_RECORDING_STORAGE` | `auto` | `auto`, `s3`, `filesystem`, or `disabled`. Under `auto`, any S3 variable being set selects S3; otherwise the filesystem path is used |
+| `REQUEST_RECORDING_FILESYSTEM_PATH` | `/data/request-recordings` | Where recordings are written on disk. Must be a persistent volume |
+| `REQUEST_RECORDING_RETENTION_DAYS` | `365` | Days to keep recordings before the sweep deletes them |
+| `REQUEST_RECORDING_S3_BUCKET` | — | Bucket name. Required for S3 |
+| `REQUEST_RECORDING_S3_REGION` | — | Region. Use `auto` for R2 and similar. Required for S3 |
+| `REQUEST_RECORDING_S3_ENDPOINT` | — | Custom endpoint for non-AWS S3-compatible storage |
+| `REQUEST_RECORDING_S3_ACCESS_KEY_ID` | — | Access key. Omit both key variables to use ambient credentials |
+| `REQUEST_RECORDING_S3_SECRET_ACCESS_KEY` | — | Secret key. Must be set together with the access key ID |
+| `REQUEST_RECORDING_S3_FORCE_PATH_STYLE` | `false` | Set `true` for storage that needs path-style bucket addressing (MinIO) |
+
+<Warning>
+  A partial S3 configuration disables recording rather than falling back to
+  local disk. Set bucket **and** region, and either both access-key variables or
+  neither.
+</Warning>
+
+## Auto-fix
+
+[Auto-fix](/autofix) needs a healing service to talk to. Without `AUTOFIX_HEALING_URL` it stays inert and never touches your traffic.
+
+| Variable | Default | Description |
+|---|---|---|
+| `AUTOFIX_HEALING_URL` | unset | Base URL of the healing service. Unset disables Auto-fix |
+| `AUTOFIX_HEALING_API_KEY` | unset | Sent as `x-api-key`. Required by a production healer |
+| `AUTOFIX_ROLLOUT` | `selected` | Set `everyone` to make Auto-fix available to every tenant on the instance |
+| `AUTOFIX_GLOBAL_ENABLED` | `true` | Set `false` to disable Auto-fix for every agent at once |
+| `AUTOFIX_TIMEOUT_MS` | `10000` | Per heal call |
+| `AUTOFIX_REPAIRABLE_STATUSES` | `400,404,422` | Which statuses are eligible |
+
 ## Email
 
 Used for both Better Auth transactional emails (signup verification, password reset) **and** [threshold alerts](/observability#spend-alerts). Set one provider block.

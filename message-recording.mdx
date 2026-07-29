@@ -1,0 +1,105 @@
+---
+title: "Message recording"
+description: "Store the full request and response body of every provider attempt, and read them back as a conversation in the request drawer. One toggle per agent."
+icon: "messages-square"
+keywords:
+  ["message recording", "request body", "response body", "LLM conversation log", "prompt logging", "full body log", "tool calls", "recording retention", "S3 recording storage"]
+---
+
+The [request log](/observability) tells you what a request cost and which model served it. Message recording tells you what was actually said: the body Manifest sent to the provider, and the body that came back.
+
+It's one toggle per agent.
+
+## What gets recorded
+
+Recording happens per **provider attempt**, not per request. A request that falls back twice before succeeding produces three recordings, each with its own body pair, so you can see how the conversation was reshaped for each provider. An [Auto-fix](/autofix) retry is its own attempt too, which is how you compare the request that failed against the patched one that worked.
+
+| | What's stored |
+|---|---|
+| **Request** | The body Manifest forwarded to the provider, after routing rewrote the model and translated the protocol. Not the body your client sent |
+| **Response** | The parsed JSON body, or for a streamed attempt, the raw SSE stream as it arrived |
+| **Wire format** | Which protocol the exchange used, so the drawer can render it correctly |
+
+A request Manifest blocked itself, on a [hard limit](/llm-gateway#hard-limits) or a malformed body, has zero provider attempts and so no recording. There was no exchange to record.
+
+## Reading it back
+
+Open any request in the dashboard's **Requests** log. When recordings exist, the drawer has a **Messages** tab next to **Attempts**.
+
+The tab renders the exchange as a conversation, with a rail down the side listing every turn. Search the rail or filter it by role, and click any row to jump to that turn in the main pane. Assistant turns show the tool calls the model actually made, not the tool definitions your client offered it.
+
+## Turning it on
+
+The toggle lives on each agent's **Settings** page, under **Message recording**.
+
+New agents have it on. Older agents keep whatever they were set to, because only the default changed, so an agent from before the feature shipped probably needs the toggle flipped once.
+
+<Note>
+  Recording stores your prompts and completions. Everything else Manifest keeps
+  is metadata ([Data and telemetry](/reference/telemetry) covers the
+  distinction). If an agent handles data you'd rather Manifest never hold onto,
+  leave recording off for that agent.
+</Note>
+
+## Retention
+
+Recordings are deleted on a schedule. The metadata row in the request log stays; only the stored body pair goes away.
+
+| Deployment | Retention |
+|---|---|
+| Cloud Free | 7 days |
+| Cloud Pro | 365 days |
+| Self-hosted | 365 days |
+
+Self-hosted installs can override this with `REQUEST_RECORDING_RETENTION_DAYS`. Setting it also overrides the per-plan split, so every recording on the instance expires on the same schedule.
+
+## Self-hosted storage
+
+Recordings don't live in Postgres. They're gzipped and written to object storage, which you pick per instance.
+
+<Tabs>
+  <Tab title="Docker (default)">
+    The bundled compose file mounts a named volume `manifest_request_recordings`
+    at `/data/request-recordings` and points Manifest at it. Nothing to
+    configure. The volume survives `docker compose down` the same way the
+    Postgres volume does.
+  </Tab>
+  <Tab title="S3-compatible">
+    Set a bucket and region, and Manifest writes there instead. Required for
+    multi-replica deploys, since replicas can't share a local disk, and for any
+    platform without a persistent volume.
+
+    ```bash
+    REQUEST_RECORDING_S3_BUCKET=manifest-recordings
+    REQUEST_RECORDING_S3_REGION=auto
+    REQUEST_RECORDING_S3_ENDPOINT=https://<account>.r2.cloudflarestorage.com
+    REQUEST_RECORDING_S3_ACCESS_KEY_ID=...
+    REQUEST_RECORDING_S3_SECRET_ACCESS_KEY=...
+    ```
+
+    Credentials are optional if the instance already has them from its
+    environment (an IAM role, for example). Provide both or neither.
+  </Tab>
+</Tabs>
+
+`REQUEST_RECORDING_STORAGE` defaults to `auto`, which picks the backend by what you've configured: any S3 setting present means S3, otherwise the mounted filesystem path. Set it to `s3`, `filesystem`, or `disabled` to decide explicitly.
+
+<Warning>
+  Under `auto`, setting *some* S3 variables commits Manifest to S3. A bucket
+  without a region, or one access-key half without the other, leaves recording
+  with no working backend instead of falling back to local disk. Configure it
+  fully or not at all.
+</Warning>
+
+Full variable list: [Environment variables](/reference/environment-variables#request-recordings).
+
+### Platforms without a persistent disk
+
+Railway, Render, Fly, Heroku, and Koyeb all give you an ephemeral filesystem, so local recordings there are wiped on every redeploy and every container restart. Point those deploys at S3-compatible storage, or accept that recordings only survive until the next deploy.
+
+## Related
+
+- [Observability](/observability) — the request log these recordings hang off
+- [Auto-fix](/autofix) — comparing a failed request against its patched retry
+- [Data and telemetry](/reference/telemetry) — what Manifest stores by default
+- [Environment variables](/reference/environment-variables#request-recordings)
