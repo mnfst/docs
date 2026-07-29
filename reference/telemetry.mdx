@@ -1,19 +1,27 @@
 ---
 title: "Data and telemetry"
 sidebarTitle: "Data & telemetry"
-description: "What Manifest stores about your requests, what it never stores, and the anonymous daily report each self-hosted install sends. Includes the full field list and how to opt out."
+description: "What Manifest stores about your requests, what's optional, and the anonymous daily report each self-hosted install sends. Includes the full field list and how to opt out."
 icon: "shield"
 keywords:
-  ["data privacy", "prompt storage", "anonymous telemetry", "MANIFEST_TELEMETRY_DISABLED", "TELEMETRY_ENDPOINT", "install_id", "opt out", "self-hosted telemetry"]
+  ["data privacy", "prompt storage", "message recording", "anonymous telemetry", "MANIFEST_TELEMETRY_DISABLED", "TELEMETRY_ENDPOINT", "install_id", "opt out", "self-hosted telemetry"]
 ---
 
 Two separate things happen to data as requests flow through Manifest: what your own instance records for the dashboard, and what a self-hosted install reports back to the project. This page covers both.
 
 ## What Manifest stores
 
-Manifest keeps metadata about each request: model, provider, tier, token counts, cost, latency, and a scrubbed error message. It does not keep the message bodies. Prompts and completions are never written to the database, inline image data is stripped out, and error text is scrubbed for secrets before it lands.
+Manifest always keeps metadata about each request: model, provider, tier, token counts, cost, latency, and a scrubbed error message. Inline image data is stripped out, and error text is scrubbed for secrets before it lands. The usage and cost views in the dashboard are built from that metadata alone. See [Observability](/observability) for what the record looks like in practice.
 
-Your agents' conversations stay between you and the provider. The usage and cost views in the dashboard are built from that metadata alone. See [Observability](/observability) for what that record looks like in practice.
+Message bodies are separate, and optional. With [message recording](/message-recording) on for an agent, Manifest also stores the request and response bodies of each provider attempt so you can read them back in the dashboard. New agents have it enabled; agents created before the feature shipped keep whatever they were set to.
+
+Recorded bodies are held outside the database, in the object storage your instance is configured for, and deleted on a retention schedule. With recording off for an agent, that agent's prompts and completions stay between you and the provider, exactly as before.
+
+<Note>
+  If an agent handles data you'd rather Manifest never hold onto, turn message
+  recording off on its **Settings** page. Metadata collection isn't affected
+  either way.
+</Note>
 
 ## Anonymous telemetry
 

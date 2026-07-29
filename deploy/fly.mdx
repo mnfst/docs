@@ -72,6 +72,7 @@ fly logs --app <your-fly-app>
 - The template keeps one Machine running so Manifest is always available for agents.
 - For production, choose a larger Postgres configuration or Fly Managed Postgres instead of the small script default.
 - Add a custom domain before configuring OAuth callback URLs.
+- [Message recording](/message-recording) writes to the Machine's local disk by default, which Fly replaces on each deploy. Attach a Fly Volume at `/data/request-recordings`, or point it at S3-compatible storage.
 - Set `MANIFEST_TELEMETRY_DISABLED=1` as a Fly secret if you want to disable anonymous self-hosted telemetry.
 - Destroy both the app and database when testing is done.
 

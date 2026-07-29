@@ -1,10 +1,10 @@
 ---
 title: "API key providers"
 sidebarTitle: "API keys"
-description: "Bring your own API key for OpenAI, Anthropic, Google, xAI, DeepSeek, Mistral, Groq, Cerebras, AWS Bedrock, NVIDIA NIM, OpenRouter, and more."
+description: "Bring your own API key for OpenAI, Anthropic, Google, xAI, DeepSeek, Mistral, Groq, Cerebras, AWS Bedrock, NVIDIA NIM, OpenRouter, Hugging Face, and more."
 icon: "key"
 keywords:
-  ["OpenAI", "Anthropic", "Google Gemini", "xAI", "DeepSeek", "Mistral", "Qwen", "Moonshot", "MiniMax", "Z.ai", "OpenRouter", "Groq", "Cerebras", "Fireworks", "AWS Bedrock", "NVIDIA NIM", "Xiaomi MiMo", "API key"]
+  ["OpenAI", "Anthropic", "Google Gemini", "xAI", "DeepSeek", "Mistral", "Qwen", "Moonshot", "MiniMax", "Z.ai", "OpenRouter", "Groq", "Cerebras", "Fireworks", "AWS Bedrock", "NVIDIA NIM", "Xiaomi MiMo", "Hugging Face", "Gemini Free", "API key"]
 ---
 
 Most providers work the standard way: sign up, generate an API key, paste it into Manifest. Routed requests go out with that key as the credential.
@@ -33,8 +33,13 @@ Most providers work the standard way: sign up, generate an API key, paste it int
 | [Xiaomi MiMo](https://platform.xiaomimimo.com)    | [platform.xiaomimimo.com](https://platform.xiaomimimo.com/console/api-keys) |
 | [Kilo](https://kilo.ai)                           | [app.kilo.ai](https://app.kilo.ai)                               |
 | [Pioneer](https://pioneer.ai)                     | [pioneer.ai](https://pioneer.ai)                                 |
+| [Hugging Face](https://huggingface.co)            | [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens) |
 
 New providers are added often, so the **Routing** page always shows the current list of tiles.
+
+### Gemini Free
+
+Gemini Free is a managed tile. Manifest provisions the credential through its own gateway, so there's no key to fetch from Google first: add the tile and you have a free model to route to. It behaves like any other provider once connected.
 
 <Note>
   BytePlus, NousResearch, Command Code, ClinePass, Kiro, GitHub Copilot, Ollama
@@ -80,6 +85,7 @@ Each provider issues keys with a recognizable prefix. Useful for catching paste 
 | Groq       | `gsk_`    | `gsk_...`    |
 | Pioneer    | `pio_sk_` | `pio_sk_...` |
 | Xiaomi MiMo | `sk-`    | `sk-...`     |
+| Hugging Face | `hf_`   | `hf_...`     |
 
 Providers not listed here (Cerebras, NVIDIA NIM, AWS Bedrock, Kilo, OpenCode Zen) issue keys with no fixed prefix.
 

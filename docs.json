@@ -127,7 +127,7 @@
           {
             "group": "Features",
             "boost": 2,
-            "pages": ["llm-gateway", "autofix", "observability"]
+            "pages": ["llm-gateway", "autofix", "observability", "message-recording"]
           },
           {
             "group": "Providers",

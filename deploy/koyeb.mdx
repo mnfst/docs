@@ -71,6 +71,10 @@ Verify the deployment:
 curl -fsS https://<your-koyeb-domain>/api/v1/health
 ```
 
+## Notes
+
+- Koyeb instances have an ephemeral filesystem, so [message recording](/message-recording) needs S3-compatible storage. Without it, recordings are lost on every redeploy.
+
 ## Tearing it down
 
 Delete both resources when you are done:

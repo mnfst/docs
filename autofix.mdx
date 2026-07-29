@@ -61,9 +61,16 @@ Self-hosting adds one prerequisite. The per-agent toggle works the same way, but
 | ----------------------------- | ------------- | ------------------------------------------------------ |
 | `AUTOFIX_HEALING_URL`         | unset         | Base URL of the healing service. Unset disables Auto-fix |
 | `AUTOFIX_HEALING_API_KEY`     | unset         | Sent as `x-api-key`. Required by a production healer   |
+| `AUTOFIX_ROLLOUT`             | `selected`    | Set `everyone` to make Auto-fix available to every tenant on the instance |
 | `AUTOFIX_GLOBAL_ENABLED`      | `true`        | Set `false` to disable Auto-fix for every agent at once |
 | `AUTOFIX_TIMEOUT_MS`          | `10000`       | Per heal call                                          |
 | `AUTOFIX_REPAIRABLE_STATUSES` | `400,404,422` | Which statuses are eligible                            |
+
+<Warning>
+  `AUTOFIX_ROLLOUT` gates Auto-fix above the per-agent toggle. Leave it at its
+  default and the toggle won't appear, even with a healing service configured
+  and the agent switched on. Self-hosted instances want `everyone`.
+</Warning>
 
 These are [environment variables](/reference/environment-variables), so they only apply to a Manifest instance you run yourself.
 
@@ -80,6 +87,18 @@ Auto-fix is built to stay out of the way when it isn't working:
 
 Open any request in the dashboard's request log. Requests that went through Auto-fix carry a panel showing what changed and whether the retry succeeded. Only a successful patched retry counts as recovered by Auto-fix.
 
+The failed original and its patched retry are separate [provider attempts](/observability#requests-and-provider-attempts), so with [message recording](/message-recording) on you can read both bodies side by side and see exactly which field was rewritten.
+
+The **Overview** page aggregates the same data across a time range:
+
+| Card | What it measures |
+|---|---|
+| **Request success rate** | Share of requests that ended successfully, however many attempts it took |
+| **Recovered requests** | Share of requests that failed at least one attempt and still succeeded |
+| **Recovered by Auto-fix** | Count of requests where a patched retry is what saved it |
+
+Each card links through to the matching filter on the request log.
+
 <Note>
   When Auto-fix is on, the failing request body is sent to the healing service
   so it can be repaired. Secrets are scrubbed and Manifest stores nothing extra,
@@ -91,5 +110,6 @@ Open any request in the dashboard's request log. Requests that went through Auto
 
 - [LLM Gateway](/llm-gateway) — where Auto-fix sits in the request flow
 - [Observability](/observability) — finding failing requests in the log
+- [Message recording](/message-recording) — reading the original and patched bodies
 - [M302: Model not available](/errors/M302)
 - [Error codes](/errors)

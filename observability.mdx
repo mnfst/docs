@@ -42,6 +42,8 @@ This is why the request count and the provider call count don't match, and why c
 
 Opening a request in the log shows the whole story: the tier that routed it, the model and provider that served it, input and output tokens, computed cost, latency, the auth type used ([API key, subscription, or local](/reference/glossary#auth-type)), and every fallback hop with its own status. Failures carry an error code, so a Manifest rejection like [M100](/errors/M100) reads differently from a provider's own 500.
 
+That's all metadata. To read the messages themselves, turn on [message recording](/message-recording) for the agent. The drawer picks up a **Messages** tab next to **Attempts**, with the body sent to the provider and the body that came back.
+
 <Tip>
   Local models record `cost = 0` with real token counts and latency, since
   nothing was billed. Custom providers do the same, because Manifest can't
@@ -118,6 +120,7 @@ Separately from your dashboard, each self-hosted install sends a small daily rep
 ## Related
 
 - [LLM Gateway](/llm-gateway) — routing, fallback, and hard limits
+- [Message recording](/message-recording) — the request and response bodies
 - [Auto-fix](/autofix)
 - [Error codes](/errors)
 - [Glossary](/reference/glossary)

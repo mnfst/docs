@@ -56,6 +56,7 @@ curl -fsS https://<your-railway-domain>/api/v1/health
 
 - Use a custom domain before configuring production OAuth callbacks.
 - Keep PostgreSQL backups enabled for production data.
+- [Message recording](/message-recording) writes to local disk by default, which Railway discards on redeploy. Point it at S3-compatible storage to keep recordings.
 - Use the Railway service logs when debugging failed boots or database connection issues.
 
 Relevant Railway links:
