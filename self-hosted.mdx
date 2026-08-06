@@ -241,6 +241,31 @@ docker compose up -d
 
 Database migrations run automatically on boot, no manual steps. Your data in the `pgdata` volume is preserved across upgrades. Pin to a specific major version (e.g. `manifestdotbuild/manifest:5`) in `docker-compose.yml` if you want control over when major upgrades happen.
 
+<Note>
+  **Upgrading from before v6.18.0 and using [logs](/message-recording)?** Run the installer once with the upgrade flag, or log bodies are written inside the container and lost when it is recreated:
+
+  ```bash
+  bash install.sh --upgrade
+  ```
+
+  It adds the `manifest_request_recordings` volume to your compose file. Later releases include it from the start.
+
+  <Accordion title="Hand-managed compose file? Add the volume yourself">
+    Declare the named volume and mount it on the backend service:
+
+    ```yaml
+    services:
+      manifest:
+        volumes:
+          - manifest_request_recordings:/data/request-recordings
+
+    volumes:
+      manifest_request_recordings:
+        name: manifest_request_recordings
+    ```
+  </Accordion>
+</Note>
+
 ## Backup and persistence
 
 The stack uses two named volumes:

@@ -42,7 +42,7 @@ This is why the request count and the provider call count don't match, and why c
 
 Opening a request in the log shows the whole story: the tier that routed it, the model and provider that served it, input and output tokens, computed cost, latency, the auth type used ([API key, subscription, or local](/reference/glossary#auth-type)), and every fallback hop with its own status. Failures carry an error code, so a Manifest rejection like [M100](/errors/M100) reads differently from a provider's own 500.
 
-That's all metadata. To read the messages themselves, turn on [message recording](/message-recording) for the harness. The drawer picks up a **Messages** tab next to **Attempts**, with the body sent to the provider and the body that came back.
+That's all metadata. To read the messages themselves, turn on [message recording](/message-recording) for the harness. Open a request, pick an attempt, and its **Messages** tab shows the body sent to the provider and the body that came back.
 
 <Tip>
   Local models record `cost = 0` with real token counts and latency, since

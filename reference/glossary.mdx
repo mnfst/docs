@@ -1,14 +1,26 @@
 ---
 title: "Glossary"
-description: "Definitions for harness, tier, default and custom routing, direct routing, fallback chain, auto, and provider auth types."
+description: "Definitions for harness, request, attempt, Autofix, tier, default and custom routing, direct routing, fallback chain, auto, and provider auth types."
 icon: "book"
 keywords:
-  ["agent", "harness", "tier", "custom tier", "default routing", "direct routing", "fallback chain", "auto", "provider", "auth type"]
+  ["agent", "harness", "request", "attempt", "autofix", "tier", "custom tier", "default routing", "direct routing", "fallback chain", "auto", "provider", "auth type"]
 ---
 
 ## Harness
 
 A configured client connection that sends requests through Manifest. Each harness has its own API key (`mnfst_...`), its own routing rules, and its own usage page. A harness typically corresponds to one tool or workflow (your IDE plugin, a Slack bot, a scheduled job), not one user.
+
+## Request
+
+One call your client makes through Manifest. The dashboard's **Requests** page lists every request with its model, cost, and status. A single request can contain several [attempts](#attempt) when fallback or Autofix stepped in.
+
+## Attempt
+
+One provider call inside a request. The initial call, each [fallback](#fallback), and an [Autofix](#autofix) retry are separate attempts, each with its own provider, model, and result. Open a request to see its attempts side by side.
+
+## Autofix
+
+The repair step for requests that fail because of the request itself: a parameter the provider rejects, a tool schema in the wrong shape, a model name that moved. Manifest corrects the failing request and sends it once more, before fallback. It repairs the request's shape, never the meaning of your prompt. See [Autofix](/autofix).
 
 ## Auth type
 
