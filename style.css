@@ -298,3 +298,28 @@ html.dark #pagination a.pagination-prev:hover,
 html.dark #pagination a.pagination-next:hover > div {
   border-color: rgba(255, 255, 255, 0.4);
 }
+
+/* Breathing room between framed screenshots */
+figure.frame {
+  margin: 1.25rem 0;
+}
+
+/* Floating copy of the deploy-mode toggle, shown once the inline one scrolls away */
+.deploy-mode-toggle--floating {
+  display: none;
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 60;
+  margin-bottom: 0;
+  background: rgba(248, 246, 241, 0.95);
+  box-shadow: 0 2px 10px rgba(2, 8, 23, 0.08);
+}
+html.dark .deploy-mode-toggle--floating {
+  background: rgba(19, 20, 24, 0.95);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+.deploy-mode-toggle--floating.is-visible {
+  display: inline-flex;
+}
