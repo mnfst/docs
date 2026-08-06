@@ -17,13 +17,13 @@ Manifest exposes both OpenAI and Anthropic-format endpoints on one proxy. Point 
 
 ## Authentication
 
-Every request requires a Manifest agent key:
+Every request requires a Manifest harness key:
 
 ```http
 Authorization: Bearer mnfst_YOUR_KEY_HERE
 ```
 
-Generate a key from the dashboard's **Agents** page. Keys always start with `mnfst_`.
+Generate a key from the dashboard's **Harnesses** page. Keys always start with `mnfst_`.
 
 ## Endpoints
 
@@ -32,7 +32,7 @@ Generate a key from the dashboard's **Agents** page. Keys always start with `mnf
 | `POST` | `/v1/chat/completions` | OpenAI | Most clients (OpenAI SDK, LangChain, Vercel AI SDK, custom HTTP) |
 | `POST` | `/v1/responses` | OpenAI Responses | Codex, `*-pro`, `o1-pro`, deep-research models |
 | `POST` | `/v1/messages` | Anthropic | Anthropic SDK, Claude Code, anything that speaks the Messages API |
-| `GET` | `/v1/models` | OpenAI | Listing the models your agent can route to |
+| `GET` | `/v1/models` | OpenAI | Listing the models your harness can route to |
 
 The proxy translates between formats internally, so you can send an OpenAI-shaped request and Manifest will reshape it before forwarding to an Anthropic-only model. The reverse works too.
 
@@ -70,14 +70,14 @@ curl -X POST http://localhost:2099/v1/messages \
 
 ## Listing models
 
-`GET /v1/models` returns the models your agent can reach, in OpenAI format. The first entry is always `auto` (routing); the rest are the real model IDs from your connected providers.
+`GET /v1/models` returns the models your harness can reach, in OpenAI format. The first entry is always `auto` (routing); the rest are the real model IDs from your connected providers.
 
 ```bash
 curl http://localhost:2099/v1/models \
   -H "Authorization: Bearer mnfst_YOUR_KEY_HERE"
 ```
 
-Send `auto` to let Manifest route, or send any listed model ID to skip routing and go straight to that provider. If you send a model ID that is not in this agent-specific list, Manifest returns [M302: Model not available](/errors/M302). See [Routing → Route a specific model](/llm-gateway#route-a-specific-model).
+Send `auto` to let Manifest route, or send any listed model ID to skip routing and go straight to that provider. If you send a model ID that is not in this harness-specific list, Manifest returns [M302: Model not available](/errors/M302). See [Routing → Route a specific model](/llm-gateway#route-a-specific-model).
 
 ### Inspect model capabilities
 
@@ -209,7 +209,7 @@ Status `424` is the only one that **does not** trigger a fallback. Manifest retu
 
 ## Rate limits
 
-Self-hosted instances default to **100 requests per 60 seconds** per agent. Override with `THROTTLE_TTL` and `THROTTLE_LIMIT` ([Environment variables](/reference/environment-variables)).
+Self-hosted instances default to **100 requests per 60 seconds** per harness. Override with `THROTTLE_TTL` and `THROTTLE_LIMIT` ([Environment variables](/reference/environment-variables)).
 
 Cloud rate limits are tied to your plan and shown in the dashboard.
 

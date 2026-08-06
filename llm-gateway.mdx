@@ -12,10 +12,10 @@ Point your client at Manifest instead of a provider, and every request goes thro
 
 <Steps>
   <Step title="Authentication">
-    The `Authorization: Bearer mnfst_...` header resolves to one of your agents. A bad or missing key stops here with a [401](/errors).
+    The `Authorization: Bearer mnfst_...` header resolves to one of your harnesses. A bad or missing key stops here with a [401](/errors).
   </Step>
   <Step title="Limits">
-    If a hard limit for this agent is already over its threshold, the request is blocked with [M200](/errors/M200) before any provider is called. Nothing is spent.
+    If a hard limit for this harness is already over its threshold, the request is blocked with [M200](/errors/M200) before any provider is called. Nothing is spent.
   </Step>
   <Step title="Routing">
     A custom tier matches on a request header, or the request goes to your default tier. Send a real model ID instead of `auto` to skip this entirely.
@@ -45,7 +45,7 @@ Instead of hard-coding one model into every client, you point your client at Man
 
 ### Default tier
 
-Every agent has a default tier: one model plus up to five fallbacks. You set it on the **Routing** page and can change it anytime without touching your code. Send `auto` as the model, and any request that doesn't match a custom tier goes to your default.
+Every harness has a default tier: one model plus up to five fallbacks. You set it on the **Routing** page and can change it anytime without touching your code. Send `auto` as the model, and any request that doesn't match a custom tier goes to your default.
 
 ### Custom tiers
 
@@ -72,7 +72,7 @@ Create as many tiers as you need, each with its own model and parameters. This i
 
 ### Route a specific model
 
-To skip routing for a single request, send a real model ID instead of `auto`. Manifest forwards it straight to that model's provider, with no tier lookup and no fallbacks. Call [`GET /v1/models`](/reference/api#listing-models) to list the model IDs your agent can reach.
+To skip routing for a single request, send a real model ID instead of `auto`. Manifest forwards it straight to that model's provider, with no tier lookup and no fallbacks. Call [`GET /v1/models`](/reference/api#listing-models) to list the model IDs your harness can reach.
 
 ```bash
 curl -X POST https://app.manifest.build/v1/chat/completions \
@@ -86,7 +86,7 @@ curl -X POST https://app.manifest.build/v1/chat/completions \
 
 The response comes back with `X-Manifest-Tier: direct`, so you can tell a direct call from a routed one. Direct model IDs work on the OpenAI-format endpoints (`/v1/chat/completions` and `/v1/responses`). Requests to the Anthropic `/v1/messages` endpoint always route through your default or custom tiers.
 
-The model list is scoped to the agent key. A model may be missing because its provider is not connected yet, or because the provider exists in your workspace but is not enabled for this agent. If you send an unlisted model ID, Manifest returns [M302: Model not available](/errors/M302). Send `auto` to use routing.
+The model list is scoped to the harness key. A model may be missing because its provider is not connected yet, or because the provider exists in your workspace but is not enabled for this harness. If you send an unlisted model ID, Manifest returns [M302: Model not available](/errors/M302). Send `auto` to use routing.
 
 ## Fallback
 
@@ -139,7 +139,7 @@ When a fallback succeeds, the response carries `X-Manifest-Fallback-From` (the p
 
 ## Hard limits
 
-A limit rule can block requests as well as email you. When a rule's action includes blocking and the agent is over its threshold for the current period, the gateway rejects the request with [M200](/errors/M200) and HTTP `429`:
+A limit rule can block requests as well as email you. When a rule's action includes blocking and the harness is over its threshold for the current period, the gateway rejects the request with [M200](/errors/M200) and HTTP `429`:
 
 ```text
 [🦚 Manifest M200] You hit your cost limit: $12.50 used, $10.00/day allowed. Adjust it here: https://app.manifest.build/...
@@ -153,7 +153,7 @@ The check runs before any provider is contacted, so a blocked request costs noth
   and isn't something you configured.
 </Note>
 
-Rules are defined per agent, with a metric, a threshold, and a period. See [Spend alerts](/observability#spend-alerts) for how to create one and how the alerting half works.
+Rules are defined per harness, with a metric, a threshold, and a period. See [Spend alerts](/observability#spend-alerts) for how to create one and how the alerting half works.
 
 ## Related
 

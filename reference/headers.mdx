@@ -12,7 +12,7 @@ Manifest reads a few request headers, and returns a set of `X-Manifest-*` respon
 
 | Header                  | Value                | Effect                                                                                                                                              |
 | ----------------------- | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Authorization`         | `Bearer mnfst_<key>` | **Required.** Authenticates the agent.                                                                                                             |
+| `Authorization`         | `Bearer mnfst_<key>` | **Required.** Authenticates the harness.                                                                                                             |
 | `Content-Type`          | `application/json`   | **Required.**                                                                                                                                      |
 | `anthropic-version`     | `2023-06-01`         | **Required for `/v1/messages`.** Forwarded to the upstream.                                                                                        |
 | Your custom tier header | your value           | Routes the request to a [custom tier](/llm-gateway#custom-tiers). You set the key and value when you create the tier, so the exact header name is up to you. |

@@ -134,8 +134,8 @@ Signing up leaves you with an empty instance. Three steps to a routed request.
 
     Manifest discovers the available models as soon as the connection is saved.
   </Step>
-  <Step title="Copy your agent's key">
-    Every agent has its own key, shown when you create it and again under the agent's **Settings**. It starts with `mnfst_`.
+  <Step title="Copy your harness's key">
+    Every harness has its own key, shown when you create it and again under the harness's **Settings**. It starts with `mnfst_`.
   </Step>
   <Step title="Send a request">
     The endpoint is OpenAI-compatible, so any SDK or agent that accepts a base URL works — point it at `http://localhost:2099/v1` with the `mnfst_` key. To check it end to end:
@@ -247,7 +247,7 @@ The stack uses two named volumes:
 
 | Volume | Mounted at | Holds |
 |---|---|---|
-| `manifest_pgdata` | `/var/lib/postgresql/data` in `postgres` | Everything: accounts, agents, provider credentials, the request log |
+| `manifest_pgdata` | `/var/lib/postgresql/data` in `postgres` | Everything: accounts, harnesses, provider credentials, the request log |
 | `manifest_request_recordings` | `/data/request-recordings` in `manifest` | Stored [message recording](/message-recording) bodies |
 
 The database volume is the one to back up. Losing the recordings volume costs you stored message bodies and nothing else, and those expire on a retention schedule regardless.
@@ -309,7 +309,7 @@ docker compose down -v    # Stop and delete all data
 
 ## Data and privacy
 
-Manifest always keeps metadata about each request — model, provider, tier, token counts, cost, latency. Message bodies are separate and optional: with [message recording](/message-recording) on for an agent, prompts and completions are stored too, in the recordings volume rather than the database. New agents have it enabled. See [Data and telemetry](/reference/telemetry).
+Manifest always keeps metadata about each request — model, provider, tier, token counts, cost, latency. Message bodies are separate and optional: with [message recording](/message-recording) on for a harness, prompts and completions are stored too, in the recordings volume rather than the database. New harnesses have it enabled. See [Data and telemetry](/reference/telemetry).
 
 ## Telemetry
 

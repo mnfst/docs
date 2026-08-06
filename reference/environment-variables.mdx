@@ -35,7 +35,7 @@ Manifest reads its configuration from environment variables. In the bundled Dock
 | `MANIFEST_DISABLE_HSTS` | — | Set `1` to silence the boot warning about HSTS being unavailable on a plain-HTTP deployment. Prefer an `https://` `BETTER_AUTH_URL` anywhere reachable from the internet |
 | `WINGMAN_CORS_ORIGINS` | — | Extra browser origins allowed to call the gateway, comma-separated. The hosted gateway tester at `wingman.manifest.build` is always allowed |
 | `THROTTLE_TTL` | `60000` | Rate-limit window in milliseconds |
-| `THROTTLE_LIMIT` | `100` | Max requests per window per agent |
+| `THROTTLE_LIMIT` | `100` | Max requests per window per harness |
 
 ## Database
 
@@ -81,16 +81,15 @@ Storage and retention for [message recording](/message-recording). The bundled D
 
 ## Auto-fix
 
-[Auto-fix](/autofix) needs a healing service to talk to. Without `AUTOFIX_HEALING_URL` it stays inert and never touches your traffic.
+[Auto-fix](/autofix) works with zero configuration; `AUTOFIX_GLOBAL_ENABLED=false` is the kill switch.
 
 | Variable | Default | Description |
 |---|---|---|
-| `AUTOFIX_HEALING_URL` | unset | Base URL of the healing service. Unset disables Auto-fix |
-| `AUTOFIX_HEALING_API_KEY` | unset | Sent as `x-api-key`. Required by a production healer |
-| `AUTOFIX_ROLLOUT` | `selected` | Set `everyone` to make Auto-fix available to every tenant on the instance |
-| `AUTOFIX_GLOBAL_ENABLED` | `true` | Set `false` to disable Auto-fix for every agent at once |
-| `AUTOFIX_TIMEOUT_MS` | `10000` | Per heal call |
-| `AUTOFIX_REPAIRABLE_STATUSES` | `400,404,422` | Which statuses are eligible |
+| `AUTOFIX_GLOBAL_ENABLED` | `true` | Set `false` to turn Auto-fix off for the whole deployment. No call reaches the healing service, including the boot health check |
+| `AUTOFIX_TIMEOUT_MS` | `10000` | Timeout per healing call, in milliseconds |
+| `AUTOFIX_REPAIRABLE_STATUSES` | `400,404,422` | Which provider statuses are eligible for a repair |
+| `AUTOFIX_HEALING_API_KEY` | unset | Sent as `x-api-key` to the healing service. Self-hosted installs don't need it; with no key set, the install announces its anonymous install id instead. Only relevant if Manifest issues you one |
+| `AUTOFIX_REPORT_ALL_4XX` | `false` | Opt-in. Also report request-side 4xx errors (except `401`/`402`/`403`/`429`) from harnesses with Auto-fix on, as diagnostic evidence with the secret-scrubbed request body. Bodies over 256 KB are dropped, not truncated. No fix comes back from it |
 
 ## Email
 

@@ -1,6 +1,6 @@
 ---
 title: "Message recording"
-description: "Store the full request and response body of every provider attempt, and read them back as a conversation in the request drawer. One toggle per agent."
+description: "Store the full request and response body of every provider attempt, and read them back as a conversation in the request drawer. One toggle per harness."
 icon: "messages-square"
 keywords:
   ["message recording", "request body", "response body", "LLM conversation log", "prompt logging", "full body log", "tool calls", "recording retention", "S3 recording storage"]
@@ -8,7 +8,7 @@ keywords:
 
 The [request log](/observability) tells you what a request cost and which model served it. Message recording tells you what was actually said: the body Manifest sent to the provider, and the body that came back.
 
-It's one toggle per agent.
+It's one toggle per harness.
 
 ## What gets recorded
 
@@ -30,15 +30,15 @@ The tab renders the exchange as a conversation, with a rail down the side listin
 
 ## Turning it on
 
-The toggle lives on each agent's **Settings** page, under **Message recording**.
+The toggle lives on each harness's **Settings** page, under **Message recording**.
 
-New agents have it on. Older agents keep whatever they were set to, because only the default changed, so an agent from before the feature shipped probably needs the toggle flipped once.
+New harnesses have it on. Older harnesses keep whatever they were set to, because only the default changed, so a harness from before the feature shipped probably needs the toggle flipped once.
 
 <Note>
   Recording stores your prompts and completions. Everything else Manifest keeps
   is metadata ([Data and telemetry](/reference/telemetry) covers the
-  distinction). If an agent handles data you'd rather Manifest never hold onto,
-  leave recording off for that agent.
+  distinction). If a harness handles data you'd rather Manifest never hold onto,
+  leave recording off for that harness.
 </Note>
 
 ## Retention

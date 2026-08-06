@@ -1,9 +1,9 @@
 ---
 title: "Observability"
-description: "See what every agent spent, which models served it, and what failed. Set email alerts when spending crosses a threshold."
+description: "See what every harness spent, which models served it, and what failed. Set email alerts when spending crosses a threshold."
 icon: "activity"
 keywords:
-  ["LLM observability", "AI cost tracking", "token usage", "spend alerts", "request log", "LLM analytics", "cost per agent", "provider errors"]
+  ["LLM observability", "AI cost tracking", "token usage", "spend alerts", "request log", "LLM analytics", "cost per agent", "cost per harness", "provider errors"]
 ---
 
 Every request through the gateway is recorded: which model served it, what it cost, how long it took, and what failed. The dashboard is built on that record, and you can query the same numbers from your own code.
@@ -25,7 +25,7 @@ This is why the request count and the provider call count don't match, and why c
 
 <CardGroup cols={2}>
   <Card title="Overview" icon="layout-dashboard">
-    Spend, tokens, and request volume over time, across all agents or one. Includes the provider and model mix.
+    Spend, tokens, and request volume over time, across all harnesses or one. Includes the provider and model mix.
   </Card>
   <Card title="Requests" icon="list">
     The full log, newest first. Filter it, then open any row for the request body, every provider attempt, and the routing decision.
@@ -34,7 +34,7 @@ This is why the request count and the provider call count don't match, and why c
     Per-provider usage, spend, and error rates. Useful for spotting one provider degrading.
   </Card>
   <Card title="Limits" icon="shield-alert">
-    Threshold rules per agent, plus email provider setup.
+    Threshold rules per harness, plus email provider setup.
   </Card>
 </CardGroup>
 
@@ -42,7 +42,7 @@ This is why the request count and the provider call count don't match, and why c
 
 Opening a request in the log shows the whole story: the tier that routed it, the model and provider that served it, input and output tokens, computed cost, latency, the auth type used ([API key, subscription, or local](/reference/glossary#auth-type)), and every fallback hop with its own status. Failures carry an error code, so a Manifest rejection like [M100](/errors/M100) reads differently from a provider's own 500.
 
-That's all metadata. To read the messages themselves, turn on [message recording](/message-recording) for the agent. The drawer picks up a **Messages** tab next to **Attempts**, with the body sent to the provider and the body that came back.
+That's all metadata. To read the messages themselves, turn on [message recording](/message-recording) for the harness. The drawer picks up a **Messages** tab next to **Attempts**, with the body sent to the provider and the body that came back.
 
 <Tip>
   Local models record `cost = 0` with real token counts and latency, since
@@ -52,7 +52,7 @@ That's all metadata. To read the messages themselves, turn on [message recording
 
 ## Spend alerts
 
-A limit rule watches one metric for one agent over a rolling period, and acts when the threshold is crossed.
+A limit rule watches one metric for one harness over a rolling period, and acts when the threshold is crossed.
 
 | Field | Options |
 |---|---|
@@ -65,7 +65,7 @@ Blocking is the gateway half of this and is covered in [hard limits](/llm-gatewa
 
 <Steps>
   <Step title="Open the Limits page">
-    Navigate to your agent's **Limits** page in the dashboard.
+    Navigate to your harness's **Limits** page in the dashboard.
   </Step>
   <Step title="Create a rule">
     Click **+ Create rule**.
@@ -99,7 +99,7 @@ Alerts are evaluated hourly, so an email can lag the threshold by up to an hour.
 
 ## Reading usage from your own code
 
-Agents can query their own numbers with their `mnfst_` key, which is useful for showing a budget in your own UI or stopping work before a limit blocks you.
+A harness can query its own numbers with its `mnfst_` key, which is useful for showing a budget in your own UI or stopping work before a limit blocks you.
 
 ```bash
 curl https://app.manifest.build/api/v1/agent/usage \
@@ -108,8 +108,8 @@ curl https://app.manifest.build/api/v1/agent/usage \
 
 | Endpoint | Returns |
 |---|---|
-| `GET /api/v1/agent/usage` | Token usage for the calling agent |
-| `GET /api/v1/agent/costs` | Cost data for the calling agent |
+| `GET /api/v1/agent/usage` | Token usage for the calling harness |
+| `GET /api/v1/agent/costs` | Cost data for the calling harness |
 
 Self-hosted installs swap the base URL for their own host.
 

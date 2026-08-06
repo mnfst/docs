@@ -1,7 +1,7 @@
 ---
 title: "M203: Concurrency limit exceeded"
 sidebarTitle: "M203"
-description: "Manifest error M203 fires when an agent has more than 10 in-flight requests. Returns HTTP 429. Common with parallel streaming. Fix: reduce parallelism."
+description: "Manifest error M203 fires when a harness has more than 10 in-flight requests. Returns HTTP 429. Common with parallel streaming. Fix: reduce parallelism."
 icon: "timer"
 keywords:
   ["M203", "Manifest M203", "concurrency limit", "in-flight requests", "429 Too Many Requests", "parallel streams", "CONCURRENCY_MAX", "Manifest limits"]
@@ -16,7 +16,7 @@ See https://manifest.build/docs/errors/M203
 
 ## Why it happened
 
-Manifest caps in-flight requests per agent at 10 by default. Streaming completions hold a slot until the stream ends, so an agent that fires off parallel streams can hit this fast.
+Manifest caps in-flight requests per harness at 10 by default. Streaming completions hold a slot until the stream ends, so an agent that fires off parallel streams can hit this fast.
 
 ## How to fix it
 

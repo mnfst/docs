@@ -1,7 +1,7 @@
 ---
 title: "M202: Per-IP rate limit exceeded"
 sidebarTitle: "M202"
-description: "Manifest error M202 fires when one IP sends more than 500 requests per minute across all agents. Returns HTTP 429. Fix: stagger workers or raise the IP cap."
+description: "Manifest error M202 fires when one IP sends more than 500 requests per minute across all harnesses. Returns HTTP 429. Fix: stagger workers or raise the IP cap."
 icon: "timer"
 keywords:
   ["M202", "Manifest M202", "per-IP rate limit", "shared IP", "429 Too Many Requests", "IP_RATE_MAX_REQUESTS", "Manifest limits", "abuse protection"]
@@ -16,7 +16,7 @@ See https://manifest.build/docs/errors/M202
 
 ## Why it happened
 
-There's a separate per-IP cap (500 requests per minute by default) sitting on top of the per-user limit. It catches abuse, plus dev setups where lots of agents share one IP. You hit it because that IP fired too many requests across all agents in a 60-second window.
+There's a separate per-IP cap (500 requests per minute by default) sitting on top of the per-user limit. It catches abuse, plus dev setups where lots of agents share one IP. You hit it because that IP fired too many requests across all harnesses in a 60-second window.
 
 ## How to fix it
 
