@@ -56,6 +56,12 @@ Auto-fix covers non-streaming responses, and streaming responses that fail befor
 
 Auto-fix is a per-harness toggle, and you meet it at two moments.
 
+<div data-deploy="selfhosted">
+
+Nothing to deploy or configure: your install talks to Manifest's hosted healing service directly.
+
+</div>
+
 ### When you create a harness
 
 The Connect Harness modal shows an Auto-fix toggle under the name field, pre-set to on. You decide there, and the choice is stored on the harness. This works the same on Cloud and self-hosted.
@@ -90,16 +96,6 @@ The dashboard shows a sidebar card while any harness has Auto-fix off. It opens 
   <img src="/images/autofix-enable-modal.png" alt="The Enable Auto-fix modal listing harnesses that have Auto-fix off, each with its own toggle" />
 </Frame>
 
-<div data-deploy="selfhosted">
-
-### Zero configuration
-
-Since v6.18.0, self-hosted Auto-fix needs zero configuration: there is no service to deploy and no URL or API key to set. Your install identifies itself to the hosted healing service with an anonymous install id, the same id [telemetry](/reference/telemetry) uses.
-
-The first time you enable Auto-fix, Manifest records a one-time consent for the install: you are agreeing that failing requests are sent to the hosted service. Any enable path records it, whether the Connect Harness toggle, a Settings toggle, or the enable-all API.
-
-</div>
-
 ## Your data
 
 <div data-deploy="cloud">
@@ -111,6 +107,8 @@ Here is exactly what Auto-fix sends to the healing service, and when nothing is 
 <div data-deploy="selfhosted">
 
 Self-hosting is often a privacy choice, so here is exactly what leaves your machine, and when nothing does.
+
+The first time you enable Auto-fix, your install records a one-time consent: enabling it means you agree that failing requests are sent to the hosted healing service, as set out in the [terms](https://manifest.build/terms/). Any enable path records it. Your install identifies itself with an anonymous install id, the same id [telemetry](/reference/telemetry) uses.
 
 </div>
 

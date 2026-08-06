@@ -359,3 +359,10 @@ html.dark .docs-book-call {
   background: #f9f8f5;
   color: #0f172a !important;
 }
+
+/* Paragraph spans nested in deploy-mode wrappers miss the theme's prose
+   styling and render inline; mirror the top-level paragraph block + margin */
+[data-deploy] span[data-as="p"] {
+  display: block;
+  margin: 20px 0;
+}
