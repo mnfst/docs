@@ -30,7 +30,10 @@ a[href="https://manifest.build"] img {
 
 /* Accent color on anchor links */
 .nav-anchor {
-  border-color: #0891b2;
+  border-color: #0f172a;
+}
+.dark .nav-anchor {
+  border-color: #ffffff;
 }
 
 /* Inline links: bold, dark, underlined — no blue border */
@@ -47,8 +50,8 @@ a[href="https://manifest.build"] img {
 
 .prose a:hover,
 .mdx-content a:not([role]):not([class*="card"]):not([class*="nav"]):not([class*="tab"]):not([class*="button"]):hover {
-  color: #0891b2 !important;
-  text-decoration-color: #0891b2 !important;
+  color: #0f172a !important;
+  text-decoration-color: #0f172a !important;
   border-bottom: none !important;
   box-shadow: none !important;
 }
@@ -63,20 +66,49 @@ a[href="https://manifest.build"] img {
 
 .dark .prose a:hover,
 .dark .mdx-content a:not([role]):not([class*="card"]):not([class*="nav"]):not([class*="tab"]):not([class*="button"]):hover {
-  color: #22d3ee !important;
-  text-decoration-color: #22d3ee !important;
+  color: #ffffff !important;
+  text-decoration-color: #ffffff !important;
   border-bottom: none !important;
   box-shadow: none !important;
 }
 
-/* Card hover accent */
-.card:hover {
-  border-color: #22d3ee;
+/* Code block copy-button fade: end on the block's real dark background */
+[data-fade-overlay] {
+  --fade-color-dark: #171717 !important;
 }
 
-/* Teal tint on inline code */
+/* Top background glow: white instead of the primary-derived dark tint */
+span.dark\:hidden[style*="radial-gradient"] {
+  background: radial-gradient(49.63% 57.02% at 58.99% -7.2%, rgba(255, 255, 255, 0.8) 39.4%, rgba(255, 255, 255, 0) 100%) !important;
+}
+
+/* Cards: warm border, tight radius, cream background */
+.card {
+  border-color: #e8e2d9;
+  border-radius: 3px !important;
+}
+html:not(.dark) .card {
+  background-color: #ffffff73 !important;
+}
+html.dark .card {
+  background-color: #1c1c1c !important;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Card hover accent */
+.card:hover {
+  border-color: #0f172a;
+}
+.dark .card:hover {
+  border-color: #ffffff;
+}
+
+/* Inline code */
 .mdx-content :not(pre) > code {
-  color: #0891b2;
+  color: #0f172a;
+}
+.dark .mdx-content :not(pre) > code {
+  color: #ffffff;
 }
 
 /* Steps titles: bold with tighter spacing */
@@ -93,7 +125,7 @@ a[href="https://manifest.build"] img {
 
 /* Steps timeline: dark number circles (match text color) */
 .step .rounded-full {
-  background-color: #1f2937 !important;
+  background-color: #1c1c1c !important;
   color: #ffffff !important;
 }
 
@@ -127,7 +159,7 @@ div.rounded-2xl svg.text-gray-300 {
 }
 
 .dark div.rounded-2xl {
-  background-color: #1f2937 !important;
+  background-color: #1c1c1c !important;
 }
 
 .dark div.rounded-2xl .w-px {
@@ -192,8 +224,8 @@ html.dark #topbar-cta-button a svg {
   display: inline-flex;
   gap: 4px;
   padding: 4px;
-  border: 1px solid #e5dfd6;
-  border-radius: 9999px;
+  border: 1px solid #e8e2d9;
+  border-radius: 3px;
   margin-bottom: 1.25rem;
 }
 html.dark .deploy-mode-toggle {
@@ -201,7 +233,7 @@ html.dark .deploy-mode-toggle {
 }
 .deploy-mode-toggle button {
   padding: 6px 14px;
-  border-radius: 9999px;
+  border-radius: 3px;
   font-size: 13px;
   font-weight: 600;
   line-height: 1;
@@ -233,39 +265,49 @@ html.deploy-selfhosted [data-deploy="cloud"] {
   display: none;
 }
 
-/* Prev / Next pagination: two plain bordered buttons, title under the Next label */
+/* Prev / Next pagination: two compact bordered buttons sized to their content,
+   Previous on the left, Next on the right, page title under the label */
 #pagination {
   background: transparent !important;
   padding: 0 !important;
   gap: 12px;
   margin-top: 2.5rem;
   align-items: stretch;
+  justify-content: space-between;
 }
-#pagination a.pagination-prev {
-  border: 1px solid #e5dfd6;
-  border-radius: 12px;
-  padding: 14px 18px;
+#pagination a {
+  width: auto !important;
+  min-width: 0;
+  flex: 0 1 auto;
 }
-#pagination a.pagination-next > div {
-  background: transparent !important;
-  border: 1px solid #e5dfd6;
-  border-radius: 12px;
-  flex-direction: column-reverse;
-  align-items: flex-end;
-  justify-content: center;
+#pagination a.pagination-next {
+  margin-left: auto;
+}
+#pagination a > div {
+  display: flex;
   height: auto !important;
-  padding: 10px 18px;
+  background: transparent !important;
+  border: 1px solid #e8e2d9;
+  border-radius: 3px;
+  padding: 10px 14px;
   gap: 2px;
+  justify-content: center;
   box-shadow: none !important;
 }
-#pagination a.pagination-next > div > div {
+#pagination a.pagination-prev > div {
+  flex-direction: column;
+  align-items: flex-start;
+}
+#pagination a.pagination-next > div {
+  flex-direction: column-reverse;
+  align-items: flex-end;
+}
+#pagination a > div > div {
   padding: 0 !important;
 }
+#pagination div[class*="w-px"],
 #pagination [data-component-part="pagination-description"] {
   display: none !important;
-}
-#pagination a.pagination-next div[class*="w-px"] {
-  display: none;
 }
 #pagination [data-component-part="pagination-title"] {
   color: #020817;
@@ -273,18 +315,23 @@ html.deploy-selfhosted [data-deploy="cloud"] {
 }
 #pagination [data-component-part="pagination-label"] {
   font-size: 12px;
-  color: #94a3b8;
+  color: #374151 !important;
+}
+#pagination [data-component-part="pagination-chevron"] {
+  color: #374151 !important;
+}
+html.dark #pagination [data-component-part="pagination-label"],
+html.dark #pagination [data-component-part="pagination-chevron"] {
+  color: #d1d5db !important;
 }
 #pagination a:hover [data-component-part="pagination-label"],
 #pagination a:hover [data-component-part="pagination-chevron"] {
-  color: #0f172a;
+  color: #0f172a !important;
 }
-#pagination a.pagination-prev:hover,
-#pagination a.pagination-next:hover > div {
+#pagination a:hover > div {
   border-color: #0f172a;
 }
-html.dark #pagination a.pagination-prev,
-html.dark #pagination a.pagination-next > div {
+html.dark #pagination a > div {
   border-color: rgba(255, 255, 255, 0.12);
 }
 html.dark #pagination [data-component-part="pagination-title"] {
@@ -292,10 +339,9 @@ html.dark #pagination [data-component-part="pagination-title"] {
 }
 html.dark #pagination a:hover [data-component-part="pagination-label"],
 html.dark #pagination a:hover [data-component-part="pagination-chevron"] {
-  color: #f9f8f5;
+  color: #f9f8f5 !important;
 }
-html.dark #pagination a.pagination-prev:hover,
-html.dark #pagination a.pagination-next:hover > div {
+html.dark #pagination a:hover > div {
   border-color: rgba(255, 255, 255, 0.4);
 }
 
