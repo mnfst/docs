@@ -9,7 +9,7 @@ keywords:
 
 Manifest is an open-source LLM router for agents and AI apps. Connect the providers you already use — subscriptions like ChatGPT or Claude, pay-per-token API keys, local models, and custom endpoints — and route every request through one OpenAI- and Anthropic-compatible URL.
 
-You choose which model handles each request. Add fallbacks so a rate limit or a retired model returns a working response instead of an error, cap spending per agent, and see the cost of every call.
+You choose which model handles each request. Add fallbacks so a rate limit or a retired model returns a working response instead of an error, cap spending per harness, and see the cost of every call.
 
 ## Key features
 
@@ -20,11 +20,11 @@ You choose which model handles each request. Add fallbacks so a rate limit or a 
   <Card title="LLM Gateway" icon="split" href="/llm-gateway">
     Route each request to the model you pick, with fallbacks when one fails and limits that cap what it can spend.
   </Card>
-  <Card title="Auto-fix" icon="wrench" href="/autofix">
+  <Card title="Autofix" icon="wrench" href="/autofix">
     Repair a malformed request and resend it, instead of failing on something a retry can't fix.
   </Card>
   <Card title="Observability" icon="activity" href="/observability">
-    See what every agent spent, which models served it, and what failed.
+    See what every harness spent, which models served it, and what failed.
   </Card>
   <Card title="Message recording" icon="messages-square" href="/message-recording">
     Read back the full request and response body of any provider attempt, as a conversation.
@@ -46,6 +46,6 @@ Manifest is open source and runs two ways. Both speak the same API, so pointing 
   </Card>
 </CardGroup>
 
-On the cloud there is nothing to install and nothing to configure on a server. You sign up, connect your providers, point your harness at the gateway URL, and everything else — routing, limits, [Auto-fix](/autofix), alerts — is a setting in the dashboard. The [environment variables](/reference/environment-variables) throughout these docs apply only to a Manifest instance you run yourself.
+On the cloud there is nothing to install and nothing to configure on a server. You sign up, connect your providers, point your harness at the gateway URL, and everything else — routing, limits, [Autofix](/autofix), alerts — is a setting in the dashboard. The [environment variables](/reference/environment-variables) throughout these docs apply only to a Manifest instance you run yourself.
 
 Cloud is also subject to [plan limits](/errors/M204) and can't reach [local models](/providers/local-models) running on your machine. A self-hosted instance has neither restriction.

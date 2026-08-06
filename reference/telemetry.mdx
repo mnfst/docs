@@ -13,12 +13,12 @@ Two separate things happen to data as requests flow through Manifest: what your 
 
 Manifest always keeps metadata about each request: model, provider, tier, token counts, cost, latency, and a scrubbed error message. Inline image data is stripped out, and error text is scrubbed for secrets before it lands. The usage and cost views in the dashboard are built from that metadata alone. See [Observability](/observability) for what the record looks like in practice.
 
-Message bodies are separate, and optional. With [message recording](/message-recording) on for an agent, Manifest also stores the request and response bodies of each provider attempt so you can read them back in the dashboard. New agents have it enabled; agents created before the feature shipped keep whatever they were set to.
+Message bodies are separate, and optional. With [message recording](/message-recording) on for a harness, Manifest also stores the request and response bodies of each provider attempt so you can read them back in the dashboard. New harnesses have it enabled; harnesses created before the feature shipped keep whatever they were set to.
 
-Recorded bodies are held outside the database, in the object storage your instance is configured for, and deleted on a retention schedule. With recording off for an agent, that agent's prompts and completions stay between you and the provider, exactly as before.
+Recorded bodies are held outside the database, in the object storage your instance is configured for, and deleted on a retention schedule. With recording off for a harness, that harness's prompts and completions stay between you and the provider, exactly as before.
 
 <Note>
-  If an agent handles data you'd rather Manifest never hold onto, turn message
+  If a harness handles data you'd rather Manifest never hold onto, turn message
   recording off on its **Settings** page. Metadata collection isn't affected
   either way.
 </Note>

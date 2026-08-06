@@ -26,7 +26,7 @@ These fire when the bearer token on `/v1/chat/completions` is missing or wrong. 
 | [M002: Empty Bearer token](/errors/M002) | Header present, token after `Bearer ` is blank |
 | [M003: Invalid key format](/errors/M003) | Token doesn't start with `mnfst_` |
 | [M004: Key expired](/errors/M004) | Key past its expiration date |
-| [M005: Key not recognized](/errors/M005) | No matching agent for this key |
+| [M005: Key not recognized](/errors/M005) | No matching harness for this key |
 
 ## Providers (M100–M102)
 
@@ -35,7 +35,7 @@ Your Manifest key is fine, but provider credentials are missing or unusable. See
 | Code | What |
 |------|------|
 | [M100: Provider API key missing](/errors/M100) | Routing picked a provider you haven't connected |
-| [M101: No providers configured](/errors/M101) | Agent has zero providers connected |
+| [M101: No providers configured](/errors/M101) | Harness has zero providers connected |
 | [M102: Provider subscription credentials unusable](/errors/M102) | Subscription OAuth/token exists but cannot be refreshed |
 
 ## Limits (M200–M204)
@@ -57,7 +57,7 @@ M300 means the request body is malformed and surfaces as HTTP 400. M302 and M303
 | Code | What |
 |------|------|
 | [M300: Missing messages array](/errors/M300) | Body has no `messages` array, or it's empty |
-| [M302: Model not available](/errors/M302) | Explicit model ID is not available for this agent |
+| [M302: Model not available](/errors/M302) | Explicit model ID is not available for this harness |
 | [M303: Local provider unavailable on Manifest Cloud](/errors/M303) | Routed to Ollama, LM Studio, or llama.cpp on Cloud |
 
 <Note>

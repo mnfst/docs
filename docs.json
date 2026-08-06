@@ -67,6 +67,10 @@
   "navbar": {
     "links": [
       {
+        "label": "Dashboard",
+        "href": "https://app.manifest.build"
+      },
+      {
         "type": "github",
         "href": "https://github.com/mnfst/manifest"
       },
@@ -77,8 +81,8 @@
     ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://app.manifest.build"
+      "label": "Book a call",
+      "href": "https://calendly.com/sebastien-manifest/30min"
     }
   },
   "navigation": {

@@ -1,14 +1,14 @@
 ---
 title: "Glossary"
-description: "Definitions for agent, tier, default and custom routing, direct routing, fallback chain, auto, and provider auth types."
+description: "Definitions for harness, tier, default and custom routing, direct routing, fallback chain, auto, and provider auth types."
 icon: "book"
 keywords:
-  ["agent", "tier", "custom tier", "default routing", "direct routing", "fallback chain", "auto", "provider", "auth type"]
+  ["agent", "harness", "tier", "custom tier", "default routing", "direct routing", "fallback chain", "auto", "provider", "auth type"]
 ---
 
-## Agent
+## Harness
 
-A configured client that sends requests through Manifest. Each agent has its own API key (`mnfst_...`), its own routing rules, and its own usage page. An agent typically corresponds to one tool or workflow (your IDE plugin, a Slack bot, a scheduled job), not one user.
+A configured client connection that sends requests through Manifest. Each harness has its own API key (`mnfst_...`), its own routing rules, and its own usage page. A harness typically corresponds to one tool or workflow (your IDE plugin, a Slack bot, a scheduled job), not one user.
 
 ## Auth type
 
@@ -55,4 +55,4 @@ The step that decides which model handles a request. Manifest checks your custom
 
 ## Tier
 
-A routing lane with its own model and fallback chain. Every agent has a **Default** tier; you can add **Custom** tiers matched on request headers. See [Routing](/llm-gateway).
+A routing lane with its own model and fallback chain. Every harness has a **Default** tier; you can add **Custom** tiers matched on request headers. See [Routing](/llm-gateway).

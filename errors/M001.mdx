@@ -16,11 +16,11 @@ See https://manifest.build/docs/errors/M001
 
 ## Why it happened
 
-Your client called `/v1/chat/completions` without an `Authorization` header. Manifest checks an agent API key on every request, so the header has to be there.
+Your client called `/v1/chat/completions` without an `Authorization` header. Manifest checks a harness API key on every request, so the header has to be there.
 
 ## How to fix it
 
-1. Grab your agent's key from the [dashboard](https://app.manifest.build) (Workspace, agent, key).
+1. Grab your harness's key from the [dashboard](https://app.manifest.build) (Workspace, harness, key).
 2. Add the header to every request: `Authorization: Bearer mnfst_<your-key>`.
 3. If you're using an SDK, set the API key in its config instead of building the header by hand.
 
