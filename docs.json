@@ -11,9 +11,9 @@
   "css": "/style.css",
   "js": "/scripts/no-tab-jump.js",
   "colors": {
-    "primary": "#0891b2",
-    "light": "#22d3ee",
-    "dark": "#164e63"
+    "primary": "#0f172a",
+    "light": "#ffffff",
+    "dark": "#0f172a"
   },
   "background": {
     "decoration": "gradient",
