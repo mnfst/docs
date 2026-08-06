@@ -144,7 +144,7 @@ Open any request in the dashboard's request log. Requests that went through Auto
   <img src="/images/autofix-request-panel.png" alt="The request drawer on a repaired request, with the failed and patched attempts listed and the Autofix panel showing what changed" />
 </Frame>
 
-The failed original and its patched retry are separate [provider attempts](/observability#requests-and-provider-attempts), so with [message recording](/message-recording) on you can read both bodies side by side and see exactly which field was rewritten.
+The failed original and its patched retry are separate [provider attempts](/observability#requests-and-provider-attempts), so with [request logs](/request-logs) on you can read both bodies side by side and see exactly which field was rewritten.
 
 The **Overview** page aggregates the same data across a time range:
 
@@ -183,5 +183,5 @@ You don't need `AUTOFIX_HEALING_API_KEY`. With no key set, the install announces
 
 - [LLM Gateway](/llm-gateway): where Autofix sits in the request flow
 - [Observability](/observability): finding failing requests in the log
-- [Message recording](/message-recording): reading the original and patched bodies
+- [Message recording](/request-logs): reading the original and patched bodies
 - [Error codes](/errors)

@@ -64,7 +64,7 @@ curl -fsS https://<your-render-service>.onrender.com/api/v1/health
 - Render PostgreSQL connection strings are wired by the Blueprint.
 - Use a custom domain before configuring production OAuth callbacks.
 - If the instance is sleeping on a free plan, the first request can take longer.
-- [Message recording](/message-recording) writes to local disk by default, which Render discards on redeploy. Point it at S3-compatible storage to keep recordings.
+- [Message recording](/request-logs) writes to local disk by default, which Render discards on redeploy. Point it at S3-compatible storage to keep recordings.
 
 Relevant Render docs:
 
