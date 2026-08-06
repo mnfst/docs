@@ -35,3 +35,16 @@ Instructions must say WHERE the user starts. "Enable Auto-fix" is not
 a doc; "on a fresh install the activation is suggested; on an upgraded
 self-hosted instance with existing agents, go to Settings and enable
 it" is. The full grid lives in `CASE-MATRIX.md`.
+
+## Editorial principles (from Seb's verdicts)
+
+1. **Less beats confusing.** When the platform's history is convoluted
+   (a feature added, removed, re-added), do not narrate it. Say the
+   simple useful thing instead: "to make sure your logs are on, go to
+   Settings → Logs". Prefer saying less over trying to say everything.
+2. **Product vocabulary**: "logs" (never "recording" in user-facing
+   text), "request", "attempt", "Autofix", "harness". The Requests page
+   URL is still `/messages`; use the visible name, not the URL.
+3. **Glossary is the home of concepts.** request, attempt, Autofix (its
+   scope: it fixes the request, not the prompt) belong in the glossary,
+   explained in end-user language, never in code words.

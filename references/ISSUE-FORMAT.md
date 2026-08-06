@@ -53,3 +53,12 @@ Findings rejetés = répondre "N → reject" : ils ne seront plus re-signalés.
 - Findings previously rejected by Seb (see memory) are not re-raised
   unless the platform changed again on that exact point — then the
   finding says so explicitly.
+
+## Language rule (added after run 1)
+
+Findings are written for Seb, in plain language. No UI-component jargon
+("drawer", "Frame", component or file names) in the claim, impact, or
+options — code references live only in the evidence lines. An IMAGE
+finding is one simple sentence: where in the doc, what photo to take,
+what it must show. If a finding cannot be said simply, it is not
+understood well enough to be filed.
