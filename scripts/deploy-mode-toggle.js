@@ -95,10 +95,25 @@
     }
   }
 
+
+  // The theme keeps its navbar hidden on this layout, so the docs.json CTA
+  // never shows. Render our own Book a call button, fixed top right.
+  function ensureBookCall() {
+    if (document.querySelector('.docs-book-call')) return;
+    var a = document.createElement('a');
+    a.className = 'docs-book-call';
+    a.href = 'https://calendly.com/sebastien-manifest/30min';
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.textContent = 'Book a call';
+    document.body.appendChild(a);
+  }
+
   var scheduled = null;
   function syncAll() {
     syncToc();
     syncFloating();
+    ensureBookCall();
   }
 
   function schedule() {
