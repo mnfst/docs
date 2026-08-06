@@ -20,16 +20,37 @@ mnfst/manifest), and the platform clone at
 `~/codebase/manifest/manifest` (pull it fresh before auditing). Run
 `bash scripts/setup.sh` at session start.
 
+## Two modes
+
+- **Full audit** (`lance l'audit`): everything merged since
+  `lastAuditedPr` in `scripts/state.json`.
+- **Scoped audit** (`lance l'audit sur <sujet>`): ONE topic, exploited
+  in depth. This is the preferred mode: a focused agent beats a broad
+  one. The topic maps to its docs pages (find them via `docs.json`
+  navigation + Grep across `*.mdx`) and to its platform surface (PRs
+  and code touching that feature). Scoped runs do NOT advance
+  `lastAuditedPr`; they record themselves in `decisions.md` like any
+  run. The digest issue title carries the topic:
+  `Docs audit — <topic> — <date>`.
+
 ## The loop
 
 ### 1 — Scope
 
-Read `scripts/state.json` (`lastAuditedPr`). List merged PRs since:
+Full mode: read `scripts/state.json` (`lastAuditedPr`), list merged
+PRs since:
 `gh pr list --repo mnfst/manifest --state merged --limit 100 --json number,title,mergedAt`
 and keep those with `number > lastAuditedPr`. If none: report "nothing
-new", update nothing, stop. Also
-`git -C ~/codebase/manifest/manifest pull` so code checks run against
-current main.
+new", update nothing, stop.
+
+Scoped mode: collect the topic's docs pages, and the topic's merged
+PRs over a stated window (default 30 days) via
+`gh pr list --repo mnfst/manifest --state merged --search "<topic terms>"`
+plus a Grep of the clone for the feature's code paths. State the
+window and the page list in the issue.
+
+Both modes: `git -C ~/codebase/manifest/manifest pull` so code checks
+run against current main.
 
 ### 2 — Truth (platform-engineer)
 
