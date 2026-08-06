@@ -12,7 +12,7 @@ It's one toggle per harness.
 
 ## What gets recorded
 
-Recording happens per **provider attempt**, not per request. A request that falls back twice before succeeding produces three recordings, each with its own body pair, so you can see how the conversation was reshaped for each provider. An [Auto-fix](/autofix) retry is its own attempt too, which is how you compare the request that failed against the patched one that worked.
+Recording happens per **provider attempt**, not per request. A request that falls back twice before succeeding produces three recordings, each with its own body pair, so you can see how the conversation was reshaped for each provider. An [Autofix](/autofix) retry is its own attempt too, which is how you compare the request that failed against the patched one that worked.
 
 | | What's stored |
 |---|---|
@@ -100,6 +100,6 @@ Railway, Render, Fly, Heroku, and Koyeb all give you an ephemeral filesystem, so
 ## Related
 
 - [Observability](/observability) — the request log these recordings hang off
-- [Auto-fix](/autofix) — comparing a failed request against its patched retry
+- [Autofix](/autofix) — comparing a failed request against its patched retry
 - [Data and telemetry](/reference/telemetry) — what Manifest stores by default
 - [Environment variables](/reference/environment-variables#request-recordings)

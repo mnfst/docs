@@ -15,7 +15,7 @@ Manifest tracks two things, and the difference matters once fallback is involved
 | | What it is | When you get more than one |
 |---|---|---|
 | **Request** | One call from your agent to Manifest | Never. One call in, one Request. |
-| **Provider attempt** | One call from Manifest to a provider | Every fallback step and every [Auto-fix](/autofix) retry adds another |
+| **Provider attempt** | One call from Manifest to a provider | Every fallback step and every [Autofix](/autofix) retry adds another |
 
 A request that succeeds on the first try is one Request with one attempt. A request that fails twice before succeeding is still one Request, with three attempts. A request Manifest blocked itself, like a [hard limit](/llm-gateway#hard-limits) or a malformed body, is one Request with **zero** attempts, since no provider was ever called.
 
@@ -121,6 +121,6 @@ Separately from your dashboard, each self-hosted install sends a small daily rep
 
 - [LLM Gateway](/llm-gateway) — routing, fallback, and hard limits
 - [Message recording](/message-recording) — the request and response bodies
-- [Auto-fix](/autofix)
+- [Autofix](/autofix)
 - [Error codes](/errors)
 - [Glossary](/reference/glossary)

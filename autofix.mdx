@@ -1,9 +1,9 @@
 ---
-title: "Auto-fix"
+title: "Autofix"
 description: "Repair a malformed request and resend it once, before the fallback chain runs. Turn it on per harness."
 icon: "wrench"
 keywords:
-  ["auto-fix", "self-healing", "LLM request repair", "malformed request", "400 bad request", "422 unprocessable", "model not found", "agent debugging", "harness debugging"]
+  ["auto-fix", "autofix", "self-healing", "LLM request repair", "malformed request", "400 bad request", "422 unprocessable", "model not found", "agent debugging", "harness debugging"]
 ---
 
 <div className="deploy-mode-toggle" role="group" aria-label="Deployment mode">
@@ -13,11 +13,11 @@ keywords:
 
 Some requests fail because of the request, not the model. A parameter the provider doesn't accept, a tool schema in the wrong shape, a model name that moved. Switching to a fallback model doesn't help, because the next model rejects the same body.
 
-Auto-fix handles that case. When a request fails with a repairable error, Manifest sends the failed request and the provider's error to a healing service, gets a corrected request back, and sends it once more. It runs **before** the fallback chain, so fallback is still the safety net if the repair doesn't land.
+Autofix handles that case. When a request fails with a repairable error, Manifest sends the failed request and the provider's error to a healing service, gets a corrected request back, and sends it once more. It runs **before** the fallback chain, so fallback is still the safety net if the repair doesn't land.
 
 ## When it runs
 
-Auto-fix only touches request-side 4xx errors, where the provider is telling you the request was wrong:
+Autofix only touches request-side 4xx errors, where the provider is telling you the request was wrong:
 
 | Status | Meaning                                        |
 | ------ | ---------------------------------------------- |
@@ -27,7 +27,7 @@ Auto-fix only touches request-side 4xx errors, where the provider is telling you
 
 It deliberately skips `401`, `403`, `429`, and every `5xx`. A bad key, a rate limit, or a provider outage isn't something a rewritten body can fix, so those go straight to [fallback](/llm-gateway#fallback).
 
-Renamed models are covered through the provider itself. When a request names a model Manifest hasn't catalogued but the provider and credentials are unambiguous, Manifest forwards it anyway. The provider answers with its real error, typically a `404` for a model that no longer exists, and that error goes through the normal Auto-fix path. A patch that corrects the model name serves the request.
+Renamed models are covered through the provider itself. When a request names a model Manifest hasn't catalogued but the provider and credentials are unambiguous, Manifest forwards it anyway. The provider answers with its real error, typically a `404` for a model that no longer exists, and that error goes through the normal Autofix path. A patch that corrects the model name serves the request.
 
 ## How it works
 
@@ -50,11 +50,11 @@ Renamed models are covered through the provider itself. When a request names a m
   </Step>
 </Steps>
 
-Auto-fix covers non-streaming responses, and streaming responses that fail before the first byte reaches your client. Once bytes are on the wire there's nothing to rewrite.
+Autofix covers non-streaming responses, and streaming responses that fail before the first byte reaches your client. Once bytes are on the wire there's nothing to rewrite.
 
 ## Turning it on
 
-Auto-fix is a per-harness toggle, and you meet it at two moments.
+Autofix is a per-harness toggle, and you meet it at two moments.
 
 <div data-deploy="selfhosted">
 
@@ -64,15 +64,15 @@ Nothing to deploy or configure: your install talks to Manifest's hosted healing 
 
 ### When you create a harness
 
-The Connect Harness modal shows an Auto-fix toggle under the name field, pre-set to on. You decide there, and the choice is stored on the harness. This works the same on Cloud and self-hosted.
+The Connect Harness modal shows an Autofix toggle under the name field, pre-set to on. You decide there, and the choice is stored on the harness. This works the same on Cloud and self-hosted.
 
-<Frame caption="The Auto-fix toggle in the Connect Harness modal, pre-set to on.">
-  <img src="/images/autofix-create-harness.png" alt="The Connect Harness modal with the Auto-fix toggle switched on under the name field" />
+<Frame caption="The Autofix toggle in the Connect Harness modal, pre-set to on.">
+  <img src="/images/autofix-connect-harness.png" alt="The Connect Harness modal with the Autofix toggle switched on under the name field" />
 </Frame>
 
 ### Harnesses you already have
 
-A harness that existed before Auto-fix keeps its state: Manifest never flips the toggle for you.
+A harness that existed before Autofix keeps its state: Manifest never flips the toggle for you.
 
 <div data-deploy="cloud">
 
@@ -86,21 +86,21 @@ Enable each one from its **Settings** page or from the sidebar card.
 
 </div>
 
-The dashboard shows a sidebar card while any harness has Auto-fix off. It opens a modal listing those harnesses with individual toggles, and you can dismiss it for the browser session.
+The dashboard shows a sidebar card while any harness has Autofix off. It opens a modal listing those harnesses with individual toggles, and you can dismiss it for the browser session.
 
-<Frame caption="The Auto-fix toggle on a harness's Settings page.">
-  <img src="/images/autofix-settings-toggle.png" alt="A harness's Settings page with the Auto-fix failing requests toggle switched on" />
+<Frame caption="The Autofix toggle on a harness's Settings page.">
+  <img src="/images/autofix-settings-toggle.png" alt="A harness's Settings page with the Autofix failing requests toggle switched on" />
 </Frame>
 
 <Frame caption="The modal opened by the sidebar card, one toggle per harness.">
-  <img src="/images/autofix-enable-modal.png" alt="The Enable Auto-fix modal listing harnesses that have Auto-fix off, each with its own toggle" />
+  <img src="/images/autofix-enable-modal.png" alt="The Enable Autofix modal listing harnesses that have Autofix off, each with its own toggle" />
 </Frame>
 
 ## Your data
 
 <div data-deploy="cloud">
 
-Here is exactly what Auto-fix sends to the healing service, and when nothing is sent.
+Here is exactly what Autofix sends to the healing service, and when nothing is sent.
 
 </div>
 
@@ -108,11 +108,11 @@ Here is exactly what Auto-fix sends to the healing service, and when nothing is 
 
 Self-hosting is often a privacy choice, so here is exactly what leaves your machine, and when nothing does.
 
-The first time you enable Auto-fix, your install records a one-time consent: enabling it means you agree that failing requests are sent to the hosted healing service, as set out in the [terms](https://manifest.build/terms/). Any enable path records it. Your install identifies itself with an anonymous install id, the same id [telemetry](/reference/telemetry) uses.
+The first time you enable Autofix, your install records a one-time consent: enabling it means you agree that failing requests are sent to the hosted healing service, as set out in the [terms](https://manifest.build/terms/). Any enable path records it. Your install identifies itself with an anonymous install id, the same id [telemetry](/reference/telemetry) uses.
 
 </div>
 
-When Auto-fix repairs a request, Manifest sends the failed request, including its message content, plus the provider's error response to the healing service.
+When Autofix repairs a request, Manifest sends the failed request, including its message content, plus the provider's error response to the healing service.
 
 Provider API keys and OAuth tokens are never sent: credentials travel in request headers, which are not part of the payload sent to the healing service. The provider's error response is scrubbed for secrets before it is sent.
 
@@ -120,7 +120,7 @@ Nothing is sent for requests that succeed. No request data is ever sent while th
 
 <div data-deploy="selfhosted">
 
-Self-hosted deployments can also switch Auto-fix off globally, which stops every call to the healing service, including the health check at boot. See [Environment variables](#environment-variables).
+Self-hosted deployments can also switch Autofix off globally, which stops every call to the healing service, including the health check at boot. See [Environment variables](#environment-variables).
 
 </div>
 
@@ -128,20 +128,20 @@ See the [privacy policy](https://manifest.build/privacy/) and the [terms](https:
 
 ## Guardrails
 
-Auto-fix is built to stay out of the way when it isn't working:
+Autofix is built to stay out of the way when it isn't working:
 
 - **One attempt.** A patched request is sent once. It never loops.
-- **Failures degrade quietly.** If the healing service errors or times out, your agent gets the original provider error. Auto-fix never turns a provider's 400 into a Manifest 500.
+- **Failures degrade quietly.** If the healing service errors or times out, your agent gets the original provider error. Autofix never turns a provider's 400 into a Manifest 500.
 - **A slow healer stops being asked.** After three consecutive transport failures, Manifest stops calling it for 30 seconds so a down service doesn't add latency to every failing request. One successful call clears the streak.
-- **Startup never waits.** In production, Manifest pings the healing service once at boot, fire-and-forget, and logs a warning if it's unreachable. It never blocks startup, and it's skipped entirely when Auto-fix is disabled globally.
-- **Fallback still runs.** Auto-fix sits in front of the chain, it doesn't replace it.
+- **Startup never waits.** In production, Manifest pings the healing service once at boot, fire-and-forget, and logs a warning if it's unreachable. It never blocks startup, and it's skipped entirely when Autofix is disabled globally.
+- **Fallback still runs.** Autofix sits in front of the chain, it doesn't replace it.
 
 ## Seeing what it did
 
-Open any request in the dashboard's request log. Requests that went through Auto-fix carry a panel showing what changed and whether the retry succeeded. Only a successful patched retry counts as recovered by Auto-fix.
+Open any request in the dashboard's request log. Requests that went through Autofix carry a panel showing what changed and whether the retry succeeded. Only a successful patched retry counts as recovered by Autofix.
 
-<Frame caption="A repaired request: the failed attempt, the provider's error, and the Auto-fix panel showing the patch.">
-  <img src="/images/autofix-request-panel.png" alt="The request drawer on a repaired request, with the failed and patched attempts listed and the Auto-fix panel showing what changed" />
+<Frame caption="A repaired request: the failed attempt, the provider's error, and the Autofix panel showing the patch.">
+  <img src="/images/autofix-request-panel.png" alt="The request drawer on a repaired request, with the failed and patched attempts listed and the Autofix panel showing what changed" />
 </Frame>
 
 The failed original and its patched retry are separate [provider attempts](/observability#requests-and-provider-attempts), so with [message recording](/message-recording) on you can read both bodies side by side and see exactly which field was rewritten.
@@ -152,7 +152,7 @@ The **Overview** page aggregates the same data across a time range:
 |---|---|
 | **Request success rate** | Share of requests that ended successfully, however many attempts it took |
 | **Recovered requests** | Share of requests that failed at least one attempt and still succeeded |
-| **Recovered by Auto-fix** | Count of requests where a patched retry is what saved it |
+| **Recovered by Autofix** | Count of requests where a patched retry is what saved it |
 
 Each card links through to the matching filter on the request log.
 
@@ -162,18 +162,18 @@ Each card links through to the matching filter on the request log.
 
 <Note>
   Self-hosted only. On [Manifest Cloud](https://app.manifest.build) there is no
-  server to configure: everything Auto-fix related lives in the dashboard.
+  server to configure: everything Autofix related lives in the dashboard.
 </Note>
 
-Auto-fix needs no setup. Every variable below is optional and adjusts behavior:
+Autofix needs no setup. Every variable below is optional and adjusts behavior:
 
 | Variable                      | Default       | Description                                            |
 | ----------------------------- | ------------- | ------------------------------------------------------ |
-| `AUTOFIX_GLOBAL_ENABLED`      | `true`        | Set `false` to turn Auto-fix off for the whole deployment. No call reaches the healing service, including the boot health check |
+| `AUTOFIX_GLOBAL_ENABLED`      | `true`        | Set `false` to turn Autofix off for the whole deployment. No call reaches the healing service, including the boot health check |
 | `AUTOFIX_TIMEOUT_MS`          | `10000`       | Timeout per healing call, in milliseconds              |
 | `AUTOFIX_REPAIRABLE_STATUSES` | `400,404,422` | Which provider statuses are eligible for a repair      |
 | `AUTOFIX_HEALING_API_KEY`     | unset         | Sent as `x-api-key` to the healing service. Only relevant if Manifest issues you one |
-| `AUTOFIX_REPORT_ALL_4XX`      | `false`       | Opt-in. Also report request-side 4xx errors (except `401`/`402`/`403`/`429`) from harnesses with Auto-fix on, as diagnostic evidence with the secret-scrubbed request body. Bodies over 256 KB are dropped, not truncated. No fix comes back from it |
+| `AUTOFIX_REPORT_ALL_4XX`      | `false`       | Opt-in. Also report request-side 4xx errors (except `401`/`402`/`403`/`429`) from harnesses with Autofix on, as diagnostic evidence with the secret-scrubbed request body. Bodies over 256 KB are dropped, not truncated. No fix comes back from it |
 
 You don't need `AUTOFIX_HEALING_API_KEY`. With no key set, the install announces its anonymous install id instead. The full list of variables lives in [Environment variables](/reference/environment-variables).
 
@@ -181,7 +181,7 @@ You don't need `AUTOFIX_HEALING_API_KEY`. With no key set, the install announces
 
 ## Related
 
-- [LLM Gateway](/llm-gateway): where Auto-fix sits in the request flow
+- [LLM Gateway](/llm-gateway): where Autofix sits in the request flow
 - [Observability](/observability): finding failing requests in the log
 - [Message recording](/message-recording): reading the original and patched bodies
 - [Error codes](/errors)

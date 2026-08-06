@@ -20,7 +20,7 @@ You choose which model handles each request. Add fallbacks so a rate limit or a 
   <Card title="LLM Gateway" icon="split" href="/llm-gateway">
     Route each request to the model you pick, with fallbacks when one fails and limits that cap what it can spend.
   </Card>
-  <Card title="Auto-fix" icon="wrench" href="/autofix">
+  <Card title="Autofix" icon="wrench" href="/autofix">
     Repair a malformed request and resend it, instead of failing on something a retry can't fix.
   </Card>
   <Card title="Observability" icon="activity" href="/observability">
@@ -46,6 +46,6 @@ Manifest is open source and runs two ways. Both speak the same API, so pointing 
   </Card>
 </CardGroup>
 
-On the cloud there is nothing to install and nothing to configure on a server. You sign up, connect your providers, point your harness at the gateway URL, and everything else — routing, limits, [Auto-fix](/autofix), alerts — is a setting in the dashboard. The [environment variables](/reference/environment-variables) throughout these docs apply only to a Manifest instance you run yourself.
+On the cloud there is nothing to install and nothing to configure on a server. You sign up, connect your providers, point your harness at the gateway URL, and everything else — routing, limits, [Autofix](/autofix), alerts — is a setting in the dashboard. The [environment variables](/reference/environment-variables) throughout these docs apply only to a Manifest instance you run yourself.
 
 Cloud is also subject to [plan limits](/errors/M204) and can't reach [local models](/providers/local-models) running on your machine. A self-hosted instance has neither restriction.
