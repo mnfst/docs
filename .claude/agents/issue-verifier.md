@@ -18,7 +18,7 @@ For EVERY finding, verify adversarially:
 1. **Doc evidence is real**: open the cited .mdx file, find the quoted
    sentence. Paraphrased or absent = FAIL that finding.
 2. **Platform evidence is real**: open the cited file:line in
-   `~/codebase/manifest/manifest` (and/or the cited PR diff). If the
+   `the platform clone (~/codebase/manifest/manifest on the Mac, ~/repos/manifest on the VM)` (and/or the cited PR diff). If the
    code does not support the claim, FAIL — this is the anti-
    hallucination gate, be ruthless.
 3. **Not a re-raise**: if memory shows Seb rejected this same finding

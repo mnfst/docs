@@ -17,7 +17,7 @@ afterwards. No findings = no issue = total silence.
 
 Requirements: `gh` authenticated (issues on mnfst/docs, read on
 mnfst/manifest), and the platform clone at
-`~/codebase/manifest/manifest` (pull it fresh before auditing). Run
+`the platform clone (~/codebase/manifest/manifest on the Mac, ~/repos/manifest on the VM)` (pull it fresh before auditing). Run
 `bash scripts/setup.sh` at session start.
 
 ## Two modes
@@ -49,7 +49,7 @@ PRs over a stated window (default 30 days) via
 plus a Grep of the clone for the feature's code paths. State the
 window and the page list in the issue.
 
-Both modes: `git -C ~/codebase/manifest/manifest pull` so code checks
+Both modes: `git -C the platform clone (~/codebase/manifest/manifest on the Mac, ~/repos/manifest on the VM) pull` so code checks
 run against current main.
 
 ### 2 — Truth (platform-engineer)
