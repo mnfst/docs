@@ -186,3 +186,49 @@ html.dark #topbar-cta-button a div span,
 html.dark #topbar-cta-button a svg {
   color: #0f172a !important;
 }
+
+/* Cloud / Self-hosted page toggle */
+.deploy-mode-toggle {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid #e5dfd6;
+  border-radius: 9999px;
+  margin-bottom: 1.25rem;
+}
+html.dark .deploy-mode-toggle {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+.deploy-mode-toggle button {
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  color: #64748b;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+html.dark .deploy-mode-toggle button {
+  color: #94a3b8;
+}
+html.deploy-cloud .deploy-mode-toggle button[data-deploy-mode="cloud"],
+html.deploy-selfhosted .deploy-mode-toggle button[data-deploy-mode="selfhosted"] {
+  background: #0f172a;
+  color: #f9f8f5;
+}
+html.dark.deploy-cloud .deploy-mode-toggle button[data-deploy-mode="cloud"],
+html.dark.deploy-selfhosted .deploy-mode-toggle button[data-deploy-mode="selfhosted"] {
+  background: #f9f8f5;
+  color: #0f172a;
+}
+
+/* Mode-scoped content: hidden only once a mode class is set, so a page
+   without the script simply shows everything */
+html.deploy-cloud [data-deploy="selfhosted"] {
+  display: none;
+}
+html.deploy-selfhosted [data-deploy="cloud"] {
+  display: none;
+}

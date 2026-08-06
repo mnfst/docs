@@ -6,6 +6,11 @@ keywords:
   ["auto-fix", "self-healing", "LLM request repair", "malformed request", "400 bad request", "422 unprocessable", "model not found", "agent debugging", "harness debugging"]
 ---
 
+<div className="deploy-mode-toggle" role="group" aria-label="Deployment mode">
+  <button type="button" data-deploy-mode="cloud">Cloud</button>
+  <button type="button" data-deploy-mode="selfhosted">Self-hosted</button>
+</div>
+
 Some requests fail because of the request, not the model. A parameter the provider doesn't accept, a tool schema in the wrong shape, a model name that moved. Switching to a fallback model doesn't help, because the next model rejects the same body.
 
 Auto-fix handles that case. When a request fails with a repairable error, Manifest sends the failed request and the provider's error to a healing service, gets a corrected request back, and sends it once more. It runs **before** the fallback chain, so fallback is still the safety net if the repair doesn't land.
@@ -61,7 +66,21 @@ The Connect Harness modal shows an Auto-fix toggle under the name field, pre-set
 
 ### Harnesses you already have
 
-A harness that existed before Auto-fix keeps its state: Manifest never flips the toggle for you. On Manifest Cloud, those harnesses are already on. On a self-hosted install, enable each one from its **Settings** page or from the sidebar card. The dashboard shows that card in every deployment mode while any harness has Auto-fix off. It opens a modal listing those harnesses with individual toggles, and you can dismiss it for the browser session.
+A harness that existed before Auto-fix keeps its state: Manifest never flips the toggle for you.
+
+<div data-deploy="cloud">
+
+On Manifest Cloud, those harnesses are already on. You can switch any of them off on its **Settings** page.
+
+</div>
+
+<div data-deploy="selfhosted">
+
+Enable each one from its **Settings** page or from the sidebar card.
+
+</div>
+
+The dashboard shows a sidebar card while any harness has Auto-fix off. It opens a modal listing those harnesses with individual toggles, and you can dismiss it for the browser session.
 
 <Frame caption="The Auto-fix toggle on a harness's Settings page.">
   <img src="/images/autofix-settings-toggle.png" alt="A harness's Settings page with the Auto-fix failing requests toggle switched on" />
@@ -71,15 +90,29 @@ A harness that existed before Auto-fix keeps its state: Manifest never flips the
   <img src="/images/autofix-enable-modal.png" alt="The Enable Auto-fix modal listing harnesses that have Auto-fix off, each with its own toggle" />
 </Frame>
 
-### Self-hosted
+<div data-deploy="selfhosted">
+
+### Zero configuration
 
 Since v6.18.0, self-hosted Auto-fix needs zero configuration: there is no service to deploy and no URL or API key to set. Your install identifies itself to the hosted healing service with an anonymous install id, the same id [telemetry](/reference/telemetry) uses.
 
-The first time you enable Auto-fix on a self-hosted install, Manifest records a one-time consent for the install: you are agreeing that failing requests are sent to the hosted service. Any enable path records it, whether the Connect Harness toggle, a Settings toggle, or the enable-all API. Cloud never shows this consent.
+The first time you enable Auto-fix, Manifest records a one-time consent for the install: you are agreeing that failing requests are sent to the hosted service. Any enable path records it, whether the Connect Harness toggle, a Settings toggle, or the enable-all API.
+
+</div>
 
 ## Your data
 
+<div data-deploy="cloud">
+
+Here is exactly what Auto-fix sends to the healing service, and when nothing is sent.
+
+</div>
+
+<div data-deploy="selfhosted">
+
 Self-hosting is often a privacy choice, so here is exactly what leaves your machine, and when nothing does.
+
+</div>
 
 When Auto-fix repairs a request, Manifest sends the failed request, including its message content, plus the provider's error response to the healing service.
 
@@ -87,7 +120,11 @@ Provider API keys and OAuth tokens are never sent: credentials travel in request
 
 Nothing is sent for requests that succeed. No request data is ever sent while the toggle is off; the only call that can still happen is the boot health check, which carries no request content.
 
+<div data-deploy="selfhosted">
+
 Self-hosted deployments can also switch Auto-fix off globally, which stops every call to the healing service, including the health check at boot. See [Environment variables](#environment-variables).
+
+</div>
 
 See the [privacy policy](https://manifest.build/privacy/) and the [terms](https://manifest.build/terms/).
 
@@ -121,6 +158,8 @@ The **Overview** page aggregates the same data across a time range:
 
 Each card links through to the matching filter on the request log.
 
+<div data-deploy="selfhosted">
+
 ## Environment variables
 
 <Note>
@@ -139,6 +178,8 @@ Auto-fix needs no setup. Every variable below is optional and adjusts behavior:
 | `AUTOFIX_REPORT_ALL_4XX`      | `false`       | Opt-in. Also report request-side 4xx errors (except `401`/`402`/`403`/`429`) from harnesses with Auto-fix on, as diagnostic evidence with the secret-scrubbed request body. Bodies over 256 KB are dropped, not truncated. No fix comes back from it |
 
 You don't need `AUTOFIX_HEALING_API_KEY`. With no key set, the install announces its anonymous install id instead. The full list of variables lives in [Environment variables](/reference/environment-variables).
+
+</div>
 
 ## Related
 
