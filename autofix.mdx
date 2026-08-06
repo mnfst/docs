@@ -123,6 +123,11 @@ Each card links through to the matching filter on the request log.
 
 ## Environment variables
 
+<Note>
+  Self-hosted only. On [Manifest Cloud](https://app.manifest.build) there is no
+  server to configure: everything Auto-fix related lives in the dashboard.
+</Note>
+
 Auto-fix needs no setup. Every variable below is optional and adjusts behavior:
 
 | Variable                      | Default       | Description                                            |
@@ -133,9 +138,7 @@ Auto-fix needs no setup. Every variable below is optional and adjusts behavior:
 | `AUTOFIX_HEALING_API_KEY`     | unset         | Sent as `x-api-key` to the healing service. Only relevant if Manifest issues you one |
 | `AUTOFIX_REPORT_ALL_4XX`      | `false`       | Opt-in. Also report request-side 4xx errors (except `401`/`402`/`403`/`429`) from harnesses with Auto-fix on, as diagnostic evidence with the secret-scrubbed request body. Bodies over 256 KB are dropped, not truncated. No fix comes back from it |
 
-Self-hosted installs don't need `AUTOFIX_HEALING_API_KEY`. With no key set, the install announces its anonymous install id instead.
-
-These are [environment variables](/reference/environment-variables), so they only apply to a Manifest instance you run yourself.
+You don't need `AUTOFIX_HEALING_API_KEY`. With no key set, the install announces its anonymous install id instead. The full list of variables lives in [Environment variables](/reference/environment-variables).
 
 ## Related
 
