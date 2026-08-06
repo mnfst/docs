@@ -65,6 +65,7 @@
   // inline one is scrolled out of view. Click handling is the delegated
   // listener above, so the clone needs no wiring of its own.
   var observer = null;
+  var observedEl = null;
 
   function syncFloating() {
     var inline = document.querySelector('.deploy-mode-toggle:not(.' + FLOATING_CLASS + ')');
@@ -75,6 +76,7 @@
       if (observer) {
         observer.disconnect();
         observer = null;
+        observedEl = null;
       }
       return;
     }
@@ -85,13 +87,17 @@
       document.body.appendChild(floating);
     }
 
-    if (!observer) {
+    // React re-creates the content DOM on hydration and navigation, so the
+    // node we observed may be detached. Re-observe the live one.
+    if (observedEl !== inline) {
+      if (observer) observer.disconnect();
       observer = new IntersectionObserver(function (entries) {
         var current = document.querySelector('.' + FLOATING_CLASS);
         if (!current) return;
         current.classList.toggle('is-visible', !entries[0].isIntersecting);
       });
       observer.observe(inline);
+      observedEl = inline;
     }
   }
 
