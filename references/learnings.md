@@ -8,3 +8,4 @@
 - 2026-08-06 · run 1 verdicts: findings must be written in PLAIN language — no UI-component jargon (no "drawer", "Frame", CSS/file names in the finding body; code refs stay in the evidence lines only). Seb could not understand the IMAGE findings as written. An IMAGE finding is one simple sentence: where in the doc, what photo to take.
 - 2026-08-06 · editorial: when history is convoluted (feature added/removed/re-added), docs say the simple useful thing, not the history. Recorded in AUDIENCE.md.
 - 2026-08-06 · terminology: "logs", "request", "attempt"; the platform will rename the /messages URL later.
+- 2026-08-06 · full audit (cron, autonomous, no human): 0 PRs merged on mnfst/manifest since baseline #2691 (max merged PR = #2691). Nothing to compare → no findings → no issue (silence is a valid outcome). lastAuditedPr left at 2691; lastRunAt bumped as a run heartbeat.
