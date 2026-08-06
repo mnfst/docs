@@ -170,3 +170,19 @@ div.rounded-2xl svg.text-gray-300 {
 .callout .code-block {
   margin-bottom: 0.5rem !important;
 }
+
+/* Navbar primary CTA (Book a call): ink button in light mode, light button in dark mode */
+#topbar-cta-button a > span.absolute {
+  background: #0f172a !important;
+}
+#topbar-cta-button a div span,
+#topbar-cta-button a svg {
+  color: #f9f8f5 !important;
+}
+html.dark #topbar-cta-button a > span.absolute {
+  background: #f9f8f5 !important;
+}
+html.dark #topbar-cta-button a div span,
+html.dark #topbar-cta-button a svg {
+  color: #0f172a !important;
+}
