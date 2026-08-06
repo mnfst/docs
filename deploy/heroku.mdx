@@ -71,7 +71,7 @@ heroku logs --tail -a <your-app-name>
 - `PGSSLMODE=no-verify` enables TLS for Heroku Postgres without editing the managed `DATABASE_URL`.
 - `DB_POOL_MAX=8` and `AUTH_DB_POOL_MAX=4` leave headroom under the Essential-0 connection limit.
 - Use a custom domain before configuring production OAuth callbacks.
-- Heroku's filesystem is ephemeral, so [message recording](/message-recording) needs S3-compatible storage. Without it, recordings are lost on every dyno restart.
+- Heroku's filesystem is ephemeral, so [request logs](/request-logs) needs S3-compatible storage. Without it, recordings are lost on every dyno restart.
 
 ## Tearing it down
 

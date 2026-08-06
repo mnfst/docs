@@ -1,12 +1,17 @@
 ---
-title: "Message recording"
-description: "Store the full request and response body of every provider attempt, and read them back as a conversation in the request drawer. One toggle per harness."
-icon: "messages-square"
+title: "Request logs"
+description: "Store the full request and response body of every provider attempt, and read them back as a conversation from the Requests page. One toggle per harness."
+icon: "logs"
 keywords:
-  ["message recording", "request body", "response body", "LLM conversation log", "prompt logging", "full body log", "tool calls", "recording retention", "S3 recording storage"]
+  ["request logs", "message recording", "request body", "response body", "LLM conversation log", "prompt logging", "full body log", "tool calls", "log retention", "S3 log storage"]
 ---
 
-The [request log](/observability) tells you what a request cost and which model served it. Message recording tells you what was actually said: the body Manifest sent to the provider, and the body that came back.
+<div className="deploy-mode-toggle" role="group" aria-label="Deployment mode">
+  <button type="button" data-deploy-mode="cloud">Cloud</button>
+  <button type="button" data-deploy-mode="selfhosted">Self-hosted</button>
+</div>
+
+The [Requests page](/observability) tells you what a request cost and which model served it. Request logs tell you what was actually said: the body Manifest sent to the provider, and the body that came back. The dashboard calls this feature **Logs**.
 
 It's one toggle per harness.
 
@@ -24,15 +29,19 @@ A request Manifest blocked itself, on a [hard limit](/llm-gateway#hard-limits) o
 
 ## Reading it back
 
-Open any request in the dashboard's **Requests** log. When recordings exist, the drawer has a **Messages** tab next to **Attempts**.
+Open a request in the dashboard's **Requests** page and pick an attempt in the **Attempts** list. The initial call, each fallback, and an [Autofix](/autofix) retry are separate attempts, and each one shows its own conversation. The **Messages**, **Tools**, and **Raw** tabs appear when that attempt has a recording.
 
-The tab renders the exchange as a conversation, with a rail down the side listing every turn. Search the rail or filter it by role, and click any row to jump to that turn in the main pane. Assistant turns show the tool calls the model actually made, not the tool definitions your client offered it.
+{/* TODO(Seb): screenshot — a request opened, Attempts list visible, Messages tab selected. Suggested path: /images/request-logs-drawer.png */}
+
+The **Messages** tab renders the exchange as a conversation, with a rail down the side listing every turn. Search the rail or filter it by role, and click any row to jump to that turn in the main pane. Assistant turns show the tool calls the model actually made, not the tool definitions your client offered it.
 
 ## Turning it on
 
-The toggle lives on each harness's **Settings** page, under **Message recording**.
+The switch is **Enable logs**, in the **Logs** section of each harness's **Settings** page.
 
-New harnesses have it on. Older harnesses keep whatever they were set to, because only the default changed, so a harness from before the feature shipped probably needs the toggle flipped once.
+New harnesses have it on. To make sure a harness records its logs, check **Settings → Logs**.
+
+{/* TODO(Seb): screenshot — the harness Settings page, Logs section with the Enable logs switch on. Suggested path: /images/request-logs-settings.png */}
 
 <Note>
   Recording stores your prompts and completions. Everything else Manifest keeps
@@ -55,14 +64,25 @@ Self-hosted installs can override this with `REQUEST_RECORDING_RETENTION_DAYS`. 
 
 ## Self-hosted storage
 
+<div data-deploy="selfhosted">
+
+<Note>
+  Logs were reintroduced in **v6.18.0**. On an older self-hosted install,
+  [upgrade Manifest](/self-hosted#upgrading) first.
+</Note>
+
+</div>
+
 Recordings don't live in Postgres. They're gzipped and written to object storage, which you pick per instance.
 
 <Tabs>
   <Tab title="Docker (default)">
     The bundled compose file mounts a named volume `manifest_request_recordings`
     at `/data/request-recordings` and points Manifest at it. Nothing to
-    configure. The volume survives `docker compose down` the same way the
-    Postgres volume does.
+    configure when your compose file includes that volume; an install from
+    before v6.18.0 needs [one upgrade step](/self-hosted#upgrading) first. The
+    volume survives `docker compose down` the same way the Postgres volume
+    does.
   </Tab>
   <Tab title="S3-compatible">
     Set a bucket and region, and Manifest writes there instead. Required for

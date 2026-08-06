@@ -50,7 +50,14 @@
     "background": "#0891b2"
   },
   "contextual": {
-    "options": ["copy", "chatgpt", "claude", "add-mcp", "cursor", "vscode"]
+    "options": [
+      "copy",
+      "chatgpt",
+      "claude",
+      "add-mcp",
+      "cursor",
+      "vscode"
+    ]
   },
   "styling": {
     "eyebrows": "breadcrumbs",
@@ -93,7 +100,9 @@
           {
             "group": "Getting Started",
             "boost": 3,
-            "pages": ["introduction"]
+            "pages": [
+              "introduction"
+            ]
           },
           {
             "group": "Self-hosting",
@@ -118,20 +127,31 @@
                 "group": "Cloud providers",
                 "icon": "server",
                 "expanded": false,
-                "pages": ["deploy/aws", "deploy/gcp"]
+                "pages": [
+                  "deploy/aws",
+                  "deploy/gcp"
+                ]
               },
               {
                 "group": "Server panels",
                 "icon": "panel-top",
                 "expanded": false,
-                "pages": ["deploy/coolify", "deploy/easypanel"]
+                "pages": [
+                  "deploy/coolify",
+                  "deploy/easypanel"
+                ]
               }
             ]
           },
           {
             "group": "Features",
             "boost": 2,
-            "pages": ["llm-gateway", "autofix", "observability", "message-recording"]
+            "pages": [
+              "llm-gateway",
+              "autofix",
+              "observability",
+              "request-logs"
+            ]
           },
           {
             "group": "Providers",
@@ -256,6 +276,10 @@
     {
       "source": "/contributing",
       "destination": "https://github.com/mnfst/manifest"
+    },
+    {
+      "source": "/message-recording",
+      "destination": "/request-logs"
     }
   ]
 }

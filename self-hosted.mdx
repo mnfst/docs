@@ -241,6 +241,31 @@ docker compose up -d
 
 Database migrations run automatically on boot, no manual steps. Your data in the `pgdata` volume is preserved across upgrades. Pin to a specific major version (e.g. `manifestdotbuild/manifest:5`) in `docker-compose.yml` if you want control over when major upgrades happen.
 
+<Note>
+  **Upgrading from before v6.18.0 and using [logs](/request-logs)?** Run the installer once with the upgrade flag, or log bodies are written inside the container and lost when it is recreated:
+
+  ```bash
+  bash install.sh --upgrade
+  ```
+
+  It adds the `manifest_request_recordings` volume to your compose file. Later releases include it from the start.
+
+  <Accordion title="Hand-managed compose file? Add the volume yourself">
+    Declare the named volume and mount it on the backend service:
+
+    ```yaml
+    services:
+      manifest:
+        volumes:
+          - manifest_request_recordings:/data/request-recordings
+
+    volumes:
+      manifest_request_recordings:
+        name: manifest_request_recordings
+    ```
+  </Accordion>
+</Note>
+
 ## Backup and persistence
 
 The stack uses two named volumes:
@@ -248,7 +273,7 @@ The stack uses two named volumes:
 | Volume | Mounted at | Holds |
 |---|---|---|
 | `manifest_pgdata` | `/var/lib/postgresql/data` in `postgres` | Everything: accounts, harnesses, provider credentials, the request log |
-| `manifest_request_recordings` | `/data/request-recordings` in `manifest` | Stored [message recording](/message-recording) bodies |
+| `manifest_request_recordings` | `/data/request-recordings` in `manifest` | Stored [request logs](/request-logs) bodies |
 
 The database volume is the one to back up. Losing the recordings volume costs you stored message bodies and nothing else, and those expire on a retention schedule regardless.
 
@@ -309,7 +334,7 @@ docker compose down -v    # Stop and delete all data
 
 ## Data and privacy
 
-Manifest always keeps metadata about each request — model, provider, tier, token counts, cost, latency. Message bodies are separate and optional: with [message recording](/message-recording) on for a harness, prompts and completions are stored too, in the recordings volume rather than the database. New harnesses have it enabled. See [Data and telemetry](/reference/telemetry).
+Manifest always keeps metadata about each request — model, provider, tier, token counts, cost, latency. Message bodies are separate and optional: with [request logs](/request-logs) on for a harness, prompts and completions are stored too, in the recordings volume rather than the database. New harnesses have it enabled. See [Data and telemetry](/reference/telemetry).
 
 ## Telemetry
 
