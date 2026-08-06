@@ -5,15 +5,19 @@
 // and in localStorage, so it survives visits. Without JS no class is set and
 // every section stays visible.
 //
-// Two companions keep the page coherent:
+// Companions:
 // - a dynamic stylesheet hides table-of-contents entries that point at
 //   headings living inside a wrapper the current mode hides;
-// - a fixed copy of the toggle appears at the top of the viewport once the
-//   inline toggle scrolls out of view, so the switch stays reachable.
+// - a fixed copy of the toggle fades in next to the Documentation tab as soon
+//   as the inline toggle slides under the header bar;
+// - the theme keeps its own navbar hidden on this layout, so we render the
+//   Book a call button ourselves, fixed top right.
 (function () {
   var STORAGE_KEY = 'manifest-deploy-mode';
   var TOC_STYLE_ID = 'deploy-mode-toc-style';
   var FLOATING_CLASS = 'deploy-mode-toggle--floating';
+  var TAB_GAP = 40;
+  var HEADER_FALLBACK = 48;
 
   function apply(mode) {
     document.documentElement.classList.remove('deploy-cloud', 'deploy-selfhosted');
@@ -61,9 +65,35 @@
     if (style.textContent !== css) style.textContent = css;
   }
 
-  // Keep exactly one floating copy of the inline toggle, shown while the
-  // inline one is scrolled out of view. Click handling is the delegated
-  // listener above, so the clone needs no wiring of its own.
+  // The Documentation tab in the top bar, used to anchor the floating toggle
+  // and to measure the header height the inline toggle slides under.
+  function topTab() {
+    var tab = document.querySelector('.navbar-link');
+    if (tab && tab.getBoundingClientRect().width > 0) return tab;
+    return null;
+  }
+
+  function positionFloating(floating) {
+    var tab = topTab();
+    if (tab) {
+      floating.style.left = Math.round(tab.getBoundingClientRect().right + TAB_GAP) + 'px';
+      floating.classList.add('is-anchored');
+    } else {
+      floating.style.left = '';
+      floating.classList.remove('is-anchored');
+    }
+  }
+
+  function headerHeight() {
+    var tab = topTab();
+    if (!tab) return HEADER_FALLBACK;
+    var bottom = Math.round(tab.getBoundingClientRect().bottom);
+    return bottom > 0 && bottom < 200 ? bottom : HEADER_FALLBACK;
+  }
+
+  // Keep exactly one floating copy of the inline toggle, faded in while the
+  // inline one sits under the header or above the viewport. Click handling is
+  // the delegated listener above, so the clone needs no wiring of its own.
   var observer = null;
   var observedEl = null;
 
@@ -86,21 +116,27 @@
       floating.classList.add(FLOATING_CLASS);
       document.body.appendChild(floating);
     }
+    positionFloating(floating);
 
     // React re-creates the content DOM on hydration and navigation, so the
-    // node we observed may be detached. Re-observe the live one.
+    // node we observed may be detached. Re-observe the live one, with the
+    // header band excluded from the intersection root: the floating copy
+    // appears the moment the inline toggle slides under the header, not once
+    // it leaves the whole viewport.
     if (observedEl !== inline) {
       if (observer) observer.disconnect();
-      observer = new IntersectionObserver(function (entries) {
-        var current = document.querySelector('.' + FLOATING_CLASS);
-        if (!current) return;
-        current.classList.toggle('is-visible', !entries[0].isIntersecting);
-      });
+      observer = new IntersectionObserver(
+        function (entries) {
+          var current = document.querySelector('.' + FLOATING_CLASS);
+          if (!current) return;
+          current.classList.toggle('is-visible', !entries[0].isIntersecting);
+        },
+        { rootMargin: '-' + headerHeight() + 'px 0px 0px 0px' }
+      );
       observer.observe(inline);
       observedEl = inline;
     }
   }
-
 
   // The theme keeps its navbar hidden on this layout, so the docs.json CTA
   // never shows. Render our own Book a call button, fixed top right.
@@ -135,6 +171,8 @@
   } else {
     syncAll();
   }
+
+  window.addEventListener('resize', schedule);
 
   // Mintlify is a SPA: re-run when the page content re-renders.
   new MutationObserver(schedule).observe(document.body, {
