@@ -9,3 +9,4 @@
 - 2026-08-06 · editorial: when history is convoluted (feature added/removed/re-added), docs say the simple useful thing, not the history. Recorded in AUDIENCE.md.
 - 2026-08-06 · terminology: "logs", "request", "attempt"; the platform will rename the /messages URL later.
 - 2026-08-06 · full audit (cron, autonomous, no human): 0 PRs merged on mnfst/manifest since baseline #2691 (max merged PR = #2691). Nothing to compare → no findings → no issue (silence is a valid outcome). lastAuditedPr left at 2691; lastRunAt bumped as a run heartbeat.
+- 2026-08-07 · full audit (cron, autonomous, no human): still 0 PRs merged since baseline #2691 (origin/main @ 47d35fa, 2026-08-05, contains merge of #2691; max merged PR = #2691). Nothing new → no findings → no issue. lastAuditedPr unchanged; lastRunAt bumped as heartbeat.
