@@ -92,7 +92,7 @@ Element by element:
    sentence may add ONE fact that changes how Seb decides; never
    restate the first sentence.
 2. **Page** (visible): the LIVE docs URL where the problem sits
-   (https://manifest.build/docs/<slug>), with the section named in
+   (`https://manifest.build/docs/<slug>`), with the section named in
    words ("First request, the Send a request step"). Seb opens it and
    sees the problem. The file path stays in the details block.
 3. **What actually happens** (visible, not folded): the user journey
@@ -144,6 +144,8 @@ verification.
 
 ## Canonical example (imitate this shape exactly)
 
+````markdown
+
 ### 3 · [WRONG] The doc says an unknown model name "falls back to your routing config". False: the request fails with M302
 
 Page: https://manifest.build/docs/self-hosted (First request, the "Send a request" step)
@@ -164,6 +166,7 @@ Options:
 - Code: `proxy.service.ts:899-916` (resolution), `:275-287` (M302 raise). No fallback path for explicit models.
 - A user believes a typo'd model is caught by routing. It fails.
 </details>
+````
 
 Why this example is right: the title states the false claim and the
 truth in one line; the journey lets Seb verify the behavior himself in

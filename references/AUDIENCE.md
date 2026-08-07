@@ -57,3 +57,21 @@ it" is. The full grid lives in `CASE-MATRIX.md`.
 3. **Glossary is the home of concepts.** request, attempt, Autofix (its
    scope: it fixes the request, not the prompt) belong in the glossary,
    explained in end-user language, never in code words.
+
+## Naming in harness memory files
+
+`decisions.md`, `learnings.md`, and `backlog.md` live in this public
+repo. They use DESCRIPTORS ("the instance-mode env var", "the internal
+healing service"), never the literal name — even when the name is
+currently public elsewhere. Literal names appear only inside a finding
+when the finding is unreadable without them.
+
+## The coherence invariant (never halfway)
+
+Either the docs talk about something, completely (every mention has its
+definition where users expect it — an env var used in any guide MUST
+have its row in the environment-variables reference), or they don't
+talk about it at all (every mention removed). A fix that creates the
+halfway state — mentioned here, undefined there — is itself a finding.
+When Seb doubts a fix, re-derive the answer from this invariant; never
+swing to the opposite position to follow the doubt.

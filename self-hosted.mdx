@@ -11,7 +11,7 @@ Run the full Manifest stack on your own machine. No Node.js required, just Docke
 
 To run Manifest somewhere other than your own machine, see the [other self-hosting paths](/deploy).
 
-All three paths end in the same place: a running stack at [http://localhost:2099](http://localhost:2099) where you sign up. The first account you create becomes the admin. No demo credentials are pre-seeded.
+All three paths end in the same place: a running stack at [http://localhost:2099](http://localhost:2099). On first access, Manifest takes you to a setup screen where you create the admin account. No demo credentials are pre-seeded.
 
 <Note>
   The bundled compose file binds port 2099 to `127.0.0.1` only, so the dashboard is reachable on the host machine but not over the LAN. See [Exposing on the LAN](#exposing-on-the-lan) to change this.
@@ -39,7 +39,7 @@ All three paths end in the same place: a running stack at [http://localhost:2099
 
     Re-running the installer against an existing install directory resumes it. The compose file and your generated secrets are left untouched.
 
-    When the installer finishes, open [http://localhost:2099](http://localhost:2099) and sign up for an account. Then connect a provider and send your first request — see [First request](#first-request).
+    When the installer finishes, open [http://localhost:2099](http://localhost:2099): a setup screen asks you to create the admin account. Then connect a provider and send your first request — see [First request](#first-request).
   </Tab>
   <Tab title="Docker Compose">
     Same underlying flow as the install script, but you drive it yourself so you can edit the config before booting the stack.
@@ -69,7 +69,7 @@ All three paths end in the same place: a running stack at [http://localhost:2099
         Give it up to a couple of minutes on a cold pull — you can watch startup with `docker compose logs -f manifest`.
       </Step>
       <Step title="Create your admin account">
-        Go to [http://localhost:2099](http://localhost:2099) and sign up. The first account you create becomes the admin.
+        Go to [http://localhost:2099](http://localhost:2099): a setup screen asks you to create the admin account.
       </Step>
       <Step title="Connect a provider">
         Connect a provider and send your first request — see [First request](#first-request).
@@ -147,7 +147,7 @@ Signing up leaves you with an empty instance. Three steps to a routed request.
       -d '{"model": "auto", "messages": [{"role": "user", "content": "Hello"}]}'
     ```
 
-    `"model": "auto"` asks Manifest to route the request. Any other name is treated as an explicit choice, and falls back to your routing config if it matches nothing you have connected.
+    `"model": "auto"` asks Manifest to route the request. Any other name is treated as an explicit choice: if the model isn't available to your harness, the request fails with [M302](/errors/M302). Send `auto` to use routing.
   </Step>
 </Steps>
 
@@ -160,7 +160,8 @@ The request shows up in the dashboard straight away, with the model that served 
   | --- | --- |
   | `M003` | The token isn't a Manifest key — it doesn't start with `mnfst_` |
   | `M005` | Well-formed key, but this instance doesn't know it. Copying the literal `mnfst_YOUR_KEY_HERE` above gets you this — replace it with the real key |
-  | `M100` | The key is fine; no provider is connected yet for the model being routed to |
+  | `M101` | The key is fine; no provider is connected yet |
+  | `M100` | Routing picked a provider that has no API key on file |
 </Note>
 
 ## Verifying the image signature
