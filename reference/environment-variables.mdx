@@ -23,6 +23,7 @@ Manifest reads its configuration from environment variables. In the bundled Dock
 | `BETTER_AUTH_URL` | No | `http://localhost:2099` | Public URL the dashboard is reachable on. Must match the browser URL |
 | `PORT` | No | `2099` | Dashboard port. Under the bundled compose file this sets both the published host port and the internal listener, and `BETTER_AUTH_URL` follows it |
 | `NODE_ENV` | No | `production` | Node environment. Telemetry is disabled when this isn't `production`. Fixed to `production` by the bundled compose file — the image is a production artifact |
+| `MANIFEST_MODE` | No | auto-detect | Forces the deployment mode: `selfhosted`, `local` (legacy alias), or `cloud`. Unset, Manifest treats a containerised runtime (Docker, Podman, Kubernetes) as self-hosted. Set `selfhosted` on platforms where the container leaves none of those traces — the deploy guides for Render, Koyeb, Easypanel, and AWS do |
 
 ## Network & security
 
