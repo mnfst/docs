@@ -14,6 +14,13 @@ need this to succeed?"
    and the auditor treats ANY of those names appearing in a docs page
    as a leak. Same rule for this repo's own files and issues: never
    write the names down.
+   **Scope of the ban**: it covers names with NO user-facing existence
+   (internal tools, dev-only credentials, team URLs). Anything already
+   printed in the public docs or in the product's own user-facing
+   output (an env var in a deploy guide, a name in an error message)
+   is public API surface: findings MUST name it in clear text —
+   hiding it makes the finding unreadable, as issue #49 finding 5
+   proved.
 2. **Team-only knowledge never appears**: release process, internal
    URLs, staging environments, credentials handling, internal Slack or
    Discord channels.
