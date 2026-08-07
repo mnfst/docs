@@ -31,7 +31,9 @@ A request Manifest blocked itself, on a [hard limit](/llm-gateway#hard-limits) o
 
 Open a request in the dashboard's **Requests** page and pick an attempt in the **Attempts** list. The initial call, each fallback, and an [Autofix](/autofix) retry are separate attempts, and each one shows its own conversation. The **Messages**, **Tools**, and **Raw** tabs appear when that attempt has a recording.
 
-{/* TODO(Seb): screenshot — a request opened, Attempts list visible, Messages tab selected. Suggested path: /images/request-logs-drawer.png */}
+<Frame caption="A request with two attempts: the failed call and its Autofix retry, each with its own tabs.">
+  <img src="/images/request-logs-drawer.png" alt="A request opened on the Requests page, showing the Attempts list and the per-attempt tabs" />
+</Frame>
 
 The **Messages** tab renders the exchange as a conversation, with a rail down the side listing every turn. Search the rail or filter it by role, and click any row to jump to that turn in the main pane. Assistant turns show the tool calls the model actually made, not the tool definitions your client offered it.
 
@@ -41,7 +43,9 @@ The switch is **Enable logs**, in the **Logs** section of each harness's **Setti
 
 New harnesses have it on. To make sure a harness records its logs, check **Settings → Logs**.
 
-{/* TODO(Seb): screenshot — the harness Settings page, Logs section with the Enable logs switch on. Suggested path: /images/request-logs-settings.png */}
+<Frame caption="The Logs section on a harness's Settings page.">
+  <img src="/images/request-logs-settings.png" alt="A harness Settings page with the Logs section and the Enable logs switch on" />
+</Frame>
 
 <Note>
   Recording stores your prompts and completions. Everything else Manifest keeps
