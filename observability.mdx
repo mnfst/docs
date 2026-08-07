@@ -6,6 +6,11 @@ keywords:
   ["LLM observability", "AI cost tracking", "token usage", "spend alerts", "request log", "LLM analytics", "cost per agent", "cost per harness", "provider errors"]
 ---
 
+<div className="deploy-mode-toggle" role="group" aria-label="Deployment mode">
+  <button type="button" data-deploy-mode="cloud">Cloud</button>
+  <button type="button" data-deploy-mode="selfhosted">Self-hosted</button>
+</div>
+
 Every request through the gateway is recorded: which model served it, what it cost, how long it took, and what failed. The dashboard is built on that record, and you can query the same numbers from your own code.
 
 ## Requests and provider attempts
@@ -82,20 +87,19 @@ Alerts are evaluated hourly, so an email can lag the threshold by up to an hour.
 
 ### Email delivery
 
-<Tabs>
-  <Tab title="Cloud">
-    Alerts go to your account email. Check it's current in your profile settings.
-  </Tab>
-  <Tab title="Self-hosted">
-    Configure a provider on the **Limits** page: Resend, Mailgun, or SendGrid.
-    Enter the API key, domain, and notification address, then save. You can set
-    the same thing with the [`EMAIL_*` environment
-    variables](/reference/environment-variables).
+<div data-deploy="cloud">
 
-    Without an email provider, alerts are skipped. Blocking rules still work,
-    since they don't need to send anything.
-  </Tab>
-</Tabs>
+Alerts go to your account email. Check it's current in your profile settings.
+
+</div>
+
+<div data-deploy="selfhosted">
+
+Configure a provider on the **Limits** page: Resend, Mailgun, or SendGrid. Enter the API key, domain, and notification address, then save. You can set the same thing with the [`EMAIL_*` environment variables](/reference/environment-variables).
+
+Without an email provider, alerts are skipped. Blocking rules still work, since they don't need to send anything.
+
+</div>
 
 ## Reading usage from your own code
 
@@ -111,11 +115,15 @@ curl https://app.manifest.build/api/v1/agent/usage \
 | `GET /api/v1/agent/usage` | Token usage for the calling harness |
 | `GET /api/v1/agent/costs` | Cost data for the calling harness |
 
+<div data-deploy="selfhosted">
+
 Self-hosted installs swap the base URL for their own host.
 
 ## Anonymous telemetry
 
 Separately from your dashboard, each self-hosted install sends a small daily report so the project can see version adoption and which providers deserve attention. It's aggregates only, never prompts or content, and one environment variable turns it off. Full field list and opt-out: [Data and telemetry](/reference/telemetry).
+
+</div>
 
 ## Related
 

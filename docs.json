@@ -185,6 +185,23 @@
     },
     "links": [
       {
+        "header": "Solutions",
+        "items": [
+          {
+            "label": "For AI builders",
+            "href": "https://manifest.build/solutions/ai-builders/"
+          },
+          {
+            "label": "For teams",
+            "href": "https://manifest.build/solutions/teams/"
+          },
+          {
+            "label": "For platforms",
+            "href": "https://manifest.build/solutions/platforms/"
+          }
+        ]
+      },
+      {
         "header": "Product",
         "items": [
           {
@@ -192,8 +209,25 @@
             "href": "https://app.manifest.build"
           },
           {
-            "label": "LLM Gateway",
-            "href": "/llm-gateway"
+            "label": "Website",
+            "href": "https://manifest.build"
+          },
+          {
+            "label": "Changelog",
+            "href": "https://manifest.build/changelog/"
+          }
+        ]
+      },
+      {
+        "header": "Company",
+        "items": [
+          {
+            "label": "Blog",
+            "href": "https://manifest.build/blog/"
+          },
+          {
+            "label": "About",
+            "href": "https://manifest.build/about/"
           }
         ]
       },
