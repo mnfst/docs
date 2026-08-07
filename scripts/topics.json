@@ -1,15 +1,79 @@
 {
   "comment": "Nightly rotation for scoped audits. When the midnight full run finds no new merged PR, it audits the topic with the oldest lastAuditedAt, then stamps it. Dates are ISO or null (never audited).",
   "topics": [
-    { "topic": "request logs", "pages": ["request-logs.mdx", "observability.mdx", "reference/telemetry.mdx"], "lastAuditedAt": "2026-08-06" },
-    { "topic": "autofix", "pages": ["autofix.mdx", "errors.mdx"], "lastAuditedAt": null },
-    { "topic": "llm gateway (routing, tiers, fallbacks)", "pages": ["llm-gateway.mdx"], "lastAuditedAt": null },
-    { "topic": "observability (requests page, analytics)", "pages": ["observability.mdx"], "lastAuditedAt": null },
-    { "topic": "providers (api keys, subscriptions, local, custom)", "pages": ["providers/"], "lastAuditedAt": null },
-    { "topic": "self-hosting with docker (install, upgrade, backup)", "pages": ["self-hosted.mdx"], "lastAuditedAt": null },
-    { "topic": "deploy platforms", "pages": ["deploy/"], "lastAuditedAt": null },
-    { "topic": "error catalog (M-codes)", "pages": ["errors.mdx", "errors/"], "lastAuditedAt": null },
-    { "topic": "reference (api, headers, environment variables, glossary)", "pages": ["reference/"], "lastAuditedAt": null },
-    { "topic": "getting started (introduction, first request)", "pages": ["introduction.mdx"], "lastAuditedAt": null }
+    {
+      "topic": "request logs",
+      "pages": [
+        "request-logs.mdx",
+        "observability.mdx",
+        "reference/telemetry.mdx"
+      ],
+      "lastAuditedAt": "2026-08-06"
+    },
+    {
+      "topic": "autofix",
+      "pages": [
+        "autofix.mdx",
+        "errors.mdx"
+      ],
+      "lastAuditedAt": null
+    },
+    {
+      "topic": "llm gateway (routing, tiers, fallbacks)",
+      "pages": [
+        "llm-gateway.mdx"
+      ],
+      "lastAuditedAt": null
+    },
+    {
+      "topic": "observability (requests page, analytics)",
+      "pages": [
+        "observability.mdx"
+      ],
+      "lastAuditedAt": null
+    },
+    {
+      "topic": "providers (api keys, subscriptions, local, custom)",
+      "pages": [
+        "providers/"
+      ],
+      "lastAuditedAt": null
+    },
+    {
+      "topic": "self-hosting with docker (install, upgrade, backup)",
+      "pages": [
+        "self-hosted.mdx"
+      ],
+      "lastAuditedAt": null
+    },
+    {
+      "topic": "deploy platforms",
+      "pages": [
+        "deploy/"
+      ],
+      "lastAuditedAt": null
+    },
+    {
+      "topic": "error catalog (M-codes)",
+      "pages": [
+        "errors.mdx",
+        "errors/"
+      ],
+      "lastAuditedAt": null
+    },
+    {
+      "topic": "reference (api, headers, environment variables, glossary)",
+      "pages": [
+        "reference/"
+      ],
+      "lastAuditedAt": null
+    },
+    {
+      "topic": "getting started (introduction, first request)",
+      "pages": [
+        "introduction.mdx"
+      ],
+      "lastAuditedAt": "2026-08-07"
+    }
   ]
 }
