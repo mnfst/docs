@@ -7,11 +7,13 @@ need this to succeed?"
 
 ## Hard bans (each one is an INTERNAL-LEAK finding)
 
-1. **Internal tools never appear.** Known internal tools as of
-   2026-08: Phoenix. If a page tells a user to do anything in an
-   internal tool (put a key, check a dashboard), it is a leak. When the
-   platform-engineer discovers a new internal-only tool in the
-   codebase, add it to this list in the same PR that fixes the leak.
+1. **Internal tools never appear.** The docs must never name an
+   internal-only tool or service. The list of such names is NOT written
+   here (this repo is public): the platform-engineer identifies
+   internal tools while reading the code and lists them in its report,
+   and the auditor treats ANY of those names appearing in a docs page
+   as a leak. Same rule for this repo's own files and issues: never
+   write the names down.
 2. **Team-only knowledge never appears**: release process, internal
    URLs, staging environments, credentials handling, internal Slack or
    Discord channels.

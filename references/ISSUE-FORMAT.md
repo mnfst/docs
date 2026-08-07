@@ -54,11 +54,20 @@ Findings rejetés = répondre "N → reject" : ils ne seront plus re-signalés.
   unless the platform changed again on that exact point — then the
   finding says so explicitly.
 
-## Language rule (added after run 1)
+## Language rule (added after run 1, hardened after Seb's feedback)
 
-Findings are written for Seb, in plain language. No UI-component jargon
-("drawer", "Frame", component or file names) in the claim, impact, or
-options — code references live only in the evidence lines. An IMAGE
-finding is one simple sentence: where in the doc, what photo to take,
-what it must show. If a finding cannot be said simply, it is not
-understood well enough to be filed.
+The issue is read by a HUMAN first, agents second. Every finding is
+structured as:
+
+1. **One plain sentence** stating the problem and what Seb must decide
+   or do ("Il manque une image de la page Settings montrant le bouton
+   Enable logs"). Eight words beat three bullet lists. No UI-component
+   jargon, no file names, no code references in this sentence.
+2. The options (for findings that need a decision), each one line.
+3. All evidence (doc quotes, file:line, PR numbers, rationale) goes in
+   a collapsed block the human can ignore:
+   `<details><summary>Preuves (pour l'agent)</summary>...</details>`
+
+An IMAGE finding is ONLY the plain sentence plus the details block: no
+options, no rationale paragraph. If Seb cannot know what to do after
+reading one sentence, the finding fails the format.

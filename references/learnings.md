@@ -10,3 +10,7 @@
 - 2026-08-06 · terminology: "logs", "request", "attempt"; the platform will rename the /messages URL later.
 - 2026-08-06 · full audit (cron, autonomous, no human): 0 PRs merged on mnfst/manifest since baseline #2691 (max merged PR = #2691). Nothing to compare → no findings → no issue (silence is a valid outcome). lastAuditedPr left at 2691; lastRunAt bumped as a run heartbeat.
 - 2026-08-07 · full audit (cron, autonomous, no human): still 0 PRs merged since baseline #2691 (origin/main @ 47d35fa, 2026-08-05, contains merge of #2691; max merged PR = #2691). Nothing new → no findings → no issue. lastAuditedPr unchanged; lastRunAt bumped as heartbeat.
+- 2026-08-07 · issue format hardened: human-first (one plain sentence per finding, options one line each, ALL evidence collapsed in a details block). Seb could not tell two images were expected of him.
+- 2026-08-07 · questions to Seb must be complete and case-specific (state: existing agents vs newly created, cloud vs self-hosted, pre/post release). "Is recording live on Cloud?" was unanswerable as asked.
+- 2026-08-07 · Seb's answer on cloud defaults: pre-existing agents have logs OFF; at agent creation the Connect Harness modal pre-checks Autofix and Logs (suggested defaults, like consent checkboxes) — the user confirms. Transition info that only concerns pre-release users is not worth documenting.
+- 2026-08-07 · internal tool names are never written anywhere in this public repo (including harness reference files); the engineer derives the list from code at each run.
