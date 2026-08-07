@@ -56,8 +56,34 @@ Rejected findings: reply "N → reject" and they will never be re-raised.
 
 ## Language rule (added after run 1, hardened after Seb's feedback)
 
-The issue is read by a HUMAN first, agents second. Every finding is
-structured as:
+The issue is read by a HUMAN first, agents second. This is a TEMPLATE:
+every agent, whatever the harness or machine, copies the skeleton below
+verbatim and fills the blanks. No reordering, no omissions, no extra
+sections.
+
+```
+### <N> · [<CATEGORY>] <one plain sentence: the false claim and the truth>
+
+Page: <live docs URL> (<section name in words>)
+
+What actually happens:
+1. <user-language step>
+2. <user-language step>
+
+Fix: <one line>            ← when one obvious fix
+Options:                   ← when a real choice exists
+1. <different outcome>. Recommended.
+2. <different outcome>.
+
+<details><summary>Evidence (for the agent)</summary>
+
+- <doc file:line — exact quote>
+- <code path:line — what it does>
+- <user impact, one line>
+</details>
+```
+
+Element by element:
 
 1. **One plain sentence** stating the problem ("An image of the
    Settings page showing the Enable logs switch is missing"). Eight
@@ -65,20 +91,24 @@ structured as:
    names, no code references in this sentence. An optional second
    sentence may add ONE fact that changes how Seb decides; never
    restate the first sentence.
-2. **What actually happens** (visible, not folded): the user journey
+2. **Page** (visible): the LIVE docs URL where the problem sits
+   (https://manifest.build/docs/<slug>), with the section named in
+   words ("First request, the Send a request step"). Seb opens it and
+   sees the problem. The file path stays in the details block.
+3. **What actually happens** (visible, not folded): the user journey
    as established from the code, 2 to 6 numbered steps, pure user
    language (screens, fields, buttons, what the user sees and does).
    No file names, no code words. This block lets Seb verify the
    behavior from his own knowledge of the product BEFORE judging the
    options, and it is the basis of the future fix's wording. Every
    step must be backed by a code reference in the details block.
-3. **Fix or Options.** One obvious fix → a single `Fix:` line. A real
+4. **Fix or Options.** One obvious fix → a single `Fix:` line. A real
    choice → `Options:`, each ONE line, each a genuinely different
    outcome. An option must never restate the problem, describe context,
    or say what the doc "already does" (that is evidence). Mark the
    recommendation with the word "Recommended." at the end of its line,
    once, without repeating why beyond a parenthesis.
-4. All evidence (doc quotes, file:line, PR numbers, rationale) goes in
+5. All evidence (doc quotes, file:line, PR numbers, rationale) goes in
    a collapsed block the human can ignore:
    `<details><summary>Evidence (for the agent)</summary>...</details>`
 
@@ -111,6 +141,8 @@ verification.
 ## Canonical example (imitate this shape exactly)
 
 ### 3 · [WRONG] The doc says an unknown model name "falls back to your routing config". False: the request fails with M302
+
+Page: https://manifest.build/docs/self-hosted (First request, the "Send a request" step)
 
 What actually happens:
 1. Your app sends a request with a model name.

@@ -28,7 +28,10 @@ For EVERY finding, verify adversarially:
    recommendation is fine, a fait accompli is not.
 5. **Impact is user-phrased**: what a user experiences, not internal
    jargon.
-6. **Format**: matches ISSUE-FORMAT.md and its canonical example,
+6. **Format**: matches ISSUE-FORMAT.md's template skeleton exactly —
+   every element present, in order, including the Page line whose URL
+   must correspond to the cited .mdx file and whose section must exist
+   on that page. Also matches the canonical example,
    footer included verbatim, right labels for the categories present.
    Also verify the "What actually happens" block: 2 to 6 steps, pure
    user language (no file names, no code words), and EVERY step
