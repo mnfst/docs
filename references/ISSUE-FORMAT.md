@@ -75,9 +75,8 @@ structured as:
    a collapsed block the human can ignore:
    `<details><summary>Evidence (for the agent)</summary>...</details>`
 
-Voice: the `/issue-writer` skill's rules apply to every finding — short
-sentences, senior-engineer tone, exact quotes and codes, no filler
-words, no em dashes, every sentence carries new information.
+Voice: see the self-contained "Voice" section below. It applies to
+every finding.
 
 An IMAGE finding is ONLY the plain sentence plus the details block: no
 options, no rationale paragraph. If Seb cannot know what to do after
@@ -90,3 +89,33 @@ PR descriptions — is written in ENGLISH, always. mnfst/docs is a public
 repo with an international audience. French is for the private
 conversation with Seb only. An issue drafted in French fails
 verification.
+
+## Voice (self-contained — do not depend on any external skill)
+
+- Short sentences. Direct. Like a senior engineer writing a bug report.
+- No em dashes. Use colons, commas, or periods.
+- No filler words: robust, comprehensive, leverage, utilize, enhance,
+  streamline, seamlessly, facilitate.
+- Exact quotes, exact error codes, exact paths. Never paraphrase a
+  quote.
+- Every sentence carries new information. If a sentence repeats the
+  title or another sentence, delete it.
+
+## Canonical example (imitate this shape exactly)
+
+### 3 · [WRONG] The doc says an unknown model name "falls back to your routing config". False: the request fails with M302
+
+Options:
+1. Replace with the sentence `llm-gateway.mdx:89` already uses: unlisted model ID → M302, send `auto` for routing. Recommended.
+2. Delete the false half of the sentence, keep the rest.
+
+<details><summary>Evidence (for the agent)</summary>
+
+- `self-hosted.mdx:150` — "Any other name is treated as an explicit choice, and falls back to your routing config if it matches nothing you have connected."
+- Code: `proxy.service.ts:899-916` (resolution), `:275-287` (M302 raise). No fallback path for explicit models.
+- A user believes a typo'd model is caught by routing. It fails.
+</details>
+
+Why this example is right: the title states the false claim and the
+truth in one line; the options are two different outcomes, one line
+each; the recommendation is one word; everything else is folded.

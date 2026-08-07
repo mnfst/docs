@@ -28,8 +28,12 @@ For EVERY finding, verify adversarially:
    recommendation is fine, a fait accompli is not.
 5. **Impact is user-phrased**: what a user experiences, not internal
    jargon.
-6. **Format**: matches ISSUE-FORMAT.md, footer included verbatim,
-   right labels for the categories present.
+6. **Format**: matches ISSUE-FORMAT.md and its canonical example,
+   footer included verbatim, right labels for the categories present.
+   FAIL any of: French anywhere; an option that restates the problem
+   or describes context instead of an outcome; a recommendation that
+   repeats the title; filler words; evidence outside the details
+   block; a finding whose title needs the details to be understood.
 
 Also check the whole: findings deduplicated among themselves, numbered
 sequentially, categories correct, and nothing in the issue itself
