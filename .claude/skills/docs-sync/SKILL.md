@@ -34,6 +34,15 @@ auditing; never clone a duplicate if one of these exists). Run
   run. The digest issue title carries the topic:
   `Docs audit — <topic> — <date>`.
 
+- **Preflight** (`préflight PR #N` / "check cette PR pas encore mergée"):
+  audit ONE OPEN platform PR before merge. Same loop, two differences:
+  no GitHub issue — findings and options go in the conversation (it is
+  interactive); and after Seb picks options, prepare the docs PR with
+  him so platform PR and docs PR merge together. Preflight never
+  touches `state.json` or the rotation.
+- **On-demand full** ("lance l'audit" during the day): identical to the
+  cron's full mode, just triggered by Seb without waiting for midnight.
+
 ## The loop
 
 ### 1 — Scope
