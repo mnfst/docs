@@ -94,8 +94,11 @@ subagent for the drafts (stop-slop + humanizer voice).
 
 ### 5 — Draft + verify (issue-verifier), max 3 iterations
 
-Assemble the digest issue per `references/ISSUE-FORMAT.md`. Spawn the
-`issue-verifier` subagent (fresh eyes) on the draft. Every FAILed
+Run `node scripts/check-coherence.mjs` (the machine-checked
+invariants); RED blocks filing until resolved or justified in the
+script's exemption lists. Assemble the digest issue per
+`references/ISSUE-FORMAT.md`. Spawn the `issue-verifier` subagent
+(fresh eyes) on the draft. Every FAILed
 finding goes back to step 3 (or is dropped if the evidence simply does
 not hold). After 3 red rounds, stop and show Seb the blockers instead
 of filing a weak issue.
@@ -114,10 +117,30 @@ of filing a weak issue.
 ## Working the verdicts (after Seb answers on the issue)
 
 When asked to apply a verdict: re-read the finding, make the PR
-together with Seb (manual flow, normal review), and update
+together with Seb (manual flow, normal review), run
+`node scripts/check-coherence.mjs` and `mint broken-links` on the
+result (both must be GREEN before the PR is pushed), and update
 `references/decisions.md` (`accepted` → `fixed` with the PR URL).
 Rejected findings get `rejected` and are never re-raised (the
 issue-verifier enforces it).
+
+## Reversal protocol (anti-oscillation)
+
+Reversing ANY position recorded in `references/decisions.md` — undoing
+an applied fix, flipping accepted↔rejected, changing a chosen option —
+requires a written derivation, BEFORE acting:
+
+1. Name the invariant(s) that govern the point (AUDIENCE.md, this
+   file).
+2. Derive the answer from them, in 2-3 sentences.
+3. If the derivation contradicts Seb's expressed doubt, DEFEND the
+   position with the derivation. Never flip to follow a doubt: doubt
+   triggers re-derivation, not reversal.
+4. If the derivation does justify the reversal, record the line in
+   decisions.md as `revised` with the one-line derivation.
+
+The issue-verifier FAILs any draft or fix that reverses a recorded
+decision without its recorded derivation.
 
 ## Phase 2 (LIVE since 2026-08-06 — see references/PHASE-2.md)
 
