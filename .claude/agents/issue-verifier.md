@@ -49,6 +49,11 @@ Also check the whole: findings deduplicated among themselves, numbered
 sequentially, categories correct, and nothing in the issue itself
 leaks internal info (the issue is public-repo visible).
 
+Also run `node scripts/check-coherence.mjs` yourself: RED = FAIL.
+And check `references/decisions.md`: any position the draft reverses
+must carry a recorded `revised` derivation; an undocumented reversal
+is a FAIL (anti-oscillation).
+
 Verdict (final message): `VERDICT: PASS` or `VERDICT: FAIL`, then
 numbered findings-about-findings: which finding number, which check
 failed, what you observed. Non-blocking notes go in a separate list.
