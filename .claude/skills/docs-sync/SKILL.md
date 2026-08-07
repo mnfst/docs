@@ -41,8 +41,12 @@ auditing; never clone a duplicate if one of these exists). Run
 Full mode: read `scripts/state.json` (`lastAuditedPr`), list merged
 PRs since:
 `gh pr list --repo mnfst/manifest --state merged --limit 100 --json number,title,mergedAt`
-and keep those with `number > lastAuditedPr`. If none: report "nothing
-new", update nothing, stop.
+and keep those with `number > lastAuditedPr`. If none: apply the
+**nightly rotation** — read `scripts/topics.json`, pick the topic with
+the oldest `lastAuditedAt` (null counts as oldest; tie-break by list
+order), run a SCOPED audit on it, and stamp its `lastAuditedAt` with
+today's date whether or not findings came out (a clean topic is a
+result). One topic per run, never more.
 
 Scoped mode: collect the topic's docs pages, and the topic's merged
 PRs over a stated window (default 30 days) via
