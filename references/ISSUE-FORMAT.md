@@ -111,6 +111,10 @@ Element by element:
 5. All evidence (doc quotes, file:line, PR numbers, rationale) goes in
    a collapsed block the human can ignore:
    `<details><summary>Evidence (for the agent)</summary>...</details>`
+   When the behavior can be reproduced with one cheap API request
+   (a harness key is available on Seb's machines and the VM), DO it
+   and put the request + verbatim response in the evidence:
+   reproduction beats code citation.
 
 Voice: see the self-contained "Voice" section below. It applies to
 every finding.
