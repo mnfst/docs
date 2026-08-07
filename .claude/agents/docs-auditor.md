@@ -39,6 +39,9 @@ Each finding (your final message, one block per finding):
 - `needs-wording: yes/no` — whether the tech-writer should draft text.
 
 Rules: no finding without both evidences. No stylistic nitpicks: if it
-does not mislead a user or leak internals, it is not a finding. When
+does not mislead a user or leak internals, it is not a finding.
+SCOPE IS HARD: in a scoped audit, findings only target the topic's own
+pages. Problems seen on linked pages go to `references/backlog.md`
+(one line each), never into the findings. When
 the report's `## Uncertain` section touches a page, flag it as a
 question for Seb, not as a finding.

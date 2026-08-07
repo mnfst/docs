@@ -30,7 +30,9 @@ For EVERY finding, verify adversarially:
    jargon.
 6. **Format**: matches ISSUE-FORMAT.md and its canonical example,
    footer included verbatim, right labels for the categories present.
-   FAIL any of: French anywhere; an option that restates the problem
+   FAIL any of: a finding targeting a page outside the audit's stated
+   page list (out-of-scope, belongs in references/backlog.md); French
+   anywhere; an option that restates the problem
    or describes context instead of an outcome; a recommendation that
    repeats the title; filler words; evidence outside the details
    block; a finding whose title needs the details to be understood.

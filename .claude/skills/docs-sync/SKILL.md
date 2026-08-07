@@ -63,6 +63,13 @@ PRs over a stated window (default 30 days) via
 plus a Grep of the clone for the feature's code paths. State the
 window and the page list in the issue.
 
+**Scope is a hard boundary.** Findings may ONLY target the topic's own
+pages (stated in the issue's page list). A problem spotted on any
+other page while following links is NOT a finding: append one line to
+`references/backlog.md` (page, claim, what looks wrong) so the topic
+that owns that page picks it up at its next audit. An issue containing
+an out-of-scope finding fails verification.
+
 Both modes: `git pull` the platform clone first, so code checks run
 against current main.
 
