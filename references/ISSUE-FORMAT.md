@@ -37,10 +37,10 @@ must show, and why that spot (Seb produces the images elsewhere).
 
 ```
 ---
-Répondre avec le numéro du finding et l'option choisie
-(ex: "3 → option 2", ou "3: autre idée, discutons").
-Les PRs se font ensuite manuellement avec l'agent, jamais par le harness.
-Findings rejetés = répondre "N → reject" : ils ne seront plus re-signalés.
+Reply with the finding number and the chosen option
+(e.g. "3 → option 2", or "3: other idea, let's discuss").
+PRs are then made manually with the agent, never by the harness.
+Rejected findings: reply "N → reject" and they will never be re-raised.
 ```
 
 ## Iron rules
@@ -66,8 +66,16 @@ structured as:
 2. The options (for findings that need a decision), each one line.
 3. All evidence (doc quotes, file:line, PR numbers, rationale) goes in
    a collapsed block the human can ignore:
-   `<details><summary>Preuves (pour l'agent)</summary>...</details>`
+   `<details><summary>Evidence (for the agent)</summary>...</details>`
 
 An IMAGE finding is ONLY the plain sentence plus the details block: no
 options, no rationale paragraph. If Seb cannot know what to do after
 reading one sentence, the finding fails the format.
+
+## Language of publication (absolute rule)
+
+Everything published on GitHub — issue titles, bodies, comments, labels,
+PR descriptions — is written in ENGLISH, always. mnfst/docs is a public
+repo with an international audience. French is for the private
+conversation with Seb only. An issue drafted in French fails
+verification.

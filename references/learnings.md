@@ -20,3 +20,4 @@
 - 2026-08-07 · Railway recurs as an "unverified" edge: README claims durable S3 storage, but railway.toml (external template) has none in-repo. Kept as an OPEN QUESTION in decisions.md, out of the public issue (questions-to-Seb stay private). Resolve by confirming the actual Railway template before touching deploy/railway.mdx or request-logs.mdx line 118.
 - 2026-08-07 · run 2 (introduction): verifier killed two false evidence statements ("renamed everywhere but here" — 5 leftovers existed; "three times" — it was two). Lesson: universal quantifiers (everywhere, always, all) in evidence must be grep-verified before writing.
 - 2026-08-07 · run 2: the human-first issue format worked — findings are one plain sentence + collapsed proofs.
+- 2026-08-07 · run 2: issue #49 was first published in FRENCH — forbidden. Everything on GitHub is English, always; French stays in the private conversation. Rule added to ISSUE-FORMAT.md; the verifier must fail any non-English draft.
