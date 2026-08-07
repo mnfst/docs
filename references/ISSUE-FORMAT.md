@@ -65,13 +65,20 @@ structured as:
    names, no code references in this sentence. An optional second
    sentence may add ONE fact that changes how Seb decides; never
    restate the first sentence.
-2. **Fix or Options.** One obvious fix → a single `Fix:` line. A real
+2. **What actually happens** (visible, not folded): the user journey
+   as established from the code, 2 to 6 numbered steps, pure user
+   language (screens, fields, buttons, what the user sees and does).
+   No file names, no code words. This block lets Seb verify the
+   behavior from his own knowledge of the product BEFORE judging the
+   options, and it is the basis of the future fix's wording. Every
+   step must be backed by a code reference in the details block.
+3. **Fix or Options.** One obvious fix → a single `Fix:` line. A real
    choice → `Options:`, each ONE line, each a genuinely different
    outcome. An option must never restate the problem, describe context,
    or say what the doc "already does" (that is evidence). Mark the
    recommendation with the word "Recommended." at the end of its line,
    once, without repeating why beyond a parenthesis.
-3. All evidence (doc quotes, file:line, PR numbers, rationale) goes in
+4. All evidence (doc quotes, file:line, PR numbers, rationale) goes in
    a collapsed block the human can ignore:
    `<details><summary>Evidence (for the agent)</summary>...</details>`
 
@@ -105,6 +112,12 @@ verification.
 
 ### 3 · [WRONG] The doc says an unknown model name "falls back to your routing config". False: the request fails with M302
 
+What actually happens:
+1. Your app sends a request with a model name.
+2. If the name is `auto`, Manifest picks the model for you (routing).
+3. If it is a real model name, Manifest sends the request to that exact model, no substitution.
+4. If that model is unreachable, the request fails with error M302. Nothing falls back.
+
 Options:
 1. Replace with the sentence `llm-gateway.mdx:89` already uses: unlisted model ID → M302, send `auto` for routing. Recommended.
 2. Delete the false half of the sentence, keep the rest.
@@ -117,5 +130,6 @@ Options:
 </details>
 
 Why this example is right: the title states the false claim and the
-truth in one line; the options are two different outcomes, one line
-each; the recommendation is one word; everything else is folded.
+truth in one line; the journey lets Seb verify the behavior himself in
+four user-language steps; the options are two different outcomes, one
+line each; the recommendation is one word; everything else is folded.

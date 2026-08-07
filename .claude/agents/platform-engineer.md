@@ -24,7 +24,12 @@ Method:
 3. Chase the dimensions that matter for docs (see the questions below)
    even when the PR doesn't mention them.
 
-For each user-visible change, answer:
+For each user-visible behavior, ALSO narrate the user journey: the
+screens, fields, buttons, and messages the user meets, step by step,
+in user language ("you land on a setup screen with one form", "the
+drawer shows an Attempts list"). The auditor turns this into the
+finding's "What actually happens" block, so precision here is what
+Seb reads. Then answer:
 
 - What changed (added / modified / removed / renamed)?
 - Cloud, self-hosted, or both? Any env var involved (self-hosted

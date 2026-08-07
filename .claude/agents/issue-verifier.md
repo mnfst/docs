@@ -30,6 +30,11 @@ For EVERY finding, verify adversarially:
    jargon.
 6. **Format**: matches ISSUE-FORMAT.md and its canonical example,
    footer included verbatim, right labels for the categories present.
+   Also verify the "What actually happens" block: 2 to 6 steps, pure
+   user language (no file names, no code words), and EVERY step
+   supported by a code reference in the details block — walk the cited
+   code and confirm each step. A journey step the code does not
+   support, or a finding with no journey block, is a FAIL.
    FAIL any of: a finding targeting a page outside the audit's stated
    page list (out-of-scope, belongs in references/backlog.md); French
    anywhere; an option that restates the problem
