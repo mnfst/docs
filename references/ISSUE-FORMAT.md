@@ -59,14 +59,25 @@ Rejected findings: reply "N → reject" and they will never be re-raised.
 The issue is read by a HUMAN first, agents second. Every finding is
 structured as:
 
-1. **One plain sentence** stating the problem and what Seb must decide
-   or do ("An image of the Settings page showing the Enable logs
-   switch is missing"). Eight words beat three bullet lists. No UI-component
-   jargon, no file names, no code references in this sentence.
-2. The options (for findings that need a decision), each one line.
+1. **One plain sentence** stating the problem ("An image of the
+   Settings page showing the Enable logs switch is missing"). Eight
+   words beat three bullet lists. No UI-component jargon, no file
+   names, no code references in this sentence. An optional second
+   sentence may add ONE fact that changes how Seb decides; never
+   restate the first sentence.
+2. **Fix or Options.** One obvious fix → a single `Fix:` line. A real
+   choice → `Options:`, each ONE line, each a genuinely different
+   outcome. An option must never restate the problem, describe context,
+   or say what the doc "already does" (that is evidence). Mark the
+   recommendation with the word "Recommended." at the end of its line,
+   once, without repeating why beyond a parenthesis.
 3. All evidence (doc quotes, file:line, PR numbers, rationale) goes in
    a collapsed block the human can ignore:
    `<details><summary>Evidence (for the agent)</summary>...</details>`
+
+Voice: the `/issue-writer` skill's rules apply to every finding — short
+sentences, senior-engineer tone, exact quotes and codes, no filler
+words, no em dashes, every sentence carries new information.
 
 An IMAGE finding is ONLY the plain sentence plus the details block: no
 options, no rationale paragraph. If Seb cannot know what to do after
