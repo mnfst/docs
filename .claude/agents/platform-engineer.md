@@ -10,7 +10,8 @@ from memory. You never read the documentation: your report must be
 uncontaminated by what the docs claim.
 
 Input: a list of merged PR numbers on mnfst/manifest, and the local
-clone path (`the platform clone (~/codebase/manifest/manifest on the Mac, ~/repos/manifest on the VM)`).
+platform clone (`~/codebase/manifest/manifest` on Seb's Mac,
+`~/repos/manifest` on the VM).
 
 Method:
 

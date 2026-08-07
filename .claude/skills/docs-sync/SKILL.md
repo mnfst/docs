@@ -16,8 +16,9 @@ findings are options to discuss, PRs happen manually with Seb
 afterwards. No findings = no issue = total silence.
 
 Requirements: `gh` authenticated (issues on mnfst/docs, read on
-mnfst/manifest), and the platform clone at
-`the platform clone (~/codebase/manifest/manifest on the Mac, ~/repos/manifest on the VM)` (pull it fresh before auditing). Run
+mnfst/manifest), and a local platform clone: `~/codebase/manifest/manifest`
+on Seb's Mac, `~/repos/manifest` on the VM (pull it fresh before
+auditing; never clone a duplicate if one of these exists). Run
 `bash scripts/setup.sh` at session start.
 
 ## Two modes
@@ -49,8 +50,8 @@ PRs over a stated window (default 30 days) via
 plus a Grep of the clone for the feature's code paths. State the
 window and the page list in the issue.
 
-Both modes: `git -C the platform clone (~/codebase/manifest/manifest on the Mac, ~/repos/manifest on the VM) pull` so code checks
-run against current main.
+Both modes: `git pull` the platform clone first, so code checks run
+against current main.
 
 ### 2 — Truth (platform-engineer)
 
@@ -98,7 +99,10 @@ together with Seb (manual flow, normal review), and update
 Rejected findings get `rejected` and are never re-raised (the
 issue-verifier enforces it).
 
-## Phase 2 (defined, not wired yet — see references/PHASE-2.md)
+## Phase 2 (LIVE since 2026-08-06 — see references/PHASE-2.md)
 
-Cron runs from the VM's Claude Code agent (2-hourly light check,
-nightly full audit) and Supabase memory replacing the flat files.
+Cron runs on the VM via `~/docs-harness/run.sh`: watch mode at minute
+15 every 2 hours (exits without invoking Claude when no new PR), full
+audit at midnight Europe/Paris. Runs are recorded in the VM Supabase
+(`docs_harness.runs`); the flat files here remain the skill's working
+memory.
