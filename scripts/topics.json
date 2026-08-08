@@ -16,7 +16,7 @@
         "autofix.mdx",
         "errors.mdx"
       ],
-      "lastAuditedAt": null
+      "lastAuditedAt": "2026-08-08"
     },
     {
       "topic": "llm gateway (routing, tiers, fallbacks)",
