@@ -30,7 +30,7 @@
       "pages": [
         "observability.mdx"
       ],
-      "lastAuditedAt": null
+      "lastAuditedAt": "2026-08-10"
     },
     {
       "topic": "providers (api keys, subscriptions, local, custom)",
