@@ -68,7 +68,7 @@ Print the service URL:
 terraform output service_url
 ```
 
-Open the URL and create the first account. The first account becomes the admin.
+Open the URL and create the first account. Fresh installs redirect to `/setup`; the first account you create becomes the admin.
 
 Verify the deployment:
 
@@ -76,11 +76,16 @@ Verify the deployment:
 curl -fsS "$(terraform output -raw health_check_url)"
 ```
 
+## Request logs
+
+The stack provisions a private Cloud Storage bucket and mounts it at `/data/request-recordings` for [request logs](/request-logs). The deploy prints its name as the `recording_bucket` output.
+
 ## Production notes
 
 - Cloud SQL deletion protection is enabled by default.
 - Configure a custom domain before using OAuth callbacks in production.
 - Keep Secret Manager access limited to the Cloud Run service account.
+- The request logs bucket keeps its objects on teardown. Export or delete its contents before `deploystack uninstall`.
 
 Relevant Google Cloud docs:
 

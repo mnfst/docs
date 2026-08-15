@@ -52,7 +52,7 @@ The Compose file uses Coolify magic environment variables so the app URL, Postgr
 
 ## Open Manifest
 
-After deployment, open the generated Manifest URL and create the first admin account. The first account becomes the admin.
+After deployment, open the generated Manifest URL and create the first admin account. Fresh installs redirect to `/setup`; the first account you create becomes the admin.
 
 Verify the deployment:
 
@@ -65,11 +65,12 @@ curl -fsS https://<your-coolify-domain>/api/v1/health
 - Manifest Docker image `manifestdotbuild/manifest:6`.
 - PostgreSQL 16 container.
 - Persistent Docker volume for PostgreSQL data.
+- Persistent Docker volume for request logs, mounted at `/data/request-recordings`.
 - Generated session, encryption, database password, and public URL values.
 
 ## Production notes
 
-- Keep the PostgreSQL volume backed up through Coolify or your server provider.
+- Back up both Docker volumes through Coolify or your server provider: PostgreSQL data and the request logs volume at `/data/request-recordings`.
 - Use a real domain with HTTPS before enabling OAuth or email-based login flows.
 - The Compose file is the starting point for a future official Coolify one-click service template.
 
