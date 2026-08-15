@@ -119,7 +119,7 @@ Full variable list: [Environment variables](/reference/environment-variables#req
 
 ### Platforms without a persistent disk
 
-Railway, Render, Fly, Heroku, and Koyeb all give you an ephemeral filesystem, so local recordings there are wiped on every redeploy and every container restart. Point those deploys at S3-compatible storage, or accept that recordings only survive until the next deploy.
+The one-click templates set this up for you. Render mounts a persistent disk. Fly, AWS, and Google Cloud provision object storage during deploy. Heroku, Koyeb, and DigitalOcean collect your bucket and keys as part of template setup. On any other platform with an ephemeral filesystem, point recording at S3-compatible storage yourself, or recordings only survive until the next deploy.
 
 ## Related
 

@@ -72,7 +72,7 @@ fly logs --app <your-fly-app>
 - The template keeps one Machine running so Manifest is always available for agents.
 - For production, choose a larger Postgres configuration or Fly Managed Postgres instead of the small script default.
 - Add a custom domain before configuring OAuth callback URLs.
-- [Request logs](/request-logs) write to the Machine's local disk by default, which Fly replaces on each deploy. Attach a Fly Volume at `/data/request-recordings`, or point them at S3-compatible storage.
+- The deploy script creates a private Tigris bucket, stores its credentials as Fly secrets, and sets `REQUEST_RECORDING_STORAGE=s3` with the Tigris endpoint. [Request logs](/request-logs) persist across deploys and across scaled Machines. Nothing to attach manually.
 - Set `MANIFEST_TELEMETRY_DISABLED=1` as a Fly secret if you want to disable anonymous self-hosted telemetry.
 - Destroy both the app and database when testing is done.
 
