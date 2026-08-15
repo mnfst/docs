@@ -3,7 +3,7 @@ title: "LLM Gateway"
 description: "Every request passes through the gateway: limits check it, routing picks the model, and fallback catches it when that model fails."
 icon: "split"
 keywords:
-  ["LLM gateway", "model routing", "LLM router", "fallback chain", "hard limit", "custom tier", "default model", "424 fallback exhausted", "429 too many requests"]
+  ["LLM gateway", "model routing", "LLM router", "fallback chain", "hard limit", "custom tier", "default model", "fallback exhausted", "429 too many requests"]
 ---
 
 Point your client at Manifest instead of a provider, and every request goes through the gateway. Three things happen there: limits decide whether the request runs at all, routing picks the model, and fallback steps in when that model fails.
@@ -84,9 +84,9 @@ curl -X POST https://app.manifest.build/v1/chat/completions \
   }'
 ```
 
-The response comes back with `X-Manifest-Tier: direct`, so you can tell a direct call from a routed one. Direct model IDs work on the OpenAI-format endpoints (`/v1/chat/completions` and `/v1/responses`). Requests to the Anthropic `/v1/messages` endpoint always route through your default or custom tiers.
+The response comes back with `X-Manifest-Tier: direct`, so you can tell a direct call from a routed one. A direct model ID works on all three endpoints: `/v1/chat/completions`, `/v1/responses`, and the Anthropic `/v1/messages`.
 
-The model list is scoped to the harness key. A model may be missing because its provider is not connected yet, or because the provider exists in your workspace but is not enabled for this harness. If you send an unlisted model ID, Manifest returns [M302: Model not available](/errors/M302). Send `auto` to use routing.
+The model list is scoped to the harness key. A model may be missing because its provider is not connected yet, or because the provider exists in your workspace but is not enabled for this harness. If you send a model ID that has no connected provider route, Manifest returns [M302: Model not available](/errors/M302). Send `auto` to use routing.
 
 ## Fallback
 
@@ -94,7 +94,7 @@ When a model fails (provider outage, rate limit, bad request), Manifest retries 
 
 ### What triggers a fallback
 
-Any HTTP status code **>= 400** triggers a fallback, with one exception: **424 (Failed Dependency)** does not, since that's the status Manifest itself returns when the entire chain is exhausted. Retrying it would loop forever.
+Any HTTP status code **>= 400** triggers a fallback.
 
 | Status | Example |
 |--------|---------|
@@ -135,11 +135,11 @@ If your upstream client has its own timeout that fires at the same time, the cli
 
 ### Response headers
 
-When a fallback succeeds, the response carries `X-Manifest-Fallback-From` (the primary that failed) and `X-Manifest-Fallback-Index` (its position in the chain) on top of the standard routing headers. When the chain is exhausted, `X-Manifest-Fallback-Exhausted: true` is set and the request returns `424`. Full table: [Headers reference](/reference/headers).
+When a fallback succeeds, the response carries `X-Manifest-Fallback-From` (the primary that failed) and `X-Manifest-Fallback-Index` (its position in the chain) on top of the standard routing headers. When the chain is exhausted, `X-Manifest-Fallback-Exhausted: true` is set with body code `fallback_exhausted`, and the response keeps the primary model's real error status (for example 500 or 529). Full table: [Headers reference](/reference/headers).
 
 ## Hard limits
 
-A limit rule can block requests as well as email you. When a rule's action includes blocking and the harness is over its threshold for the current period, the gateway rejects the request with [M200](/errors/M200) and HTTP `429`:
+A limit rule can block requests as well as email you. When a rule's action includes blocking and the harness is over its threshold for the current period, the gateway returns [M200](/errors/M200) as an HTTP `200` response whose assistant message carries the block text, so your agent keeps flowing instead of throwing:
 
 ```text
 [🦚 Manifest M200] You hit your cost limit: $12.50 used, $10.00/day allowed. Adjust it here: https://app.manifest.build/...
