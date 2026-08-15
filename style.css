@@ -28,6 +28,13 @@ a[href="https://manifest.build"] img {
   --tw-bg-opacity: 1;
 }
 
+/* Sidebar bottom links: Book a call is already top right and Dashboard is in
+   the footer, so only GitHub and Discord stay */
+#sidebar li[id="https://app.manifest.build"],
+#sidebar li[id="https://calendly.com/sebastien-manifest/30min"] {
+  display: none;
+}
+
 /* Accent color on anchor links */
 .nav-anchor {
   border-color: #0f172a;
