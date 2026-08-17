@@ -14,7 +14,7 @@ keywords:
 See https://manifest.build/docs/errors/M201
 ```
 
-The HTTP status is `429`, so SDKs that respect retry-after will back off on their own.
+The HTTP status is `429`, which most SDKs treat as retryable and back off from on their own.
 
 ## Why it happened
 
