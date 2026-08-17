@@ -65,9 +65,13 @@ SEED_DATA=false
 DB_POOL_MAX=10
 AUTH_DB_POOL_MAX=5
 MANIFEST_TELEMETRY_DISABLED=0
+REQUEST_RECORDING_STORAGE=filesystem
+REQUEST_RECORDING_FILESYSTEM_PATH=/data/request-recordings
 ```
 
 Generate two different 64-character secrets with `openssl rand -hex 32`. Use an alphanumeric or hex PostgreSQL password in `DATABASE_URL`. If your password contains URL-reserved characters such as `@`, `:`, `/`, `%`, or `#`, percent-encode them before pasting the connection string.
+
+Add an app volume named `recordings` mounted at `/data/request-recordings` so [request logs](/request-logs) survive restarts and redeploys. This volume is single-instance; move to S3-compatible storage before running more than one replica.
 
 `AUTH_DB_POOL_MAX` is read by Manifest's Better Auth database pool. Set `MANIFEST_TELEMETRY_DISABLED=1` if you want to disable anonymous self-hosted telemetry.
 
