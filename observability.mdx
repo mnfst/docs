@@ -101,9 +101,11 @@ Alerts go to your account email. Check it's current in your profile settings.
 
 <div data-deploy="selfhosted">
 
-Set an email provider with the [`EMAIL_*` environment variables](/reference/environment-variables): `EMAIL_PROVIDER` (`resend`, `mailgun`, or `sendgrid`), `EMAIL_API_KEY`, `EMAIL_FROM`, and `EMAIL_DOMAIN` for Mailgun. The **Limits** page shows the address alerts go to.
+Pick a provider on the harness's **Limits** page: Resend, Mailgun, or SendGrid. Paste the API key and the notification address, then save. The saved provider appears as a card on the same page, where you can edit or remove it.
 
-Without an email provider, alerts are skipped. Blocking rules still work, since they don't need to send anything.
+You can set the same thing instance-wide with the [`EMAIL_*` environment variables](/reference/environment-variables): `EMAIL_PROVIDER` (`resend`, `mailgun`, or `sendgrid`), `EMAIL_API_KEY`, `EMAIL_FROM`, and `EMAIL_DOMAIN` for Mailgun. A provider saved in the dashboard takes precedence over the environment variables.
+
+Without an email provider from either path, alerts are skipped. Blocking rules still work, since they don't need to send anything.
 
 </div>
 
