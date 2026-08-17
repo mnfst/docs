@@ -206,7 +206,7 @@ The proxy returns a standard JSON error envelope:
 | `429` | Manifest rate limit tripped ([M201](/errors/M201), [M202](/errors/M202), [M203](/errors/M203)) |
 | `5xx` | Upstream provider error (triggers [fallback](/llm-gateway#fallback)) |
 
-A [hard limit](/llm-gateway#hard-limits) block ([M200](/errors/M200)) is not in this table: it comes back as an HTTP `200` chat completion whose assistant message carries the block text. When the fallback chain is exhausted, the response keeps the primary model's real error status and carries `X-Manifest-Fallback-Exhausted: true` with body code `fallback_exhausted`.
+A [hard limit](/llm-gateway#hard-limits) block ([M200](/errors/M200)) is not in this table: it comes back as an HTTP `200` chat completion whose assistant message carries the block text. When the fallback chain is exhausted, the response keeps the primary model's real error status and carries `X-Manifest-Fallback-Exhausted: true`; the body keeps the provider's own error code, or `fallback_exhausted` when there is none.
 
 ## Rate limits
 

@@ -135,7 +135,7 @@ If your upstream client has its own timeout that fires at the same time, the cli
 
 ### Response headers
 
-When a fallback succeeds, the response carries `X-Manifest-Fallback-From` (the primary that failed) and `X-Manifest-Fallback-Index` (its position in the chain) on top of the standard routing headers. When the chain is exhausted, `X-Manifest-Fallback-Exhausted: true` is set with body code `fallback_exhausted`, and the response keeps the primary model's real error status (for example 500 or 529). Full table: [Headers reference](/reference/headers).
+When a fallback succeeds, the response carries `X-Manifest-Fallback-From` (the primary that failed) and `X-Manifest-Fallback-Index` (its position in the chain) on top of the standard routing headers. When the chain is exhausted, `X-Manifest-Fallback-Exhausted: true` is set, the body carries the provider's own error code (or `fallback_exhausted` when there is none), and the response keeps the primary model's real error status (for example 500 or 529). Full table: [Headers reference](/reference/headers).
 
 ## Hard limits
 
