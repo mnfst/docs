@@ -44,7 +44,7 @@ When **every** model in the chain fails:
 
 | Header                          | Description                              |
 | ------------------------------- | ---------------------------------------- |
-| `X-Manifest-Fallback-Exhausted` | Set to `true`. Response status is `424`. |
+| `X-Manifest-Fallback-Exhausted` | Set to `true`. The response keeps the primary model's real error status; the body carries code `fallback_exhausted`. |
 
 ## Reading headers in code
 
