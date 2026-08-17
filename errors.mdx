@@ -16,6 +16,8 @@ See https://manifest.build/docs/errors/M100
 
 Look up the code below to see what it means and how to fix it.
 
+Except where a section says otherwise, chat and streaming clients receive these codes as an HTTP 200 assistant message carrying the error text, and the HTTP status codes named below apply to non-chat clients (SDKs and tools).
+
 ## Authentication (M001–M005)
 
 These fire when the bearer token on `/v1/chat/completions` is missing or wrong. They surface as HTTP 401 to non-chat clients.
@@ -40,11 +42,11 @@ Your Manifest key is fine, but provider credentials are missing or unusable. See
 
 ## Limits (M200–M204)
 
-You hit a usage cap, rate limit, or Free plan request quota. M200-M203 surface as HTTP 429. M204 surfaces as HTTP 402 because it is a billing plan restriction.
+You hit a usage cap, rate limit, or Free plan request quota. M200 comes back as an HTTP 200 assistant message for every client: the text rides in the assistant content, not in the HTTP status. M201-M203 surface as HTTP 429 for every client. M204 surfaces as HTTP 402 to non-chat clients because it is a billing plan restriction.
 
 | Code | What |
 |------|------|
-| [M200: Usage limit exceeded](/errors/M200) | Cost or message-count limit you set was crossed |
+| [M200: Usage limit exceeded](/errors/M200) | Cost or token limit you set was crossed |
 | [M201: Per-user rate limit exceeded](/errors/M201) | More than 200 requests/minute from one user |
 | [M202: Per-IP rate limit exceeded](/errors/M202) | More than 500 requests/minute from one IP |
 | [M203: Concurrency limit exceeded](/errors/M203) | More than 10 in-flight requests at once |
@@ -52,7 +54,7 @@ You hit a usage cap, rate limit, or Free plan request quota. M200-M203 surface a
 
 ## Request validation and model selection (M300–M303)
 
-M300 means the request body is malformed and surfaces as HTTP 400. M302 and M303 mean Manifest can't reach the model the request asked for; both come back as a friendly proxy message.
+M300 means the request body is malformed and surfaces as HTTP 400. M302 and M303 mean Manifest can't reach the model the request asked for. M302 comes back as an HTTP 200 assistant message for every client. M303 surfaces as HTTP 400 to non-chat clients.
 
 | Code | What |
 |------|------|
