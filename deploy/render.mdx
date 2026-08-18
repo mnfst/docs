@@ -63,8 +63,7 @@ curl -fsS https://<your-render-service>.onrender.com/api/v1/health
 
 - Render PostgreSQL connection strings are wired by the Blueprint.
 - Use a custom domain before configuring production OAuth callbacks.
-- If the instance is sleeping on a free plan, the first request can take longer.
-- [Request logs](/request-logs) write to local disk by default, which Render discards on redeploy. Point them at S3-compatible storage to keep logs.
+- The Blueprint mounts a 1 GB persistent disk `manifest-recordings` at `/data/request-recordings` and sets `REQUEST_RECORDING_STORAGE=filesystem`, so [request logs](/request-logs) survive redeploys. This disk is single-instance. Point recording at S3-compatible storage before you scale to more than one instance.
 
 Relevant Render docs:
 

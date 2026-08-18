@@ -66,6 +66,8 @@ The CloudFormation template generates:
 
 Manifest runs with `PORT=2099`, `BIND_ADDRESS=0.0.0.0`, and `MANIFEST_MODE=selfhosted`.
 
+The template also creates an S3 bucket for [request logs](/request-logs). It is retained by design, so deleting the CloudFormation stack leaves the bucket in place. Delete it by hand when you tear the deployment down.
+
 ## Open Manifest
 
 After deployment, the script prints `ServiceUrl` and `HealthCheckUrl`.

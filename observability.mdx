@@ -43,6 +43,12 @@ This is why the request count and the provider call count don't match, and why c
   </Card>
 </CardGroup>
 
+<div data-deploy="cloud">
+
+On the Free plan, the Overview covers up to 7 days of history; the 30-, 90-, and 365-day ranges need Pro.
+
+</div>
+
 ### What's on each request
 
 Opening a request in the log shows the whole story: the tier that routed it, the model and provider that served it, input and output tokens, computed cost, latency, the auth type used ([API key, subscription, or local](/reference/glossary#auth-type)), and every fallback hop with its own status. Failures carry an error code, so a Manifest rejection like [M100](/errors/M100) reads differently from a provider's own 500.
@@ -64,7 +70,7 @@ A limit rule watches one metric for one harness over a rolling period, and acts 
 | **Metric** | Tokens or cost |
 | **Threshold** | The number to watch for |
 | **Period** | Hour, day, week, or month |
-| **Action** | Email you, block further requests, or both |
+| **Action** | Every rule emails you. Turn on blocking to also stop requests over the threshold |
 
 Blocking is the gateway half of this and is covered in [hard limits](/llm-gateway#hard-limits). The rest of this section is the alerting half.
 
@@ -76,7 +82,7 @@ Blocking is the gateway half of this and is covered in [hard limits](/llm-gatewa
     Click **+ Create rule**.
   </Step>
   <Step title="Configure it">
-    Pick the metric, threshold, period, and whether it should notify, block, or both.
+    Pick the metric, threshold, and period. Every rule emails you; turn on **Block requests when exceeded** to also stop requests over the threshold.
   </Step>
   <Step title="Save">
     The rule takes effect immediately.
@@ -95,9 +101,11 @@ Alerts go to your account email. Check it's current in your profile settings.
 
 <div data-deploy="selfhosted">
 
-Configure a provider on the **Limits** page: Resend, Mailgun, or SendGrid. Enter the API key, domain, and notification address, then save. You can set the same thing with the [`EMAIL_*` environment variables](/reference/environment-variables).
+Pick a provider on the harness's **Limits** page: Resend, Mailgun, or SendGrid. Paste the API key and the notification address, then save. The saved provider appears as a card on the same page, where you can edit or remove it.
 
-Without an email provider, alerts are skipped. Blocking rules still work, since they don't need to send anything.
+You can set the same thing instance-wide with the [`EMAIL_*` environment variables](/reference/environment-variables): `EMAIL_PROVIDER` (`resend`, `mailgun`, or `sendgrid`), `EMAIL_API_KEY`, `EMAIL_FROM`, and `EMAIL_DOMAIN` for Mailgun. A provider saved in the dashboard takes precedence over the environment variables.
+
+Without an email provider from either path, alerts are skipped. Blocking rules still work, since they don't need to send anything.
 
 </div>
 
