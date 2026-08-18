@@ -11,16 +11,16 @@ Two separate things happen to data as requests flow through Manifest: what your 
 
 ## What Manifest stores
 
-Manifest always keeps metadata about each request: model, provider, tier, token counts, cost, latency, and a scrubbed error message. Inline image data is stripped out, and error text is scrubbed for secrets before it lands. The usage and cost views in the dashboard are built from that metadata alone. See [Observability](/observability) for what the record looks like in practice.
+Manifest always keeps metadata about each request: model, provider, tier, token counts, cost, latency, and an error message. Error text is scrubbed for secrets before it lands, and the request headers Manifest stores drop credentials and IP addresses. The usage and cost views in the dashboard are built from that metadata alone. See [Observability](/observability) for what the record looks like in practice.
 
 Message bodies are separate, and optional. With [request logs](/request-logs) on for a harness, Manifest also stores the request and response bodies of each provider attempt so you can read them back in the dashboard. New harnesses have it enabled; to make sure a harness records its logs, check its **Settings → Logs**.
 
-Recorded bodies are held outside the database, in the object storage your instance is configured for, and deleted on a retention schedule. With recording off for a harness, that harness's prompts and completions stay between you and the provider, exactly as before.
+A stored body is exactly what went over the wire: every message, system instruction, tool definition and inline image, at full length. Manifest doesn't redact or truncate it, and there is no size limit. Stored bodies are held outside the database, in the object storage your instance is configured for, and deleted on a retention schedule. With logs off for a harness, that harness's prompts and completions stay between you and the provider.
 
 <Note>
-  If a harness handles data you'd rather Manifest never hold onto, turn message
-  recording off on its **Settings** page. Metadata collection isn't affected
-  either way.
+  If a harness handles data you'd rather Manifest never hold onto, switch
+  **Enable logs** off in its **Settings → Logs** section. Metadata collection
+  isn't affected either way.
 </Note>
 
 ## Anonymous telemetry
@@ -39,16 +39,16 @@ Once a day, each self-hosted install sends us a small anonymous report. That's h
 | `schema_version` | `1` | So the shape can grow without breaking old clients. Stays `1` for additive changes; bumps on breaking ones |
 | `install_id` | random UUIDv4 | Count distinct installs. Generated once on first boot, persisted, never rotated |
 | `manifest_version` | `5.47.0` | Version adoption across the fleet |
-| `messages_total` | `1284` | Daily activity per install |
-| `messages_by_provider` | `{"anthropic": 700, "openai": 500}` | Provider mix. Anything we don't recognize collapses to `"custom"`, so self-hosted provider names and URLs stay local |
-| `messages_by_tier` | `{"default": 900, "simple": 300, ...}` | Routing tier usage |
-| `messages_by_auth_type` | `{"api_key": 1200, "subscription": 84}` | API key vs. paid-subscription usage |
+| `messages_total` | `1284` | Daily activity per install. One count per provider attempt, so a request that fell back twice counts three. Requests Manifest blocked count too |
+| `messages_by_provider` | `{"anthropic": 700, "openai": 500}` | Provider mix. Anything we don't recognize collapses to `"custom"`, so self-hosted provider names and URLs stay local. Activity with no provider, like a blocked request, lands in `"unknown"` |
+| `messages_by_tier` | `{"default": 900, "simple": 300, ...}` | Routing tier usage. A tier outside the known set collapses to `"other"`, and activity with no tier lands in `"unknown"` |
+| `messages_by_auth_type` | `{"api_key": 1200, "subscription": 84}` | API key, paid subscription or local usage. Anything else collapses to `"other"`, and activity with no auth type lands in `"unknown"` |
 | `tokens_input_total` | `1_450_000` | Volume-weighted signal |
 | `tokens_output_total` | `890_000` | Same |
 | `cost_usd_total` <sup>†</sup> | `47.83` | Sum of `cost_usd` Manifest computed at routing time, rounded to cents. Lets us see real dollar throughput instead of guessing from token counts. `0` for Ollama-only / free-API installs |
 | `cost_usd_by_provider` <sup>†</sup> | `{"anthropic": 30.50, "openai": 17.33}` | Per-provider split of `cost_usd_total`, rounded to cents. Same `"custom"` collapse rule as `messages_by_provider` — admin-configured BYOK pricing is never keyed by the raw provider name |
 | `agents_total` | `4` | Configuration scale |
-| `agents_by_platform` | `{"openclaw": 3, "hermes": 1}` | Which agent clients people use |
+| `agents_by_platform` | `{"openclaw": 3, "hermes": 1}` | Which agent clients people use. A harness whose platform is `other` is keyed by its category instead: `personal:other`, `app:other` or `coding:other` |
 | `platform` | `linux` / `darwin` / `windows` | OS distribution |
 | `arch` | `x64` / `arm64` | Architecture distribution |
 
