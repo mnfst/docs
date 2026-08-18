@@ -50,7 +50,7 @@ curl -X POST http://localhost:2099/v1/chat/completions \
   }'
 ```
 
-The body is forwarded verbatim to the resolved provider, with `model` rewritten to the actual model ID. All standard OpenAI fields (`temperature`, `max_tokens`, `tools`, `tool_choice`, `response_format`, `stream`, etc.) pass through.
+Manifest adapts the body to the resolved provider: it rewrites `model` to the actual model ID, converts the payload to the provider's shape, renames parameters where the provider expects another name (`max_tokens` becomes `max_completion_tokens` and back), and merges the model parameters saved on your harness into every routed attempt. OpenAI-only fields such as `stream_options`, `reasoning_effort`, `modalities`, `audio`, and `prediction` survive only on OpenAI and OpenRouter routes; on other providers they are dropped silently.
 
 ## Anthropic messages
 
@@ -77,7 +77,7 @@ curl http://localhost:2099/v1/models \
   -H "Authorization: Bearer mnfst_YOUR_KEY_HERE"
 ```
 
-Send `auto` to let Manifest route, or send any listed model ID to skip routing and go straight to that provider. If you send a model ID that is not in this harness-specific list, Manifest returns [M302: Model not available](/errors/M302). See [Routing → Route a specific model](/llm-gateway#route-a-specific-model).
+Send `auto` to let Manifest route, or send any listed model ID to skip routing and go straight to that provider. If you send a model ID that no connected provider can serve, Manifest returns [M302: Model not available](/errors/M302). See [Routing → Route a specific model](/llm-gateway#route-a-specific-model).
 
 ### Inspect model capabilities
 
@@ -185,7 +185,7 @@ Routing and fallback both work with streams. If the primary model fails before t
 
 ## Errors
 
-The proxy returns a standard JSON error envelope:
+Streaming and chat clients receive errors as an HTTP `200` completion with the message inside the assistant turn; the statuses below are what tool and SDK callers see. The envelope:
 
 ```json
 {
@@ -203,17 +203,17 @@ The proxy returns a standard JSON error envelope:
 |---|---|
 | `401` | Invalid or missing `Authorization` header |
 | `402` | Manifest Free plan quota reached (`error.code = PLAN_LIMIT_REQUESTS`, [M204](/errors/M204)), or provider billing/quota error from the upstream |
-| `429` | Manifest rate limit tripped ([M201](/errors/M201), [M202](/errors/M202), [M203](/errors/M203)) |
+| `429` | Manifest rate limit tripped ([M201](/errors/M201), [M202](/errors/M202), [M203](/errors/M203)), or a rate limit the provider itself returned |
 | `5xx` | Upstream provider error (triggers [fallback](/llm-gateway#fallback)) |
 
 A [hard limit](/llm-gateway#hard-limits) block ([M200](/errors/M200)) is not in this table: it comes back as an HTTP `200` chat completion whose assistant message carries the block text. When the fallback chain is exhausted, the response keeps the primary model's real error status and carries `X-Manifest-Fallback-Exhausted: true`; the body keeps the provider's own error code, or `fallback_exhausted` when there is none.
 
 ## Rate limits
 
-Self-hosted instances default to **100 requests per 60 seconds** per harness. Override with `THROTTLE_TTL` and `THROTTLE_LIMIT` ([Environment variables](/reference/environment-variables)).
+The gateway allows **200 requests per minute per workspace** ([M201](/errors/M201)), **500 requests per minute per IP** ([M202](/errors/M202)), and **10 requests in flight at once** ([M203](/errors/M203)). The caps are the same on Cloud and self-hosted, and no setting changes them.
 
-Cloud rate limits are tied to your plan and shown in the dashboard.
+Your Cloud plan changes your monthly request quota ([M204](/errors/M204)), not the per-minute caps.
 
 ## Response headers
 
-Every response carries [routing headers](/reference/headers) so your client can see which model and tier handled the request, without parsing the response body.
+Routed responses carry [routing headers](/reference/headers) so your client can see which model and tier handled the request, without parsing the response body. A request rejected before routing runs (bad key, quota, rate limit) carries none.
