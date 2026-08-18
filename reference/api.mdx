@@ -50,7 +50,7 @@ curl -X POST http://localhost:2099/v1/chat/completions \
   }'
 ```
 
-Manifest adapts the body to the resolved provider: it rewrites `model` to the actual model ID, converts the payload to the provider's shape, renames parameters where the provider expects another name (`max_tokens` becomes `max_completion_tokens` and back), and merges the model parameters saved on your harness into every routed attempt. OpenAI-only fields such as `stream_options`, `reasoning_effort`, `modalities`, `audio`, and `prediction` survive only on OpenAI and OpenRouter routes; on other providers they are dropped silently.
+Manifest adapts the body to the provider it picked. It replaces `model` with the real model ID. It converts the body to the format that provider expects. It renames parameters the provider spells differently, like `max_tokens` and `max_completion_tokens`. And it merges the model parameters saved on your harness into every attempt. Some fields only exist at OpenAI: `stream_options`, `reasoning_effort`, `modalities`, `audio`, and `prediction`. Those reach OpenAI and OpenRouter. Every other provider gets the request without them, and nothing warns you.
 
 ## Anthropic messages
 
@@ -185,7 +185,7 @@ Routing and fallback both work with streams. If the primary model fails before t
 
 ## Errors
 
-Streaming and chat clients receive errors as an HTTP `200` completion with the message inside the assistant turn; the statuses below are what tool and SDK callers see. The envelope:
+Errors come in two shapes, depending on the caller. A tool or SDK call gets a real HTTP status and the JSON envelope below. A chat or streaming client gets an HTTP `200` that looks like a normal completion, and the error text sits inside the assistant message.
 
 ```json
 {
@@ -210,10 +210,10 @@ A [hard limit](/llm-gateway#hard-limits) block ([M200](/errors/M200)) is not in 
 
 ## Rate limits
 
-The gateway allows **200 requests per minute per workspace** ([M201](/errors/M201)), **500 requests per minute per IP** ([M202](/errors/M202)), and **10 requests in flight at once** ([M203](/errors/M203)). The caps are the same on Cloud and self-hosted, and no setting changes them.
+The gateway enforces three caps. A workspace can send **200 requests per minute** ([M201](/errors/M201)). An IP can send **500 requests per minute** ([M202](/errors/M202)). A workspace can have **10 requests in flight at once** ([M203](/errors/M203)). The caps are the same on Cloud and self-hosted. No setting changes them.
 
-Your Cloud plan changes your monthly request quota ([M204](/errors/M204)), not the per-minute caps.
+Your Cloud plan sets your monthly request quota ([M204](/errors/M204)). The per-minute caps stay the same on every plan.
 
 ## Response headers
 
-Routed responses carry [routing headers](/reference/headers) so your client can see which model and tier handled the request, without parsing the response body. A request rejected before routing runs (bad key, quota, rate limit) carries none.
+Routed responses carry [routing headers](/reference/headers). They tell your client which model and tier handled the request, with no need to parse the response body. A request rejected before routing (bad key, quota, rate limit) carries none.

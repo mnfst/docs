@@ -38,11 +38,11 @@ The model ID you send to opt into routing. When Manifest sees `auto`, it applies
 
 ## Custom tier
 
-A routing rule matched on a request header. You choose the header key and value on the dashboard and pin the tier to its own model and fallback chain. When a request carries that header, it routes to the tier's model instead of the default, even when the body names an explicit model ID. See [Routing → Custom](/llm-gateway#custom-tiers).
+A routing rule matched on a request header. You choose the header key and value on the dashboard and pin the tier to its own model and fallback chain. When a request carries that header, it routes to the tier's model instead of the default. That holds even when the body names an explicit model ID. See [Routing → Custom](/llm-gateway#custom-tiers).
 
 ## Direct routing
 
-Sending a real model ID (one that `GET /v1/models` lists) instead of `auto`. Manifest forwards the request straight to that provider and skips tiers and fallbacks. The response carries `X-Manifest-Tier: direct`. One exception: a matching custom-tier header takes precedence over the model ID.
+Sending a real model ID (one that `GET /v1/models` lists) instead of `auto`. Manifest forwards the request straight to that provider and skips tiers and fallbacks. The response carries `X-Manifest-Tier: direct`. One exception: if the request also carries a matching custom-tier header, the header wins.
 
 ## Fallback
 
@@ -50,7 +50,7 @@ The retry mechanism that kicks in when the primary model fails. Manifest tries t
 
 ## Fallback chain
 
-The ordered list of models tried for a single tier, primary first. Up to 5 models. When all of them fail, the response keeps the primary model's real error status and carries `X-Manifest-Fallback-Exhausted: true`.
+The ordered list of models tried for a single tier, primary first. Up to 5 models. When all of them fail, Manifest returns the primary model's real error status, plus the header `X-Manifest-Fallback-Exhausted: true`.
 
 ## Provider
 

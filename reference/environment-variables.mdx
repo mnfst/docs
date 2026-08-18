@@ -37,7 +37,7 @@ Manifest reads its configuration from environment variables. In the bundled Dock
 | `MANIFEST_DISABLE_HSTS` | — | Set `1` to silence the boot warning about HSTS being unavailable on a plain-HTTP deployment. Prefer an `https://` `BETTER_AUTH_URL` anywhere reachable from the internet |
 | `WINGMAN_CORS_ORIGINS` | — | Extra browser origins allowed to call the gateway, comma-separated. Useful when you host your own copy of [Wingman](https://github.com/mnfst/wingman), the open-source gateway tester; the hosted one at `wingman.manifest.build` is always allowed |
 | `THROTTLE_TTL` | `60000` | Window (ms) for the rate limit on the dashboard's own API calls. Does not apply to gateway traffic on `/v1` |
-| `THROTTLE_LIMIT` | `100` | Max dashboard API calls per window. The gateway caps (200/min per workspace, 500/min per IP, 10 in flight) are fixed and not configurable |
+| `THROTTLE_LIMIT` | `100` | Max dashboard API calls per window. The gateway has its own fixed caps, see [Rate limits](/reference/api#rate-limits) |
 
 ## Database
 

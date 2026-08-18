@@ -49,7 +49,7 @@ Every harness has a default tier: one model plus up to five fallbacks. You set i
 
 ### Custom tiers
 
-Custom tiers route by request header. You create a tier on the dashboard, give it a header key and value, and pin it to a model with its own fallbacks. When an incoming request carries that header, Manifest sends it to that tier's model instead of the default, even when the body names an explicit model ID — the header wins.
+Custom tiers route by request header. You create a tier on the dashboard, give it a header key and value, and pin it to a model with its own fallbacks. When an incoming request carries that header, Manifest sends it to that tier's model instead of the default. The header wins even when the body names an explicit model ID.
 
 The header key is yours to choose (lowercase letters, numbers, and hyphens). A few names are reserved and rejected, including `authorization`, `cookie`, and `x-api-key`. Send the header from your client like any other:
 
