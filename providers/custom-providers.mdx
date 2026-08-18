@@ -51,7 +51,7 @@ Manifest discovers models by hitting `GET <base_url>/v1/models` and reading the 
 
 ## Security
 
-User-supplied URLs are revalidated on every request to defend against SSRF. On Manifest Cloud, a custom provider must use a public `https://` URL. Self-hosted deployments also accept private addresses and plain `http://`, so they can reach a server inside your own network.
+User-supplied URLs are revalidated on every request to defend against SSRF. On Manifest Cloud, Manifest blocks resolution to private IP ranges (`10.x`, `192.168.x`, `127.x`, link-local): a custom provider must use a public `https://` URL. Self-hosted deployments accept private addresses and plain `http://`, so they can reach a server inside your own network.
 
 <Warning>
   Custom providers run with your Manifest instance's network access. If you
