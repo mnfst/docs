@@ -32,16 +32,19 @@ If you already pay for ChatGPT Plus, Claude Max, GitHub Copilot, or one of the o
 | [OpenCode](https://opencode.ai)                       | OpenCode Go          | Subscription token |
 | [Ollama Cloud](https://ollama.com)                    | Ollama Cloud         | Subscription token |
 
+<Note>
+  The Kimi Coding Plan serves `k3`, `k3-256k`, `kimi-for-coding` and
+  `kimi-for-coding-highspeed`. If a tier or a fallback still points at
+  `kimi-k3`, click **Refresh models** on the connection and pin one of these
+  ids instead.
+</Note>
+
 ## Connect a subscription
 
 <Steps>
-  <Step title="Open the Routing page">
-    In the dashboard, open **Routing** and click the provider tile.
-  </Step>
-  <Step title="Pick the Subscription tab">
-    Providers that take either credential show two tabs (**API Key** and
-    **Subscription**); pick **Subscription**. Subscription-only providers, like
-    GitHub Copilot and ClinePass, go straight there.
+  <Step title="Open the Subscriptions page">
+    In the dashboard sidebar, open **Providers → Subscriptions** and click
+    **Connect** on the provider.
   </Step>
   <Step title="Complete the auth flow">
     Manifest opens the provider's OAuth page, shows you a device code to enter,
@@ -49,6 +52,8 @@ If you already pay for ChatGPT Plus, Claude Max, GitHub Copilot, or one of the o
     you're routed.
   </Step>
 </Steps>
+
+A model your plan just gained doesn't show up on its own. Click **Refresh models** on the connection to pick it up.
 
 ## How auth works per provider
 
