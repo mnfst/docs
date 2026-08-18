@@ -325,7 +325,7 @@ The first two are required and the installer generates both, so a default instal
   The installer also generates `MANIFEST_ENCRYPTION_KEY`. If you are installing by hand, set it too. Left unset, Manifest falls back to `BETTER_AUTH_SECRET` for at-rest encryption and warns on every boot — meaning one leaked session-signing secret also decrypts every stored provider key and OAuth token. Set it **before first boot**: introducing it later means re-encrypting what is already in the database.
 </Warning>
 
-Everything else is optional: rate limits, provider timeouts, email delivery for alerts and password resets, OAuth logins, connection-pool sizing, recording storage and retention, Autofix, and Sentry. See [Environment variables](/reference/environment-variables) for the full list with defaults.
+Everything else is optional: provider timeouts, email delivery for alerts and password resets, OAuth logins, connection-pool sizing, recording storage and retention, Autofix, and Sentry. See [Environment variables](/reference/environment-variables) for the full list with defaults.
 
 <Note>
   `NODE_ENV` and `SEED_DATA` are fixed by the bundled compose file and are not knobs for a self-hosted install. The image is a production artifact, and the demo-data seeder refuses to run under `NODE_ENV=production` whatever `SEED_DATA` says — use the first-run setup wizard to create your admin account.
