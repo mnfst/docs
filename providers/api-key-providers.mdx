@@ -91,6 +91,8 @@ Each provider issues keys with a recognizable prefix. Useful for catching paste 
 
 Providers not listed here (Cerebras, Kilo, OpenCode Zen) issue keys with no fixed prefix.
 
+For AWS Bedrock and NVIDIA NIM the prefix is a hint, not a rule: Manifest accepts any key shape for them, and a wrong key fails the live validation call instead.
+
 ## Regional providers
 
 Some providers serve more than one region. Alibaba Cloud, AWS Bedrock, and MiniMax let you pick a region when you connect them, and Manifest routes to the matching endpoint.
