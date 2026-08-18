@@ -25,7 +25,7 @@ Recording happens per **provider attempt**, not per request. A request that fall
 | **Response** | The parsed JSON body, or for a streamed attempt, the raw SSE stream as it arrived |
 | **Wire format** | Which protocol the exchange used, so the drawer can render it correctly |
 
-A request Manifest blocked itself, on a [hard limit](/llm-gateway#hard-limits) or a malformed body, has zero provider attempts and so no recording. There was no exchange to record.
+A request Manifest blocked itself, on a [hard limit](/llm-gateway#hard-limits) or a malformed body, still lists one attempt, labelled with the model you asked for or **No provider**. It carries the failure status and no **Messages**, **Tools**, or **Raw** tab: Manifest sent nothing to a provider, so there is nothing to read back.
 
 ## Reading it back
 
@@ -36,6 +36,10 @@ Open a request in the dashboard's **Requests** page and pick an attempt in the *
 </Frame>
 
 The **Messages** tab renders the exchange as a conversation, with a rail down the side listing every turn. Search the rail or filter it by role, and click any row to jump to that turn in the main pane. Assistant turns show the tool calls the model actually made, not the tool definitions your client offered it.
+
+<Frame caption="The Messages tab: the turn rail with its role filters, and the conversation in the main pane.">
+  <img src="/images/request-logs-messages.png" alt="A request's Messages tab showing the turn rail with role filter pills and the conversation cards, including a tool call and its result" />
+</Frame>
 
 ## Turning it on
 
@@ -63,6 +67,8 @@ Recordings are deleted on a schedule. The metadata row in the request log stays;
 | Cloud Free | 7 days |
 | Cloud Pro | 365 days |
 | Self-hosted | 365 days |
+
+Cloud Pro keeps 365 days only while the subscription is active or in a trial. A canceled workspace, or one whose payment failed, drops to 7 days, and the nightly cleanup applies that on its next run, deleting everything older than 7 days.
 
 Self-hosted installs can override this with `REQUEST_RECORDING_RETENTION_DAYS`. Setting it also overrides the per-plan split, so every recording on the instance expires on the same schedule.
 
@@ -116,6 +122,16 @@ Recordings don't live in Postgres. They're gzipped and written to object storage
 </Warning>
 
 Full variable list: [Environment variables](/reference/environment-variables#request-recordings).
+
+### Check it's working
+
+A storage problem never stops traffic, and the dashboard never mentions it. Flipping **Enable logs** on still confirms the change, and attempts come back without **Messages**, **Tools**, or **Raw** tabs, exactly as if logs were off. The server output is the only place the problem shows.
+
+```bash
+docker compose logs manifest | grep "Request recording storage"
+```
+
+A line reading `Request recording storage unavailable: <reason>` means Manifest is storing nothing, and the reason names what to fix. No such line means the backend resolved.
 
 ### Platforms without a persistent disk
 
