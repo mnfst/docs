@@ -204,8 +204,14 @@ docker run -d \
 By default the compose file binds port 2099 to `127.0.0.1` only. The dashboard is reachable from the host but not from other machines on the network. To expose it on the LAN:
 
 <Steps>
-  <Step title="Change the port binding">
-    Edit `docker-compose.yml` and change the `ports` line from `"127.0.0.1:2099:2099"` to `"2099:2099"`.
+  <Step title="Bind to all interfaces">
+    In `.env`, set:
+
+    ```bash
+    HOST_BIND_ADDRESS=0.0.0.0
+    ```
+
+    Editing `docker-compose.yml` by hand does not survive an upgrade; `.env` does.
   </Step>
   <Step title="Set BETTER_AUTH_URL">
     In `.env`, set `BETTER_AUTH_URL` to the host you'll reach the dashboard on, e.g. `http://192.168.1.20:2099` or `https://manifest.mydomain.com`. This must match the URL in the browser or Better Auth will reject the login with "Invalid origin".
@@ -310,6 +316,7 @@ docker compose down -v    # destroys all data
 | `MANIFEST_ENCRYPTION_KEY` | Recommended | falls back to `BETTER_AUTH_SECRET` | Separate 32+ char key encrypting stored provider keys and OAuth tokens |
 | `BETTER_AUTH_URL` | No | `http://localhost:${PORT}` | Public URL. Must match the URL in your browser |
 | `PORT` | No | `2099` | Dashboard port — sets the published host port and the internal listener |
+| `HOST_BIND_ADDRESS` | No | `127.0.0.1` | Host interface the dashboard port binds to. Set `0.0.0.0` to reach it over the LAN |
 | `MANIFEST_DISABLE_HSTS` | No | unset | Set `1` to silence the boot warning about serving over plain HTTP |
 
 The first two are required and the installer generates both, so a default install boots without you setting anything.
@@ -323,7 +330,7 @@ Everything else is optional: rate limits, provider timeouts, email delivery for 
 <Note>
   `NODE_ENV` and `SEED_DATA` are fixed by the bundled compose file and are not knobs for a self-hosted install. The image is a production artifact, and the demo-data seeder refuses to run under `NODE_ENV=production` whatever `SEED_DATA` says — use the first-run setup wizard to create your admin account.
 
-  `BIND_ADDRESS` is likewise set by the image (`0.0.0.0`, so the container is reachable through Docker's port mapping); restrict exposure with the `ports` line in `docker-compose.yml`, not this variable.
+  `BIND_ADDRESS` is likewise set by the image (`0.0.0.0`, so the container is reachable through Docker's port mapping); control host exposure with `HOST_BIND_ADDRESS` in `.env`, not this variable.
 </Note>
 
 ## Stop and clean up
