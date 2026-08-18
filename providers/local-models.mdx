@@ -48,8 +48,9 @@ All three speak OpenAI-compatible `/v1/chat/completions` and accept any GGUF mod
 ## Connect to Manifest
 
 <Steps>
-  <Step title="Open the Routing page">
-    In the dashboard, click the runtime tile (Ollama, LM Studio, or llama.cpp).
+  <Step title="Open the Local page">
+    In the dashboard sidebar, open **Providers → Local** and click **Connect** on
+    your runtime (Ollama, LM Studio, or llama.cpp).
   </Step>
   <Step title="Confirm the server is reachable">
     Manifest probes `http://localhost:<default-port>/v1/models`. If the probe succeeds, every loaded model appears for routing.
