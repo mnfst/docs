@@ -159,6 +159,12 @@ Sentry is opt-in and stays off unless you give it a DSN.
 |---|---|---|
 | `SHUTDOWN_DRAIN_MS` | `10000` | How long the server keeps serving traffic after a termination signal while reporting unhealthy, so a load balancer can deregister it first. Set `0` to shut down immediately |
 
+## Image version
+
+| Variable | Default | Description |
+|---|---|---|
+| `MANIFEST_VERSION` | `latest` | Image tag the bundled compose file pulls. Set `6` to follow a major line, or `6.18.0` to pin one release. Docker Compose substitutes it into the image name; the app itself never reads it. See [Image tags](/self-hosted#image-tags) |
+
 ## Postgres bundled volume
 
 When you run the bundled compose file, Manifest brings up its own Postgres container. To use a stronger password than the default, set **both** of these. They must agree, and special characters in the password must be percent-encoded in `DATABASE_URL`:
