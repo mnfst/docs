@@ -1,7 +1,7 @@
 ---
 title: "M102: Provider subscription credentials unusable"
 sidebarTitle: "M102"
-description: "Manifest error M102 fires when routing picks a subscription provider whose OAuth or refresh credentials cannot be used. Fix: reconnect the subscription on Routing."
+description: "Manifest error M102 fires when routing picks a subscription provider whose OAuth or refresh credentials cannot be used. Fix: reconnect the subscription from Providers → Subscriptions."
 icon: "plug-zap"
 keywords:
   [
@@ -43,7 +43,7 @@ When fallback routes are configured, Manifest records the M102 hop and continues
 ## How to fix it
 
 1. Open the dashboard link in the error message. It goes straight to the harness's **Routing** page.
-2. On the provider tile, open the **Subscription** tab and reconnect (re-run OAuth, device code, or paste a fresh token).
+2. Open **Providers → Subscriptions** in the sidebar, click **Connect** on the provider, and redo the auth: OAuth, device code, or a fresh token.
 3. Optionally add a working [API key](/providers/api-key-providers) or another [subscription](/providers/subscription-based-providers) as a fallback so a dead primary does not block traffic.
 4. Retry the request.
 
