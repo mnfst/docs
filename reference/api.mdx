@@ -3,7 +3,7 @@ title: "API"
 description: "The Manifest proxy speaks both OpenAI and Anthropic. Endpoints, auth, streaming, and error responses."
 icon: "code"
 keywords:
-  ["chat completions", "responses API", "Anthropic messages", "auto", "v1/models", "streaming", "SSE", "424 fallback exhausted"]
+  ["chat completions", "responses API", "Anthropic messages", "auto", "v1/models", "streaming", "SSE", "fallback exhausted"]
 ---
 
 Manifest exposes both OpenAI and Anthropic-format endpoints on one proxy. Point your client at the Manifest URL, send `auto` as the model, and routing picks the real model behind the scenes.
@@ -190,22 +190,23 @@ The proxy returns a standard JSON error envelope:
 ```json
 {
   "error": {
-    "message": "Limit exceeded: cost usage ($1.23) exceeds $1.00 per day",
-    "type": "limit_exceeded",
-    "code": 429
+    "message": "[🦚 Manifest M005] I don't recognize this key. ...",
+    "type": "auth_error",
+    "code": "manifest_auth"
   }
 }
 ```
+
+`error.code` is a string identifier, never the numeric HTTP status.
 
 | Status | Meaning |
 |---|---|
 | `401` | Invalid or missing `Authorization` header |
 | `402` | Manifest Free plan quota reached (`error.code = PLAN_LIMIT_REQUESTS`, [M204](/errors/M204)), or provider billing/quota error from the upstream |
-| `424` | Fallback chain exhausted (all configured models failed) |
-| `429` | [Hard limit](/llm-gateway#hard-limits) hit ([M200](/errors/M200)), or Manifest rate limit tripped |
+| `429` | Manifest rate limit tripped ([M201](/errors/M201), [M202](/errors/M202), [M203](/errors/M203)) |
 | `5xx` | Upstream provider error (triggers [fallback](/llm-gateway#fallback)) |
 
-Status `424` is the only one that **does not** trigger a fallback. Manifest returns it itself when the chain is exhausted, so re-routing it would loop forever.
+A [hard limit](/llm-gateway#hard-limits) block ([M200](/errors/M200)) is not in this table: it comes back as an HTTP `200` chat completion whose assistant message carries the block text. When the fallback chain is exhausted, the response keeps the primary model's real error status and carries `X-Manifest-Fallback-Exhausted: true`; the body keeps the provider's own error code, or `fallback_exhausted` when there is none.
 
 ## Rate limits
 

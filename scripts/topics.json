@@ -8,7 +8,7 @@
         "observability.mdx",
         "reference/telemetry.mdx"
       ],
-      "lastAuditedAt": "2026-08-06"
+      "lastAuditedAt": "2026-08-17"
     },
     {
       "topic": "autofix",
@@ -66,14 +66,14 @@
       "pages": [
         "reference/"
       ],
-      "lastAuditedAt": null
+      "lastAuditedAt": "2026-08-16"
     },
     {
       "topic": "getting started (introduction, first request)",
       "pages": [
         "introduction.mdx"
       ],
-      "lastAuditedAt": "2026-08-07"
+      "lastAuditedAt": "2026-08-18"
     }
   ]
 }

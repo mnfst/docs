@@ -1,10 +1,10 @@
 ---
 title: "M203: Concurrency limit exceeded"
 sidebarTitle: "M203"
-description: "Manifest error M203 fires when a harness has more than 10 in-flight requests. Returns HTTP 429. Common with parallel streaming. Fix: reduce parallelism."
+description: "Manifest error M203 fires when a workspace has more than 10 in-flight requests. Returns HTTP 429. Common with parallel streaming. Fix: reduce parallelism."
 icon: "timer"
 keywords:
-  ["M203", "Manifest M203", "concurrency limit", "in-flight requests", "429 Too Many Requests", "parallel streams", "CONCURRENCY_MAX", "Manifest limits"]
+  ["M203", "Manifest M203", "concurrency limit", "in-flight requests", "429 Too Many Requests", "parallel streams", "Manifest limits"]
 ---
 
 ## What you saw
@@ -16,13 +16,13 @@ See https://manifest.build/docs/errors/M203
 
 ## Why it happened
 
-Manifest caps in-flight requests per harness at 10 by default. Streaming completions hold a slot until the stream ends, so an agent that fires off parallel streams can hit this fast.
+Manifest caps in-flight requests at 10 per workspace, shared by all its harnesses. Streaming completions hold a slot until the stream ends, so an agent that fires off parallel streams can hit this fast.
 
 ## How to fix it
 
 1. Let in-flight requests finish, then retry. Most SDKs handle this automatically with backoff on `429`.
 2. Reduce parallelism on the client side. Most agents only need one or two concurrent calls.
-3. On a self-hosted install, raise `CONCURRENCY_MAX` in `proxy-rate-limiter.ts`.
+3. The 10 concurrent-request cap is a fixed guardrail. No env var or setting changes it, self-hosted included. Reduce parallelism as in step 2.
 
 ## Related
 
