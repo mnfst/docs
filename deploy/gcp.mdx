@@ -78,7 +78,7 @@ curl -fsS "$(terraform output -raw health_check_url)"
 
 ## Request logs
 
-The stack provisions a private Cloud Storage bucket and mounts it at `/data/request-recordings` for [request logs](/request-logs). The deploy prints its name as the `recording_bucket` output.
+The stack provisions a private Cloud Storage bucket for [request logs](/request-logs). The deploy prints its name as the `recording_bucket` output.
 
 ## Production notes
 
