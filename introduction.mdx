@@ -4,12 +4,17 @@ sidebarTitle: "Introduction"
 description: "Open-source LLM router for agents. Connect your subscriptions, API keys, and local models to any harness through one endpoint, with fallbacks and spend limits."
 icon: "house"
 keywords:
-  ["LLM router", "AI subscriptions", "model routing", "open source", "LLM gateway"]
+  ["LLM router", "AI subscriptions", "model routing", "open source", "LLM gateway", "quickstart", "first request", "create a harness", "gateway base URL"]
 ---
+
+<div className="deploy-mode-toggle" role="group" aria-label="Deployment mode">
+  <button type="button" data-deploy-mode="cloud">Cloud</button>
+  <button type="button" data-deploy-mode="selfhosted">Self-hosted</button>
+</div>
 
 Manifest is an open-source LLM router for agents and AI apps. Connect the providers you already use — subscriptions like ChatGPT or Claude, pay-per-token API keys, local models, and custom endpoints — and route every request through one OpenAI- and Anthropic-compatible URL.
 
-You choose which model handles each request. Add fallbacks so a rate limit or a retired model returns a working response instead of an error, cap spending per harness, and see the cost of every call.
+Send `auto` as the model and Manifest routes each request by the rules you set, with fallbacks when one fails. Pin a real model ID instead, and the request goes straight to that model, with no routing and no fallback. Either way, you cap what each harness spends and see the cost of every request.
 
 ## Key features
 
@@ -18,7 +23,7 @@ You choose which model handles each request. Add fallbacks so a rate limit or a 
     Connect API keys, subscriptions you already pay for, local models, or any custom endpoint.
   </Card>
   <Card title="LLM Gateway" icon="split" href="/llm-gateway">
-    Route each request to the model you pick, with fallbacks when one fails and limits that cap what it can spend.
+    Send `auto` and your routing rules pick the model, with fallbacks when one fails. Limits cap what a harness can spend.
   </Card>
   <Card title="Autofix" icon="wrench" href="/autofix">
     Repair a malformed request and resend it, instead of failing on something a retry can't fix.
@@ -48,4 +53,31 @@ Manifest is open source and runs two ways. Both speak the same API, so pointing 
 
 On the cloud there is nothing to install and nothing to configure on a server. You sign up, connect your providers, point your harness at the gateway URL, and everything else — routing, limits, [Autofix](/autofix), alerts — is a setting in the dashboard. The [environment variables](/reference/environment-variables) throughout these docs apply only to a Manifest instance you run yourself.
 
-Cloud is also subject to [plan limits](/errors/M204): the free plan includes 10,000 routed requests per month. And it can't reach [local models](/providers/local-models) running on your machine. A self-hosted instance has neither restriction.
+Cloud is also subject to [plan limits](/errors/M204): the free plan includes 10,000 routed requests per calendar month, shown by the usage meter in the dashboard sidebar and reset at 00:00 UTC on the 1st. And it can't reach [local models](/providers/local-models) running on your machine. A self-hosted instance has neither restriction.
+
+## Your first request
+
+<div data-deploy="cloud">
+
+Sign up at [app.manifest.build](https://app.manifest.build) and a guided setup walks you through it. Step one creates a harness. Then connect a provider, and give your default tier a model to route to. The last step shows the gateway address and the harness key, which starts with `mnfst_`. A harness you create later reuses the providers your workspace already has.
+
+<Frame caption="The guided setup after signing up: step one creates your first harness.">
+  <img src="/images/welcome-setup.png" alt="The Manifest guided setup on step one, Create your first harness, with the five setup steps listed in the sidebar" />
+</Frame>
+
+```bash
+curl -X POST https://app.manifest.build/v1/chat/completions \
+  -H "Authorization: Bearer mnfst_YOUR_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"model": "auto", "messages": [{"role": "user", "content": "Hello"}]}'
+```
+
+`auto` asks Manifest to route the request. The request appears on the Requests page with the model that served it and its cost.
+
+</div>
+
+<div data-deploy="selfhosted">
+
+Install Manifest first: [Self-hosted](/self-hosted) covers Docker and the managed platforms. Your instance starts empty. [First request](/self-hosted#first-request) takes you from there to a routed request, against `http://localhost:2099/v1`.
+
+</div>
