@@ -14,22 +14,24 @@ Manifest reads a few request headers, and returns a set of `X-Manifest-*` respon
 | ----------------------- | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `Authorization`         | `Bearer mnfst_<key>` | **Required.** Authenticates the harness.                                                                                                             |
 | `Content-Type`          | `application/json`   | **Required.**                                                                                                                                      |
-| `anthropic-version`     | `2023-06-01`         | **Required for `/v1/messages`.** Forwarded to the upstream.                                                                                        |
+| `anthropic-version`     | `2023-06-01`         | Accepted and ignored. Anthropic SDKs send it on their own. Manifest picks the version it sends upstream.                                            |
 | Your custom tier header | your value           | Routes the request to a [custom tier](/llm-gateway#custom-tiers). You set the key and value when you create the tier, so the exact header name is up to you. |
 | `x-session-key`         | any string           | Groups requests into a session. Manifest keeps a session on the same upstream where the provider supports it, for sticky routing and prompt caching. |
 
-The custom tier header is the only one that changes routing: send the header you configured on a tier and the request goes to that tier's model. See [Routing → Custom](/llm-gateway#custom-tiers).
+The custom tier header is the only one that changes routing: send the header you configured on a tier and the request goes to that tier's model. The header wins even when the body names an explicit model ID. See [Routing → Custom](/llm-gateway#custom-tiers).
 
-## Response headers (every request)
+## Response headers (routed requests)
 
 | Header                       | Description                                                                      | Example         |
 | ---------------------------- | -------------------------------------------------------------------------------- | --------------- |
-| `X-Manifest-Tier`            | The tier that handled the request: `default`, a custom tier's name, or `direct`  | `default`       |
+| `X-Manifest-Tier`            | How the request was routed: `standard` after a custom-tier header match, `direct` for an explicit model ID, `simple` when Manifest answered without calling a provider | `direct`        |
 | `X-Manifest-Model`           | Model that actually served the response                                          | `claude-sonnet-4-6` |
 | `X-Manifest-Provider`        | Upstream provider                                                                | `anthropic`     |
-| `X-Manifest-Reason`          | Why that route was picked: `default`, `header-match`, or `direct`                | `header-match`  |
+| `X-Manifest-Reason`          | Why that route was picked, for example `header-match`, `direct`, or `default`. Other values exist | `header-match`  |
 | `X-Manifest-Output-Modality` | Output modality of the response                                                  | `text`          |
 | `X-Manifest-Response-Mode`   | Whether the response was streamed or `buffered`                                  | `buffered`      |
+
+Your custom tier's name appears on the request in the dashboard, never in a header. When Manifest answers a request itself (a spend block, no provider connected, a model it cannot serve), `X-Manifest-Model` and `X-Manifest-Provider` both report `manifest`.
 
 ## Response headers (fallback only)
 
