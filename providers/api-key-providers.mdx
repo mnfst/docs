@@ -86,12 +86,8 @@ Each provider issues keys with a recognizable prefix. Useful for catching paste 
 | Pioneer    | `pio_sk_` | `pio_sk_...` |
 | Xiaomi MiMo | `sk-`    | `sk-...`     |
 | Hugging Face | `hf_`   | `hf_...`     |
-| AWS Bedrock | `ABSK`   | `ABSK...`    |
-| NVIDIA NIM  | `nvapi-` | `nvapi-...`  |
 
-Providers not listed here (Cerebras, Kilo, OpenCode Zen) issue keys with no fixed prefix.
-
-For AWS Bedrock and NVIDIA NIM the prefix is a hint, not a rule: Manifest accepts any key shape for them, and a wrong key fails the live validation call instead.
+Providers not listed here (Cerebras, NVIDIA NIM, AWS Bedrock, Kilo, OpenCode Zen) issue keys with no fixed prefix.
 
 ## Regional providers
 
