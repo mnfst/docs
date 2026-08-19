@@ -45,6 +45,14 @@ For EVERY finding, verify adversarially:
    repeats the title; filler words; evidence outside the details
    block; a finding whose title needs the details to be understood.
 
+7. **Readable on first pass**: the issue is read by a human with no
+   context. Check the user-facing prose (titles, journeys, options)
+   against `.claude/skills/asd-ste100/references/writing-rules.md`,
+   STE-flavored: sentences start with their subject, one fact or one
+   instruction per sentence, active voice, no semicolon chains, no
+   hedge stacks. FAIL a finding whose title or journey needs a second
+   read. Fact-preserving length is fine; density is not.
+
 Also check the whole: findings deduplicated among themselves, numbered
 sequentially, categories correct, and nothing in the issue itself
 leaks internal info (the issue is public-repo visible).

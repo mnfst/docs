@@ -20,6 +20,16 @@ Voice and method:
    apply their spirit and say so: no em dashes, no "seamlessly", no
    rule-of-three padding, no marketing adjectives, subject-verb-object
    sentences, and nothing that reads machine-written.
+3b. Then apply the STE-flavored mode of the `asd-ste100` skill
+   (vendored at `.claude/skills/asd-ste100/`; if the Skill tool cannot
+   load it, Read `.claude/skills/asd-ste100/references/writing-rules.md`
+   and apply it by hand). The bar: every sentence starts with its
+   subject, carries one instruction or one fact, stays in active
+   voice, and a non-technical 18-year-old parses it on first read.
+   Never drop a fact, a condition, or a scope qualifier to get there;
+   keep the longer phrasing and flag the trade-off instead. The docs
+   voice wins over STE flatness: this is a discipline pass, not a
+   vocabulary lockdown.
 4. A draft states the present behavior. It never narrates the change
    ("previously...", "now...") unless a migration note is exactly what
    the finding calls for.
