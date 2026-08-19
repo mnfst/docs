@@ -23,7 +23,7 @@
       "pages": [
         "llm-gateway.mdx"
       ],
-      "lastAuditedAt": "2026-08-09"
+      "lastAuditedAt": "2026-08-19"
     },
     {
       "topic": "observability (requests page, analytics)",
