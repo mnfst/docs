@@ -90,14 +90,20 @@ double evidence and options.
 ### 4 — Wording (tech-writer)
 
 If any finding is `needs-wording: yes`, spawn the `tech-writer`
-subagent for the drafts (stop-slop + humanizer voice).
+subagent for the drafts (stop-slop + humanizer voice, then the
+STE-flavored pass of `.claude/skills/asd-ste100/`).
 
 ### 5 — Draft + verify (issue-verifier), max 3 iterations
 
 Run `node scripts/check-coherence.mjs` (the machine-checked
 invariants); RED blocks filing until resolved or justified in the
 script's exemption lists. Assemble the digest issue per
-`references/ISSUE-FORMAT.md`. Spawn the `issue-verifier` subagent
+`references/ISSUE-FORMAT.md`. Write the issue's prose for a reader
+with no context, in the STE-flavored discipline of
+`.claude/skills/asd-ste100/references/writing-rules.md`: subject
+first, one fact per sentence, active voice, no fact dropped for
+brevity. Seb reads these issues; a finding he has to reread is a
+finding he cannot judge. Spawn the `issue-verifier` subagent
 (fresh eyes) on the draft. Every FAILed
 finding goes back to step 3 (or is dropped if the evidence simply does
 not hold). After 3 red rounds, stop and show Seb the blockers instead

@@ -22,7 +22,7 @@ Manifest tracks two things, and the difference matters once fallback is involved
 | **Request** | One call from your agent to Manifest | Never. One call in, one Request. |
 | **Provider attempt** | One call from Manifest to a provider | Every fallback step and every [Autofix](/autofix) retry adds another |
 
-A request that succeeds on the first try is one Request with one attempt. A request that fails twice before succeeding is still one Request, with three attempts. A request Manifest blocked itself, like a [hard limit](/llm-gateway#hard-limits) or a malformed body, is one Request with **zero** attempts, since no provider was ever called.
+A request that succeeds on the first try is one Request with one attempt. A request that fails twice before succeeding is still one Request, with three attempts. A request Manifest blocked itself, like a [hard limit](/llm-gateway#hard-limits) or a malformed body, is one Request with one attempt that never reached a provider. That attempt is listed under the model you asked for, or **No provider** when the request named none, and carries the error that stopped it.
 
 This is why the request count and the provider call count don't match, and why cost is attributed to attempts: a failed attempt can still burn tokens.
 
@@ -101,9 +101,11 @@ Alerts go to your account email. Check it's current in your profile settings.
 
 <div data-deploy="selfhosted">
 
-Pick a provider on the harness's **Limits** page: Resend, Mailgun, or SendGrid. Paste the API key and the notification address, then save. The saved provider appears as a card on the same page, where you can edit or remove it.
+On the **Limits** page, under **Configure email provider**, pick Resend, Mailgun, or SendGrid. Enter the API key. Mailgun also asks for a sending domain. **Notification email** defaults to your account email; change it to send alerts elsewhere. **Test & Connect** sends a real test email and saves nothing if it fails. The saved provider appears as a card on the same page, where you can edit or remove it.
 
-You can set the same thing instance-wide with the [`EMAIL_*` environment variables](/reference/environment-variables): `EMAIL_PROVIDER` (`resend`, `mailgun`, or `sendgrid`), `EMAIL_API_KEY`, `EMAIL_FROM`, and `EMAIL_DOMAIN` for Mailgun. A provider saved in the dashboard takes precedence over the environment variables.
+Your workspace holds one provider, shared by every harness. Removing it stops alerts for all of them.
+
+Alerts use the saved provider first, and fall back to the [`EMAIL_*` environment variables](/reference/environment-variables) when no provider is saved. Those variables also send verification and password-reset email, which the saved provider never handles.
 
 Without an email provider from either path, alerts are skipped. Blocking rules still work, since they don't need to send anything.
 

@@ -1,7 +1,7 @@
 ---
 title: "M100: Provider API key missing"
 sidebarTitle: "M100"
-description: "Manifest error M100 fires when routing picks a provider that has no API key for this harness (OpenAI, Anthropic, Gemini, OpenRouter, etc). Fix: add the key in Routing."
+description: "Manifest error M100 fires when routing picks a provider that has no API key for this harness (OpenAI, Anthropic, Gemini, OpenRouter, etc). Fix: add the key from Providers → Usage-based."
 icon: "plug-zap"
 keywords:
   ["M100", "Manifest M100", "provider API key missing", "no OpenAI key", "no Anthropic key", "no Gemini key", "OpenRouter key", "Manifest routing", "provider credentials"]
@@ -23,7 +23,7 @@ Routing picked a provider that has no key on file for this harness. Manifest won
 ## How to fix it
 
 1. Open the dashboard link in the error message. It goes straight to the harness's **Routing** page.
-2. Either add an API key for the named provider, or remove that provider from your tier configuration so routing won't pick it again.
+2. Open **Providers → Usage-based** in the sidebar and add a key for the named provider. Or remove that provider from your tier configuration so routing won't pick it again.
 3. Retry the request.
 
 ## Related

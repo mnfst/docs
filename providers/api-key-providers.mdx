@@ -17,6 +17,7 @@ Most providers work the standard way: sign up, generate an API key, paste it int
 | [Anthropic](https://www.anthropic.com)            | [console.anthropic.com](https://console.anthropic.com)           |
 | [Google](https://ai.google.dev)                   | [ai.google.dev](https://ai.google.dev)                           |
 | [xAI](https://x.ai)                               | [x.ai/api](https://x.ai/api)                                     |
+| [Meta](https://dev.meta.ai)                       | [dev.meta.ai](https://dev.meta.ai)                               |
 | [DeepSeek](https://www.deepseek.com)              | [platform.deepseek.com](https://platform.deepseek.com)           |
 | [Mistral](https://mistral.ai)                     | [console.mistral.ai](https://console.mistral.ai)                 |
 | [Alibaba Cloud (Qwen)](https://qwen.ai)           | [bailian.console.aliyun.com](https://bailian.console.aliyun.com) |
@@ -35,7 +36,7 @@ Most providers work the standard way: sign up, generate an API key, paste it int
 | [Pioneer](https://pioneer.ai)                     | [pioneer.ai](https://pioneer.ai)                                 |
 | [Hugging Face](https://huggingface.co)            | [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens) |
 
-New providers are added often, so the **Routing** page always shows the current list of tiles.
+New providers are added often, so **Providers → Usage-based** in the dashboard always shows the current list.
 
 ### Gemini Free
 
@@ -51,18 +52,29 @@ Gemini Free is a managed tile. Manifest provisions the credential through its ow
 ## Add a provider
 
 <Steps>
-  <Step title="Open the Routing page">
-    In the dashboard, navigate to **Routing**. You'll see a tile for every
-    supported provider.
+  <Step title="Open the Usage-based page">
+    In the dashboard sidebar, open **Providers → Usage-based**. Under
+    **Supported usage-based providers** you get a card per provider.
   </Step>
-  <Step title="Click the provider tile">
-    The tile opens a panel where you can paste your API key.
+  <Step title="Click Connect on the provider">
+    **Connect** opens a panel where you paste your API key.
   </Step>
   <Step title="Paste the key and save">
-    Manifest validates the key by fetching the provider's model list. If the key
-    is rejected, double-check the prefix below.
+    Manifest validates the key by fetching the provider's model list. That list
+    is what routing sees until you refresh it. If the key is rejected,
+    double-check the prefix below.
   </Step>
 </Steps>
+
+<Frame caption="The Usage-based page: one card per provider, each with a Connect button.">
+  <img src="/images/providers-usage-based.png" alt="The Providers → Usage-based page showing the sidebar Providers section, the connections table, and the grid of supported provider cards with Connect buttons" />
+</Frame>
+
+## Refreshing the model list
+
+A connection keeps the model list it discovered when you saved it. Nothing re-checks it on a schedule. When a provider adds, renames, or drops a model, click **Refresh models**: on your harness's **Routing** page, or on the connection itself under **Providers**.
+
+The refresh replaces the list, it does not merge it. A tier or a fallback pinned to a model id that no longer exists stops matching, so pin it to one of the new ids.
 
 ## Key prefixes
 
@@ -73,6 +85,7 @@ Each provider issues keys with a recognizable prefix. Useful for catching paste 
 | OpenAI     | `sk-`     | `sk-...`     |
 | Anthropic  | `sk-ant-` | `sk-ant-...` |
 | xAI        | `xai-`    | `xai-...`    |
+| Meta       | `LLM_`    | `LLM_...`    |
 | DeepSeek   | `sk-`     | `sk-...`     |
 | Moonshot   | `sk-`     | `sk-...`     |
 | MiniMax    | `sk-`     | `sk-...`     |
