@@ -86,6 +86,7 @@ All three paths end in the same place: a running stack at [http://localhost:2099
     ```bash
     docker run -d \
       -p 2099:2099 \
+      -e PORT=2099 \
       -e DATABASE_URL=postgresql://user:pass@host:5432/manifest \
       -e BETTER_AUTH_SECRET=$(openssl rand -hex 32) \
       -e BETTER_AUTH_URL=http://localhost:2099 \
@@ -98,6 +99,7 @@ All three paths end in the same place: a running stack at [http://localhost:2099
 
       docker run -d `
         -p 2099:2099 `
+        -e PORT=2099 `
         -e DATABASE_URL=postgresql://user:pass@host:5432/manifest `
         -e BETTER_AUTH_SECRET=$secret `
         -e BETTER_AUTH_URL=http://localhost:2099 `
@@ -111,6 +113,7 @@ All three paths end in the same place: a running stack at [http://localhost:2099
       ```cmd
       docker run -d ^
         -p 2099:2099 ^
+        -e PORT=2099 ^
         -e DATABASE_URL=postgresql://user:pass@host:5432/manifest ^
         -e BETTER_AUTH_SECRET=<your-64-char-secret> ^
         -e BETTER_AUTH_URL=http://localhost:2099 ^
@@ -189,6 +192,7 @@ For a `docker run` install there is no `.env`, so pass the mapping and the URL e
 ```bash
 docker run -d \
   -p 8080:2099 \
+  -e PORT=2099 \
   -e BETTER_AUTH_URL=http://localhost:8080 \
   ...
 ```
@@ -211,10 +215,10 @@ By default the compose file binds port 2099 to `127.0.0.1` only. The dashboard i
     HOST_BIND_ADDRESS=0.0.0.0
     ```
 
-    Editing `docker-compose.yml` by hand does not survive an upgrade; `.env` does.
+    Editing `docker-compose.yml` by hand does not survive an upgrade; `.env` does. If you exposed the LAN by editing the `ports:` line in `docker-compose.yml`, move that change to `HOST_BIND_ADDRESS` here: `bash install.sh --upgrade` replaces the compose file and your LAN access goes with it.
   </Step>
   <Step title="Set BETTER_AUTH_URL">
-    In `.env`, set `BETTER_AUTH_URL` to the host you'll reach the dashboard on, e.g. `http://192.168.1.20:2099` or `https://manifest.mydomain.com`. This must match the URL in the browser or Better Auth will reject the login with "Invalid origin".
+    In `.env`, set `BETTER_AUTH_URL` to the host you'll reach the dashboard on, e.g. `http://192.168.1.20:2099` or `https://manifest.mydomain.com`. This must match the URL in the browser or Better Auth will reject the login with "Invalid origin". If you sign in with Google, GitHub or Discord, update the redirect URI in the provider's console to `${BETTER_AUTH_URL}/api/auth/callback/<provider>`, or the provider rejects the login.
   </Step>
   <Step title="Apply">
     ```bash
@@ -223,15 +227,17 @@ By default the compose file binds port 2099 to `127.0.0.1` only. The dashboard i
   </Step>
 </Steps>
 
+You can reach the setup screen from another machine while `BETTER_AUTH_URL` still points at localhost. The admin account is created, then sign-in fails with "Invalid origin" and drops you back on the login page. The setup screen does not come back, because the account now exists. That account is fine. Set `BETTER_AUTH_URL` to the URL you type in the browser, run `docker compose up -d`, then sign in with it.
+
 ## Image tags
 
 Every release is published with the following tags:
 
 | Tag | Example | Description |
 |-----|---------|-------------|
-| `major.minor.patch` | `5.46.0` | Fully pinned |
-| `major.minor` | `5.46` | Latest patch within a minor |
-| `major` | `5` | Latest minor+patch within a major |
+| `major.minor.patch` | `6.18.0` | Fully pinned |
+| `major.minor` | `6.18` | Latest patch within a minor |
+| `major` | `6` | Latest minor+patch within a major |
 | `latest` | — | Latest stable release |
 | `sha-<short>` | — | Exact commit for rollback |
 
@@ -246,14 +252,19 @@ docker compose pull
 docker compose up -d
 ```
 
-Database migrations run automatically on boot, no manual steps. Your data in the `pgdata` volume is preserved across upgrades. Pin to a specific major version (e.g. `manifestdotbuild/manifest:5`) in `docker-compose.yml` if you want control over when major upgrades happen.
+Database migrations run automatically on boot, no manual steps. Your data in the `pgdata` volume is preserved across upgrades. To control when major upgrades happen, pin the image tag with `MANIFEST_VERSION` in `.env`, for example `MANIFEST_VERSION=6`, then run the two commands above. Unset, the compose file pulls `latest`. Pin here rather than in `docker-compose.yml`, which `bash install.sh --upgrade` replaces.
+
+The two commands above only pull new images. Your `docker-compose.yml` stays as it is, hand edits included. `bash install.sh --upgrade` is the other path: it downloads a fresh `docker-compose.yml` and replaces yours, after copying the old one next to it as `docker-compose.yml.backup.<UTC timestamp>`. Your `.env` is left alone. Keep custom compose changes in `docker-compose.override.yml`, which the installer never downloads.
 
 <Note>
   **Upgrading from before v6.18.0 and using [logs](/request-logs)?** Run the installer once with the upgrade flag, or log bodies are written inside the container and lost when it is recreated:
 
   ```bash
+  curl -sSLO https://raw.githubusercontent.com/mnfst/manifest/main/docker/install.sh
   bash install.sh --upgrade
   ```
+
+  (`--upgrade` looks for the install in `~/manifest`. Installed elsewhere? Pass `--dir /your/path`, otherwise the script stops with "No installation found at ...".)
 
   It adds the `manifest_request_recordings` volume to your compose file. Later releases include it from the start.
 
