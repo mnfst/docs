@@ -109,6 +109,10 @@ Any HTTP status code **>= 400** triggers a fallback.
 
 An upstream 429 also pauses that model for a short time. When the provider sends a `Retry-After`, that value sets the pause, up to five minutes. During the pause, Manifest sends the request to the next model in the chain. A request with no chain behind it, such as a direct model ID, comes back as a 429 that the provider never sent.
 
+A tier also moves to its fallback list when its pinned model leaves your model list, and no provider error is involved. Your provider can retire the model. Manifest can also drop it when its capability data does not report tool calling. A model that data does not cover at all is kept. Manifest then serves the request with the first fallback model in that tier whose provider is still connected, at that model's price. No response header marks this, because `X-Manifest-Fallback-From` is only set after a failed attempt. A tier with no usable fallback left returns [M101](/errors/M101), whose message says no providers are set up.
+
+The tier card on the **Routing** page keeps showing the old model name. The model picker no longer lists that model, so pin a different one.
+
 Fallback covers a streaming request until the first chunk reaches your client. If the stream fails after that, the error arrives inside the stream and the connection closes. Manifest tries no other model.
 
 ### Configuration
