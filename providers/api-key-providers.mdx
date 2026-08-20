@@ -76,6 +76,8 @@ A connection keeps the model list it discovered when you saved it. Nothing re-ch
 
 The refresh replaces the list, it does not merge it. A tier or a fallback pinned to a model id that no longer exists stops matching, so pin it to one of the new ids.
 
+Your list can also be shorter than the provider's own. Manifest checks each discovered model against [models.dev](https://models.dev), a public model catalog, and leaves out the models that catalog reports as unable to do tool calling, because agents send tools with almost every request. A model missing from your list is not always a model the provider removed.
+
 ## Key prefixes
 
 Each provider issues keys with a recognizable prefix. Useful for catching paste mistakes:

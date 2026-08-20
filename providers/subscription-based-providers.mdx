@@ -39,6 +39,15 @@ If you already pay for ChatGPT Plus, Claude Max, GitHub Copilot, or one of the o
   ids instead.
 </Note>
 
+<Note>
+  Ollama Cloud serves the models Ollama hosts, not the models on your own
+  machine. Connect it with an API key from
+  [ollama.com/settings/keys](https://ollama.com/settings/keys). It works the
+  same on Manifest Cloud and self-hosted. The built-in
+  [Ollama connection](/providers/local-models) is the local one, and that one
+  is self-hosted only.
+</Note>
+
 ## Connect a subscription
 
 <Steps>
@@ -53,7 +62,7 @@ If you already pay for ChatGPT Plus, Claude Max, GitHub Copilot, or one of the o
   </Step>
 </Steps>
 
-A model your plan just gained doesn't show up on its own. Click **Refresh models** on the connection to pick it up.
+A model your plan just gained doesn't show up on its own. Click **Refresh models** on the connection to pick it up. The list can also be shorter than what your plan serves: Manifest leaves out models a public catalog reports as unable to do tool calling. See [Refreshing the model list](/providers/api-key-providers#refreshing-the-model-list).
 
 ## How auth works per provider
 
