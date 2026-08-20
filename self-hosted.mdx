@@ -85,7 +85,7 @@ All three paths end in the same place: a running stack at [http://localhost:2099
 
     ```bash
     docker run -d \
-      -p 127.0.0.1:2099:2099 \
+      -p 2099:2099 \
       -e PORT=2099 \
       -e DATABASE_URL=postgresql://user:pass@host:5432/manifest \
       -e BETTER_AUTH_SECRET=$(openssl rand -hex 32) \
@@ -93,14 +93,12 @@ All three paths end in the same place: a running stack at [http://localhost:2099
       manifestdotbuild/manifest
     ```
 
-    The `127.0.0.1:` prefix keeps the dashboard on this machine. Drop it to reach the container from other machines on the network, and set `BETTER_AUTH_URL` to the address you type in the browser: the same rule as [Exposing on the LAN](#exposing-on-the-lan), which covers the compose install.
-
     <Accordion title="Windows (PowerShell)">
       ```powershell
       $secret = -join ((48..57 + 97..122) | Get-Random -Count 64 | ForEach-Object { [char]$_ })
 
       docker run -d `
-        -p 127.0.0.1:2099:2099 `
+        -p 2099:2099 `
         -e PORT=2099 `
         -e DATABASE_URL=postgresql://user:pass@host:5432/manifest `
         -e BETTER_AUTH_SECRET=$secret `
@@ -114,7 +112,7 @@ All three paths end in the same place: a running stack at [http://localhost:2099
 
       ```cmd
       docker run -d ^
-        -p 127.0.0.1:2099:2099 ^
+        -p 2099:2099 ^
         -e PORT=2099 ^
         -e DATABASE_URL=postgresql://user:pass@host:5432/manifest ^
         -e BETTER_AUTH_SECRET=<your-64-char-secret> ^
@@ -193,7 +191,7 @@ For a `docker run` install there is no `.env`, so pass the mapping and the URL e
 
 ```bash
 docker run -d \
-  -p 127.0.0.1:8080:2099 \
+  -p 8080:2099 \
   -e PORT=2099 \
   -e BETTER_AUTH_URL=http://localhost:8080 \
   ...
