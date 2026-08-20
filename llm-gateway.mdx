@@ -18,7 +18,7 @@ Point your client at Manifest instead of a provider, and every request goes thro
     If a hard limit for this harness is already over its threshold, the request is blocked with [M200](/errors/M200) before any provider is called. Nothing is spent.
   </Step>
   <Step title="Routing">
-    A custom tier matches on a request header, or the request goes to your default tier. Send a real model ID instead of `auto` to skip this entirely.
+    A custom tier matches on a request header, or the request goes to your default tier. Send a real model ID instead of `auto` to skip routing. A matching custom tier header still wins.
   </Step>
   <Step title="Forward">
     Manifest calls the resolved provider with your credentials and streams the response back.
@@ -72,7 +72,7 @@ Create as many tiers as you need, each with its own model and parameters. This i
 
 ### Route a specific model
 
-To skip routing for a single request, send a real model ID instead of `auto`. Manifest forwards it straight to that model's provider, with no tier lookup and no fallbacks. Call [`GET /v1/models`](/reference/api#listing-models) to list the model IDs your harness can reach.
+To skip routing for a single request, send a real model ID instead of `auto`. Manifest forwards it straight to that model's provider, with no tier lookup and no fallbacks. A matching [custom tier](#custom-tiers) header is the exception. The request then runs on the tier's model and the tier's fallbacks. Call [`GET /v1/models`](/reference/api#listing-models) to list the model IDs your harness can reach.
 
 ```bash
 curl -X POST https://app.manifest.build/v1/chat/completions \
@@ -106,6 +106,10 @@ Any HTTP status code **>= 400** triggers a fallback.
 | **502** | Bad gateway |
 | **503** | Service unavailable |
 | **529** | Provider overloaded |
+
+An upstream 429 also pauses that model for a short time. When the provider sends a `Retry-After`, that value sets the pause, up to five minutes. During the pause, Manifest sends the request to the next model in the chain. A request with no chain behind it, such as a direct model ID, comes back as a 429 that the provider never sent.
+
+Fallback covers a streaming request until the first chunk reaches your client. If the stream fails after that, the error arrives inside the stream and the connection closes. Manifest tries no other model.
 
 ### Configuration
 
