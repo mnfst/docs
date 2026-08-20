@@ -122,8 +122,6 @@ curl "http://localhost:2099/v1/models?capabilities=true" \
 
 Capability fields are optional. A missing field means that support is unknown, not that the model does not support it. Manifest omits the entire `capabilities` object when it has no known metadata for a model.
 
-Manifest reads part of this metadata from [models.dev](https://models.dev), a public model catalog it refreshes once a day. A self-hosted instance that cannot reach models.dev returns fewer capability fields, and the response carries no error.
-
 The synthetic `auto` model never includes capabilities because it can resolve to a different model for each request. Concrete model IDs remain directly routable exactly as listed, including IDs with the `-subscription` suffix.
 
 ### Inspect model costs
