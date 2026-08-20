@@ -114,7 +114,10 @@ of filing a weak issue.
 - `gh issue create --repo mnfst/docs --title "Docs audit — <date> (PRs #A–#B)" --label docs-sync --label <categories present> --body-file <tmp>`
 - Update `scripts/state.json`: `lastAuditedPr`, `lastRunAt`, issue URL.
 - Append one line per finding to `references/decisions.md` with status
-  `raised` (create the file if missing). When Seb answers on the issue
+  `raised` (create the file if missing). Commit decision-log lines to
+  main directly, never on a docs PR branch: the log is append-only
+  shared state, and a branch copy re-conflicts at every merge of main.
+  When Seb answers on the issue
   ("N → option 2", "N → reject"), whoever handles that session updates
   the line to `accepted`/`rejected` — this is what prevents re-raising.
 - Append process lessons to `references/learnings.md`.
