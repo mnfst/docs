@@ -107,11 +107,7 @@ Any HTTP status code **>= 400** triggers a fallback.
 | **503** | Service unavailable |
 | **529** | Provider overloaded |
 
-After a provider answers 429, Manifest pauses that model for a short time, a few minutes at most. A routed request moves to the next model in the chain. A direct model ID has no chain, so it comes back with a 429 that the provider never sent.
-
-A tier also falls back when its pinned model leaves your model list. No provider error is involved and no response header marks the change: the tier's first available fallback serves the request, at its own price. A tier with no fallback left returns [M101](/errors/M101). The **Routing** page still shows the old model name, so open the model picker and pin a new one.
-
-Fallback covers a streaming request until the first chunk reaches your client. If the stream fails after that, the error arrives inside the stream and the connection closes. Manifest tries no other model.
+A tier also falls back when its pinned model leaves your model list. When the tier has no fallback left, the request returns [M101](/errors/M101).
 
 ### Configuration
 
