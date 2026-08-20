@@ -36,6 +36,8 @@ Generate a key from the dashboard's **Harnesses** page. Keys always start with `
 
 The proxy translates between formats internally, so you can send an OpenAI-shaped request and Manifest will reshape it before forwarding to an Anthropic-only model. The reverse works too.
 
+Translation carries what the request itself contains: messages, tools, and tool results. Manifest does not resolve `previous_response_id`, so send the full conversation in `input` on every `/v1/responses` request.
+
 ## Chat completions
 
 ```bash
