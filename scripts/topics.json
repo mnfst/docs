@@ -37,7 +37,7 @@
       "pages": [
         "providers/"
       ],
-      "lastAuditedAt": "2026-08-11"
+      "lastAuditedAt": "2026-08-21"
     },
     {
       "topic": "self-hosting with docker (install, upgrade, backup)",
