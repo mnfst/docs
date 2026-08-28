@@ -62,4 +62,4 @@ User-supplied URLs are revalidated on every request to defend against SSRF. On M
 
 ## Cost tracking
 
-Manifest can't infer pricing for unknown models. Custom-provider requests show up in the dashboard with `cost = 0` and `model = <your-id>`. Token counts and latency are still recorded, so [hard limits](/llm-gateway#hard-limits) on token volume still work.
+You price a custom provider's models yourself. The connect form takes **Input / 1M tokens** and **Output / 1M tokens** for each model, and Manifest computes cost from those figures like any other provider. Leave both prices empty and the model's requests show `cost = 0`. Token counts and latency are recorded either way, so [hard limits](/llm-gateway#hard-limits) on token volume work with or without prices.
