@@ -10,6 +10,10 @@
   "favicon": "/favicon.svg",
   "css": "/style.css",
   "js": "/scripts/no-tab-jump.js",
+  "banner": {
+    "content": "**NEW** Manifest is becoming the self-healing layer for APIs. [Read more](https://manifest.build/blog/manifest-is-taking-a-new-direction/)",
+    "dismissible": false
+  },
   "colors": {
     "primary": "#0f172a",
     "light": "#ffffff",

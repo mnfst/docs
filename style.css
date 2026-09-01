@@ -12,6 +12,86 @@
   scroll-margin-top: 9999px !important;
 }
 
+/* Announcement banner: website green-to-yellow gradient, lightened for
+   readability, dark NEW badge and dark Read more button */
+#banner {
+  background: linear-gradient(90deg, #4fc487 0%, #a9cf6b 55%, #ecd05e 100%) !important;
+  border-bottom: none !important;
+}
+/* The maple theme offsets the navbar by a hardcoded 40px, so the banner must
+   be exactly 40px tall on desktop or it overflows onto the header */
+@media (min-width: 1024px) {
+  #banner {
+    height: 40px;
+  }
+  #banner > div {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+}
+#banner,
+#banner * {
+  color: #14261b !important;
+  font-weight: 500;
+}
+#banner strong,
+#banner [data-streamdown="strong"] {
+  display: inline-block;
+  padding: 2px 8px;
+  margin-right: 6px;
+  border-radius: 4px;
+  background: #14261b;
+  color: #f9f8f5 !important;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  vertical-align: middle;
+}
+#banner a {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 4px 12px;
+  border-radius: 6px;
+  background: #14261b !important;
+  color: #f9f8f5 !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+#banner a:hover {
+  opacity: 0.9;
+}
+#banner strong,
+#banner strong *,
+#banner [data-streamdown="strong"],
+#banner [data-streamdown="strong"] *,
+#banner a,
+#banner a * {
+  color: #f9f8f5 !important;
+}
+#banner button,
+#banner svg {
+  color: #14261b !important;
+}
+/* Mintlify forces white text via a Tailwind utility marked !important inside
+   the "utilities" cascade layer; an un-layered !important loses to it, so the
+   color overrides must live in that same layer where ID specificity wins */
+@layer utilities {
+  #banner,
+  #banner * {
+    color: #14261b !important;
+  }
+  #banner strong,
+  #banner strong *,
+  #banner [data-streamdown="strong"],
+  #banner [data-streamdown="strong"] *,
+  #banner a,
+  #banner a * {
+    color: #f9f8f5 !important;
+  }
+}
+
 /* Logo height */
 #sidebar img[alt*="logo" i],
 #sidebar img[src*="logo"],
@@ -362,7 +442,7 @@ figure.frame {
    script; centered fallback when the tab is not found. */
 .deploy-mode-toggle--floating {
   position: fixed;
-  top: 6px;
+  top: calc(6px + var(--banner-height, 40px));
   left: 50%;
   transform: translateX(-50%) translateY(-6px);
   z-index: 60;
@@ -390,7 +470,7 @@ html.dark .deploy-mode-toggle--floating {
 /* Book a call button, fixed top right over the header bar */
 .docs-book-call {
   position: fixed;
-  top: 7.5px;
+  top: calc(7.5px + var(--banner-height, 40px));
   right: 40px;
   z-index: 60;
   display: inline-block;
@@ -409,6 +489,17 @@ html.dark .deploy-mode-toggle--floating {
 html.dark .docs-book-call {
   background: #f9f8f5;
   color: #0f172a !important;
+}
+
+/* Below lg the banner scrolls with the page instead of staying fixed, so the
+   fixed elements keep their original offsets */
+@media (max-width: 1023px) {
+  .deploy-mode-toggle--floating {
+    top: 6px;
+  }
+  .docs-book-call {
+    top: 7.5px;
+  }
 }
 
 /* Paragraph spans nested in deploy-mode wrappers miss the theme's prose
