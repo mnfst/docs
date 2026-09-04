@@ -1,10 +1,10 @@
 ---
 title: "API key providers"
 sidebarTitle: "API keys"
-description: "Bring your own API key for OpenAI, Anthropic, Google, xAI, DeepSeek, Mistral, Groq, Cerebras, AWS Bedrock, NVIDIA NIM, OpenRouter, Hugging Face, and more."
+description: "Bring your own API key for OpenAI, Anthropic, Google, Google Vertex AI, xAI, DeepSeek, Mistral, Groq, Cerebras, AWS Bedrock, NVIDIA NIM, OpenRouter, Hugging Face, and more."
 icon: "key"
 keywords:
-  ["OpenAI", "Anthropic", "Google Gemini", "xAI", "DeepSeek", "Mistral", "Qwen", "Moonshot", "MiniMax", "Z.ai", "OpenRouter", "Groq", "Cerebras", "Fireworks", "AWS Bedrock", "NVIDIA NIM", "Xiaomi MiMo", "Hugging Face", "Gemini Free", "API key"]
+  ["OpenAI", "Anthropic", "Google Gemini", "Google Vertex AI", "xAI", "DeepSeek", "Mistral", "Qwen", "Moonshot", "MiniMax", "Z.ai", "OpenRouter", "Groq", "Cerebras", "Fireworks", "AWS Bedrock", "NVIDIA NIM", "Xiaomi MiMo", "Hugging Face", "Gemini Free", "API key"]
 ---
 
 Most providers work the standard way: sign up, generate an API key, paste it into Manifest. Routed requests go out with that key as the credential.
@@ -16,6 +16,7 @@ Most providers work the standard way: sign up, generate an API key, paste it int
 | [OpenAI](https://platform.openai.com)             | [platform.openai.com](https://platform.openai.com)               |
 | [Anthropic](https://www.anthropic.com)            | [console.anthropic.com](https://console.anthropic.com)           |
 | [Google](https://ai.google.dev)                   | [ai.google.dev](https://ai.google.dev)                           |
+| Google Vertex AI                                  | [cloud.google.com/vertex-ai](https://cloud.google.com/vertex-ai/generative-ai/docs/start/express-mode/overview) |
 | [xAI](https://x.ai)                               | [x.ai/api](https://x.ai/api)                                     |
 | [Meta](https://dev.meta.ai)                       | [dev.meta.ai](https://dev.meta.ai)                               |
 | [DeepSeek](https://www.deepseek.com)              | [platform.deepseek.com](https://platform.deepseek.com)           |
@@ -41,6 +42,10 @@ New providers are added often, so **Providers → Usage-based** in the dashboard
 ### Gemini Free
 
 Gemini Free is a managed tile. Manifest provisions the credential through its own gateway, so there's no key to fetch from Google first: add the tile and you have a free model to route to. It behaves like any other provider once connected.
+
+### Google Vertex AI
+
+Google Vertex AI serves Gemini models through Google Cloud, and it takes an express mode API key. The connect form refuses a key that does not start with `AQ.`, and it refuses a key shorter than 40 characters. The **Google** entry above takes a Google AI Studio key instead, and Manifest enforces no prefix on that one.
 
 <Note>
   BytePlus, NousResearch, Command Code, ClinePass, Kiro, GitHub Copilot, Ollama
@@ -92,6 +97,7 @@ Each provider issues keys with a recognizable prefix. Useful for catching paste 
 | Qwen       | `sk-`     | `sk-...`     |
 | OpenRouter | `sk-or-`  | `sk-or-...`  |
 | Google     | none      | API key      |
+| Google Vertex AI | `AQ.` | `AQ...`    |
 | Mistral    | none      | API key      |
 | Z.ai       | none      | API key      |
 | Fireworks  | `fw_`     | `fw_...`     |
