@@ -168,6 +168,13 @@
             ]
           },
           {
+            "group": "Integrations",
+            "boost": 2,
+            "pages": [
+              "integrations/n8n"
+            ]
+          },
+          {
             "group": "Reference",
             "pages": [
               "reference/api",
