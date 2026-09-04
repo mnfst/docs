@@ -1,0 +1,21 @@
+docs.json
+  s_269b4efc204140::t_4b4b7b4365a64d 170-176,330
+integrations/n8n.mdx
+  s_269b4efc204140::t_209dd535812e34 1-126
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "0b061c9641a89c5b669fc195c8c174b32fca877f",
+  "prompts": {},
+  "sessions": {
+    "s_269b4efc204140": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "83abf028-c439-40a9-9d46-44316d62e03a",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Guillaume Gay <guillaume.gay@protonmail.com>"
+    }
+  }
+}
