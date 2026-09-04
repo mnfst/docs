@@ -1,0 +1,126 @@
+---
+title: "n8n"
+description: "Use Manifest as the chat model behind n8n AI Agents, or call it directly from a workflow, with the n8n-nodes-manifest community node."
+icon: "workflow"
+keywords:
+  ["n8n", "n8n community node", "n8n-nodes-manifest", "n8n AI Agent", "Manifest Chat Model", "n8n self-hosted", "n8n LLM router", "n8n OpenAI alternative"]
+---
+
+<div className="deploy-mode-toggle" role="group" aria-label="Deployment mode">
+  <button type="button" data-deploy-mode="cloud">Cloud</button>
+  <button type="button" data-deploy-mode="selfhosted">Self-hosted</button>
+</div>
+
+Manifest ships as a verified n8n community node, [`n8n-nodes-manifest`](https://www.npmjs.com/package/n8n-nodes-manifest). It installs from n8n's own **Community Nodes** screen on n8n Cloud and on self-hosted n8n alike, and gives you two nodes:
+
+<CardGroup cols={2}>
+  <Card title="Manifest Chat Model" icon="bot">
+    A language-model sub-node. Plug it into the **AI Agent** or **Basic LLM Chain** node in place of the OpenAI Chat Model, and Manifest routes every request the agent makes.
+  </Card>
+  <Card title="Manifest" icon="plug">
+    An action node for calling Manifest directly from a workflow: list models, create a chat completion, or create a Responses API call.
+  </Card>
+</CardGroup>
+
+Both nodes are plain HTTP clients for the [gateway](/llm-gateway). Nothing about routing, limits, or [Autofix](/autofix) changes because the caller is n8n.
+
+## Install the node
+
+<Steps>
+  <Step title="Open Community Nodes">
+    In n8n, go to **Settings** > **Community Nodes** and select **Install**.
+  </Step>
+  <Step title="Enter the package name">
+    Enter `n8n-nodes-manifest`, confirm the community-node notice, and install.
+  </Step>
+  <Step title="Find the nodes">
+    Search the node panel for **Manifest**. The Chat Model sub-node appears where n8n lists language models, and the action node appears with the regular nodes.
+  </Step>
+</Steps>
+
+The Chat Model sub-node needs an n8n version that ships `@n8n/ai-node-sdk` (2026 releases). The action node works on older versions.
+
+## Create the credential
+
+Both nodes share one **Manifest API** credential with two fields.
+
+<div data-deploy="cloud">
+
+| Field        | Value                                                                 |
+| ------------ | --------------------------------------------------------------------- |
+| **Base URL** | `https://app.manifest.build`                                          |
+| **API Key**  | The harness key, starting with `mnfst_`, from the harness **Settings** page |
+
+</div>
+
+<div data-deploy="selfhosted">
+
+| Field        | Value                                                                 |
+| ------------ | --------------------------------------------------------------------- |
+| **Base URL** | The origin of your instance, for example `http://192.168.1.20:2099`   |
+| **API Key**  | The harness key, starting with `mnfst_`, from the harness **Settings** page |
+
+</div>
+
+The Base URL is the origin only, without `/v1`. The nodes append `/v1/models`, `/v1/chat/completions`, and `/v1/responses` themselves. A Base URL ending in `/v1` sends requests to `/v1/v1/...` and every call fails.
+
+Select **Test** on the credential. It calls `GET /v1/models`, so a passing test confirms that n8n can reach your instance and that the key is valid.
+
+<div data-deploy="selfhosted">
+
+### Reaching a self-hosted instance from n8n
+
+The credential test fails with a connection error when n8n cannot reach Manifest. Where the two run decides the address:
+
+- **n8n and Manifest in Docker on the same host.** `localhost` inside the n8n container is n8n itself. Put both containers on a shared Docker network and use the Manifest service name as the host, or use `http://host.docker.internal:2099` on Docker Desktop.
+- **n8n on another machine.** The bundled compose file binds Manifest to `127.0.0.1` only. Set `HOST_BIND_ADDRESS=0.0.0.0` in Manifest's `.env`, as described in [Exposing on the LAN](/self-hosted#exposing-on-the-lan), so the port answers on the network.
+- **Plain `http://` is fine.** The calls are server to server. The dashboard's browser security rules do not apply to them.
+
+The keyless loopback shortcut that a development build of Manifest accepts does not exist in the production image. n8n always needs a real `mnfst_` key.
+
+</div>
+
+## Use Manifest behind an AI Agent
+
+<Steps>
+  <Step title="Add the Chat Model">
+    On an **AI Agent** or **Basic LLM Chain** node, select the **Model** connector and choose **Manifest Chat Model**.
+  </Step>
+  <Step title="Pick the credential and model">
+    Select the Manifest credential. The model list is loaded from your instance. Leave it on `auto` to let your [routing rules](/llm-gateway#routing) pick the model, or choose a model ID to pin one.
+  </Step>
+  <Step title="Run the workflow">
+    Streaming and tool calling work as they do with the OpenAI Chat Model, so agent tools run unchanged. Each call appears on the harness's **Requests** page with the model that served it and its cost.
+  </Step>
+</Steps>
+
+An option on the sub-node switches it from Chat Completions to the [Responses API](/reference/api#endpoints). Leave it off unless a model you route to needs Responses.
+
+## Call Manifest from a workflow
+
+The **Manifest** action node has three operations:
+
+| Operation                  | Gateway route               |
+| -------------------------- | --------------------------- |
+| **List Models**            | `GET /v1/models`            |
+| **Create Chat Completion** | `POST /v1/chat/completions` |
+| **Create Response**        | `POST /v1/responses`        |
+
+For a first test, choose **Create Chat Completion**, set **Model** to `auto`, and use these messages:
+
+```json
+[
+  { "role": "user", "content": "Reply with one sentence confirming that Manifest is connected." }
+]
+```
+
+Your routing decides whether the route answers with buffered JSON or a stream. The node handles both: a buffered response is returned as the API's JSON object, and a streamed response is collected until it finishes and returned as its parsed server-sent events. Do not set `stream` in **Additional Body**. The node ignores that field.
+
+## Troubleshooting
+
+| Symptom                                                        | Cause                                                                                                                              |
+| -------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| Credential test fails with a connection error                  | n8n cannot reach the Base URL. See [Reaching a self-hosted instance](#reaching-a-self-hosted-instance-from-n8n).                  |
+| Credential test fails with `401`                               | The key is not a valid `mnfst_` harness key. Copy it again from the harness **Settings** page.                                      |
+| Every call returns `404`                                       | The Base URL ends in `/v1`. Remove it.                                                                                             |
+| The model list shows only `auto`, or calls fail with [M100](/errors/M100) or [M101](/errors/M101) | No provider is connected to the harness yet. Connect one on the harness's **Providers** tab.                |
