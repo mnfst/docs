@@ -1,7 +1,7 @@
 ---
 title: "M102: Provider subscription credentials unusable"
 sidebarTitle: "M102"
-description: "Manifest error M102 fires when routing picks a subscription provider whose OAuth or refresh credentials cannot be used. Fix: reconnect the subscription from Providers → Subscriptions."
+description: "M102 is returned when subscription credentials cannot be refreshed or used."
 icon: "plug-zap"
 keywords:
   [
@@ -25,11 +25,11 @@ canonical: "https://manifest.build/llm-gateway/docs/errors/M102"
 See https://manifest.build/llm-gateway/docs/errors/M102
 ```
 
-The provider name (`openai` in the example) varies based on which subscription route Manifest selected.
+The provider name (`openai` in the example) varies based on which subscription route the gateway selected.
 
 ## Why it happened
 
-Routing elected a **subscription** connection (ChatGPT OAuth, Claude Max token, Copilot device code, and similar), and Manifest still has a stored credential blob for it — but that credential cannot produce a usable access token.
+Routing elected a **subscription** connection (ChatGPT OAuth, Claude Max token, Copilot device code, and similar), and the gateway still has a stored credential blob for it — but that credential cannot produce a usable access token.
 
 Typical causes:
 
@@ -39,7 +39,7 @@ Typical causes:
 
 This is different from [M100](/llm-gateway/docs/errors/M100): M100 means there is no key on file. M102 means a subscription row exists and was elected, but the unwrap/refresh step failed.
 
-When fallback routes are configured, Manifest records the M102 hop and continues the chain. You only see a terminal M102 response when no usable fallback remains.
+When fallback routes are configured, the gateway records the M102 hop and continues the chain. You only see a terminal M102 response when no usable fallback remains.
 
 ## How to fix it
 

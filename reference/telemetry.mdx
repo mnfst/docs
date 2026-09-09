@@ -1,25 +1,25 @@
 ---
 title: "Data and telemetry"
 sidebarTitle: "Data & telemetry"
-description: "What Manifest stores about your requests, what's optional, and the anonymous daily report each self-hosted install sends. Includes the full field list and how to opt out."
+description: "Data saved for the dashboard and anonymous telemetry reported by self-hosted LLM Gateway instances."
 icon: "shield"
 keywords:
   ["data privacy", "prompt storage", "message recording", "anonymous telemetry", "MANIFEST_TELEMETRY_DISABLED", "TELEMETRY_ENDPOINT", "install_id", "opt out", "self-hosted telemetry"]
 canonical: "https://manifest.build/llm-gateway/docs/reference/telemetry"
 ---
 
-Two separate things happen to data as requests flow through Manifest: what your own instance records for the dashboard, and what a self-hosted install reports back to the project. This page covers both.
+Two separate things happen to data as requests flow through the gateway: what your own instance records for the dashboard, and what a self-hosted install reports back to the project. This page covers both.
 
-## What Manifest stores
+## What the gateway stores
 
-Manifest always keeps metadata about each request: model, provider, tier, token counts, cost, latency, and an error message. Error text is scrubbed for secrets before it lands, and the request headers Manifest stores drop credentials and IP addresses. The usage and cost views in the dashboard are built from that metadata alone. See [Observability](/llm-gateway/docs/observability) for what the record looks like in practice.
+The gateway always keeps metadata about each request: model, provider, tier, token counts, cost, latency, and an error message. Error text is scrubbed for secrets before it lands, and the request headers the gateway stores drop credentials and IP addresses. The usage and cost views in the dashboard are built from that metadata alone. See [Observability](/llm-gateway/docs/observability) for what the record looks like in practice.
 
-Message bodies are separate, and optional. With [request logs](/llm-gateway/docs/request-logs) on for a harness, Manifest also stores the request and response bodies of each provider attempt so you can read them back in the dashboard. New harnesses have it enabled; to make sure a harness records its logs, check its **Settings → Logs**.
+Message bodies are separate, and optional. With [request logs](/llm-gateway/docs/request-logs) on for a harness, the gateway also stores the request and response bodies of each provider attempt so you can read them back in the dashboard. New harnesses have it enabled; to make sure a harness records its logs, check its **Settings → Logs**.
 
-A stored body is exactly what went over the wire: every message, system instruction, tool definition and inline image, at full length. Manifest doesn't redact or truncate it, and there is no size limit. Stored bodies are held outside the database, in the object storage your instance is configured for, and deleted on a retention schedule. With logs off for a harness, that harness's prompts and completions stay between you and the provider.
+A stored body is exactly what went over the wire: every message, system instruction, tool definition and inline image, at full length. The gateway doesn't redact or truncate it, and there is no size limit. Stored bodies are held outside the database, in the object storage your instance is configured for, and deleted on a retention schedule. With logs off for a harness, that harness's prompts and completions stay between you and the provider.
 
 <Note>
-  If a harness handles data you'd rather Manifest never hold onto, switch
+  If a harness handles data you'd rather the gateway never hold onto, switch
   **Enable logs** off in its **Settings → Logs** section. Metadata collection
   isn't affected either way.
 </Note>
@@ -29,7 +29,7 @@ A stored body is exactly what went over the wire: every message, system instruct
 Once a day, each self-hosted install sends us a small anonymous report. That's how we know whether anyone's actually using the thing, and which providers are popular enough to deserve more work. It's aggregates, never content: no prompts, no messages, no keys, nothing tied to a user. Fifteen fields total.
 
 <Note>
-  This section applies to self-hosted installs only. Manifest Cloud has no
+  This section applies to self-hosted installs only. LLM Gateway Cloud has no
   separate telemetry report — your usage is already in your own dashboard.
 </Note>
 
@@ -40,20 +40,20 @@ Once a day, each self-hosted install sends us a small anonymous report. That's h
 | `schema_version` | `1` | So the shape can grow without breaking old clients. Stays `1` for additive changes; bumps on breaking ones |
 | `install_id` | random UUIDv4 | Count distinct installs. Generated once on first boot, persisted, never rotated |
 | `manifest_version` | `5.47.0` | Version adoption across the fleet |
-| `messages_total` | `1284` | Daily activity per install. One count per provider attempt, so a request that fell back twice counts three. Requests Manifest blocked count too |
+| `messages_total` | `1284` | Daily activity per install. One count per provider attempt, so a request that fell back twice counts three. Requests the gateway blocked count too |
 | `messages_by_provider` | `{"anthropic": 700, "openai": 500}` | Provider mix. Anything we don't recognize collapses to `"custom"`, so self-hosted provider names and URLs stay local. Activity with no provider, like a blocked request, lands in `"unknown"` |
 | `messages_by_tier` | `{"default": 900, "simple": 300, ...}` | Routing tier usage. A tier outside the known set collapses to `"other"`, and activity with no tier lands in `"unknown"` |
 | `messages_by_auth_type` | `{"api_key": 1200, "subscription": 84}` | API key, paid subscription or local usage. Anything else collapses to `"other"`, and activity with no auth type lands in `"unknown"` |
 | `tokens_input_total` | `1_450_000` | Volume-weighted signal |
 | `tokens_output_total` | `890_000` | Same |
-| `cost_usd_total` <sup>†</sup> | `47.83` | Sum of `cost_usd` Manifest computed at routing time, rounded to cents. Lets us see real dollar throughput instead of guessing from token counts. `0` for Ollama-only / free-API installs |
+| `cost_usd_total` <sup>†</sup> | `47.83` | Sum of `cost_usd` the gateway computed at routing time, rounded to cents. Lets us see real dollar throughput instead of guessing from token counts. `0` for Ollama-only / free-API installs |
 | `cost_usd_by_provider` <sup>†</sup> | `{"anthropic": 30.50, "openai": 17.33}` | Per-provider split of `cost_usd_total`, rounded to cents. Same `"custom"` collapse rule as `messages_by_provider` — admin-configured BYOK pricing is never keyed by the raw provider name |
 | `agents_total` | `4` | Configuration scale |
 | `agents_by_platform` | `{"openclaw": 3, "hermes": 1}` | Which agent clients people use. A harness whose platform is `other` is keyed by its category instead: `personal:other`, `app:other` or `coding:other` |
 | `platform` | `linux` / `darwin` / `windows` | OS distribution |
 | `arch` | `x64` / `arm64` | Architecture distribution |
 
-<sup>†</sup> *Optional. Installs running older Manifest versions omit these fields; receivers should feature-detect on presence rather than on `schema_version`. Cost values are derived from the same `input_tokens` / `output_tokens` we already ship, multiplied by Manifest's per-model pricing table — no new data leaves the box, just a rolled-up dollar figure for what's already disclosed.*
+<sup>†</sup> *Optional. Installs running older gateway versions omit these fields; receivers should feature-detect on presence rather than on `schema_version`. Cost values are derived from the same `input_tokens` / `output_tokens` we already ship, multiplied by the gateway's per-model pricing table — no new data leaves the box, just a rolled-up dollar figure for what's already disclosed.*
 
 ### Never sent
 

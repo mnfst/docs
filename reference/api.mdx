@@ -1,13 +1,13 @@
 ---
 title: "API"
-description: "The Manifest proxy speaks both OpenAI and Anthropic. Endpoints, auth, streaming, and error responses."
+description: "OpenAI- and Anthropic-compatible endpoints exposed by the Manifest LLM Gateway."
 icon: "code"
 keywords:
   ["chat completions", "responses API", "Anthropic messages", "auto", "v1/models", "streaming", "SSE", "fallback exhausted"]
 canonical: "https://manifest.build/llm-gateway/docs/reference/api"
 ---
 
-Manifest exposes both OpenAI and Anthropic-format endpoints on one proxy. Point your client at the Manifest URL, send `auto` as the model, and routing picks the real model behind the scenes.
+The gateway exposes both OpenAI and Anthropic-format endpoints on one proxy. Point your client at the gateway URL, send `auto` as the model, and routing picks the real model behind the scenes.
 
 ## Base URL
 
@@ -18,7 +18,7 @@ Manifest exposes both OpenAI and Anthropic-format endpoints on one proxy. Point 
 
 ## Authentication
 
-Every request requires a Manifest harness key:
+Every request requires a harness key:
 
 ```http
 Authorization: Bearer mnfst_YOUR_KEY_HERE
@@ -35,9 +35,9 @@ Generate a key from the dashboard's **Harnesses** page. Keys always start with `
 | `POST` | `/v1/messages` | Anthropic | Anthropic SDK, Claude Code, anything that speaks the Messages API |
 | `GET` | `/v1/models` | OpenAI | Listing the models your harness can route to |
 
-The proxy translates between formats internally, so you can send an OpenAI-shaped request and Manifest will reshape it before forwarding to an Anthropic-only model. The reverse works too.
+The proxy translates between formats internally, so you can send an OpenAI-shaped request and the gateway will reshape it before forwarding to an Anthropic-only model. The reverse works too.
 
-Translation carries what the request itself contains: messages, tools, and tool results. Manifest does not resolve `previous_response_id`, so send the full conversation in `input` on every `/v1/responses` request.
+Translation carries what the request itself contains: messages, tools, and tool results. The gateway does not resolve `previous_response_id`, so send the full conversation in `input` on every `/v1/responses` request.
 
 ## Chat completions
 
@@ -53,7 +53,7 @@ curl -X POST http://localhost:2099/v1/chat/completions \
   }'
 ```
 
-Manifest adapts the body to the provider it picked. It replaces `model` with the real model ID. It converts the body to the format that provider expects. It renames parameters the provider spells differently, like `max_tokens` and `max_completion_tokens`. And it merges the model parameters saved on your harness into every attempt. Some fields only exist at OpenAI: `stream_options`, `reasoning_effort`, `modalities`, `audio`, and `prediction`. Those reach OpenAI and OpenRouter. Every other provider gets the request without them, and nothing warns you.
+The gateway adapts the body to the provider it picked. It replaces `model` with the real model ID. It converts the body to the format that provider expects. It renames parameters the provider spells differently, like `max_tokens` and `max_completion_tokens`. And it merges the model parameters saved on your harness into every attempt. Some fields only exist at OpenAI: `stream_options`, `reasoning_effort`, `modalities`, `audio`, and `prediction`. Those reach OpenAI and OpenRouter. Every other provider gets the request without them, and nothing warns you.
 
 ## Anthropic messages
 
@@ -80,7 +80,7 @@ curl http://localhost:2099/v1/models \
   -H "Authorization: Bearer mnfst_YOUR_KEY_HERE"
 ```
 
-Send `auto` to let Manifest route, or send any listed model ID to skip routing and go straight to that provider. If you send a model ID that no connected provider can serve, Manifest returns [M302: Model not available](/llm-gateway/docs/errors/M302). See [Routing → Route a specific model](/llm-gateway/docs/llm-gateway#route-a-specific-model).
+Send `auto` to let the gateway route, or send any listed model ID to skip routing and go straight to that provider. If you send a model ID that no connected provider can serve, the gateway returns [M302: Model not available](/llm-gateway/docs/errors/M302). See [Routing → Route a specific model](/llm-gateway/docs/llm-gateway#route-a-specific-model).
 
 ### Inspect model capabilities
 
@@ -123,7 +123,7 @@ curl "http://localhost:2099/v1/models?capabilities=true" \
 | `features` | Known feature support: `stream` and `tools` |
 | `supported_endpoints` | API endpoint formats the model supports. Present only when the provider publishes them in its own model list |
 
-Capability fields are optional. A missing field means that support is unknown, not that the model does not support it. Manifest omits the entire `capabilities` object when it has no known metadata for a model.
+Capability fields are optional. A missing field means that support is unknown, not that the model does not support it. The gateway omits the entire `capabilities` object when it has no known metadata for a model.
 
 The synthetic `auto` model never includes capabilities because it can resolve to a different model for each request. Concrete model IDs remain directly routable exactly as listed, including IDs with the `-subscription` suffix.
 
@@ -175,7 +175,7 @@ curl "http://localhost:2099/v1/models?cost=true" \
 | `input` | USD per million input tokens |
 | `output` | USD per million output tokens |
 
-A zero value means the model has no per-token charge, as with some free or subscription-backed routes. If one price is unknown, Manifest omits only that field. If both prices are unknown, Manifest omits the entire `cost` object.
+A zero value means the model has no per-token charge, as with some free or subscription-backed routes. If one price is unknown, the gateway omits only that field. If both prices are unknown, the gateway omits the entire `cost` object.
 
 The synthetic `auto` model never includes cost because its concrete model is selected for each request. To inspect both metadata types in one response, combine the query parameters: `?capabilities=true&cost=true`.
 
@@ -204,8 +204,8 @@ Errors come in two shapes, depending on the caller. A tool or SDK call gets a re
 | Status | Meaning |
 |---|---|
 | `401` | Invalid or missing `Authorization` header |
-| `402` | Manifest Free plan quota reached (`error.code = PLAN_LIMIT_REQUESTS`, [M204](/llm-gateway/docs/errors/M204)), or provider billing/quota error from the upstream |
-| `429` | Manifest rate limit tripped ([M201](/llm-gateway/docs/errors/M201), [M202](/llm-gateway/docs/errors/M202), [M203](/llm-gateway/docs/errors/M203)), or a rate limit the provider itself returned |
+| `402` | LLM Gateway Cloud Free plan quota reached (`error.code = PLAN_LIMIT_REQUESTS`, [M204](/llm-gateway/docs/errors/M204)), or provider billing/quota error from the upstream |
+| `429` | gateway rate limit tripped ([M201](/llm-gateway/docs/errors/M201), [M202](/llm-gateway/docs/errors/M202), [M203](/llm-gateway/docs/errors/M203)), or a rate limit the provider itself returned |
 | `5xx` | Upstream provider error (triggers [fallback](/llm-gateway/docs/llm-gateway#fallback)) |
 
 A [hard limit](/llm-gateway/docs/llm-gateway#hard-limits) block ([M200](/llm-gateway/docs/errors/M200)) is not in this table: it comes back as an HTTP `200` chat completion whose assistant message carries the block text. When the fallback chain is exhausted, the response keeps the primary model's real error status and carries `X-Manifest-Fallback-Exhausted: true`; the body keeps the provider's own error code, or `fallback_exhausted` when there is none.

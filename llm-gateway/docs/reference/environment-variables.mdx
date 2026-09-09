@@ -1,16 +1,16 @@
 ---
 title: "Environment variables"
-description: "Every environment variable Manifest reads at startup, grouped by what it controls: database, auth, rate limiting, email, OAuth, telemetry."
+description: "Environment variables for a self-hosted Manifest LLM Gateway."
 icon: "settings"
 keywords:
   ["DATABASE_URL", "BETTER_AUTH_SECRET", "BETTER_AUTH_URL", "PORT", "BIND_ADDRESS", "THROTTLE_LIMIT", "EMAIL_PROVIDER", "Resend", "Mailgun", "SendGrid", "MANIFEST_TELEMETRY_DISABLED"]
 canonical: "https://manifest.build/llm-gateway/docs/reference/environment-variables"
 ---
 
-Manifest reads its configuration from environment variables. In the bundled Docker setup these come from `~/manifest/.env`. For `docker run`, pass them with `-e`. For non-Docker installs, export them in the shell before launching the backend.
+The gateway reads its configuration from environment variables. In the bundled Docker setup these come from `~/manifest/.env`. For `docker run`, pass them with `-e`. For non-Docker installs, export them in the shell before launching the backend.
 
 <Note>
-  This page is for [self-hosted](/llm-gateway/docs/self-hosted) instances only. On [Manifest
+  This page is for [self-hosted](/llm-gateway/docs/self-hosted) instances only. On [LLM Gateway
   Cloud](https://app.manifest.build) there is no server to configure and no
   `.env` to edit — everything you can change lives in the dashboard.
 </Note>
@@ -24,7 +24,7 @@ Manifest reads its configuration from environment variables. In the bundled Dock
 | `BETTER_AUTH_URL` | No | `http://localhost:2099` | Public URL the dashboard is reachable on. Must match the browser URL |
 | `PORT` | No | `2099` | Dashboard port. Under the bundled compose file this sets both the published host port and the internal listener, and `BETTER_AUTH_URL` follows it |
 | `NODE_ENV` | No | `production` | Node environment. Telemetry is disabled when this isn't `production`. Fixed to `production` by the bundled compose file — the image is a production artifact |
-| `MANIFEST_MODE` | No | — | Marks the install as self-hosted when Manifest can't tell on its own. Accepted value: `selfhosted` (`local` is a legacy alias with the same effect). Unset, Manifest detects Docker, Podman, and Kubernetes automatically; some platforms hide the container, which is why the [Render](/llm-gateway/docs/deploy/render), [Koyeb](/llm-gateway/docs/deploy/koyeb), [Easypanel](/llm-gateway/docs/deploy/easypanel), and [AWS](/llm-gateway/docs/deploy/aws) guides set it |
+| `MANIFEST_MODE` | No | — | Marks the install as self-hosted when the gateway can't tell on its own. Accepted value: `selfhosted` (`local` is a legacy alias with the same effect). Unset, the gateway detects Docker, Podman, and Kubernetes automatically; some platforms hide the container, which is why the [Render](/llm-gateway/docs/deploy/render), [Koyeb](/llm-gateway/docs/deploy/koyeb), [Easypanel](/llm-gateway/docs/deploy/easypanel), and [AWS](/llm-gateway/docs/deploy/aws) guides set it |
 
 ## Network & security
 
@@ -47,12 +47,12 @@ Manifest reads its configuration from environment variables. In the bundled Dock
 | `DB_POOL_MAX` | `10` | Max PostgreSQL connections in the main pool |
 | `AUTH_DB_POOL_MAX` | `5` | Separate pool used by Better Auth. Counted on top of `DB_POOL_MAX` when sizing your server's `max_connections` |
 | `RUN_MIGRATIONS_ON_BOOT` | `true` | Run pending migrations at startup. Set `false` on multi-replica deploys so only one instance migrates |
-| `DB_TUNE_SESSION` | `true` | Apply Manifest's planner defaults at boot. Set `false` on managed Postgres where your role can't `ALTER ROLE` itself |
+| `DB_TUNE_SESSION` | `true` | Apply the gateway's planner defaults at boot. Set `false` on managed Postgres where your role can't `ALTER ROLE` itself |
 | `SEED_DATA` | `false` | Seed demo data on first boot. Development only — the seeder refuses to run under `NODE_ENV=production`, so it has no effect on a Docker self-host. Use the first-run setup wizard to create your admin account |
 
 ## LLM proxy
 
-How Manifest talks to upstream providers.
+How the gateway talks to upstream providers.
 
 | Variable | Default | Description |
 |---|---|---|
@@ -91,7 +91,7 @@ Storage and retention for [request logs](/llm-gateway/docs/request-logs). The bu
 | `AUTOFIX_GLOBAL_ENABLED` | `true` | Set `false` to turn Autofix off for the whole deployment. No call reaches the healing service, including the boot health check |
 | `AUTOFIX_TIMEOUT_MS` | `10000` | Timeout per healing call, in milliseconds |
 | `AUTOFIX_REPAIRABLE_STATUSES` | `400,404,422` | Which provider statuses are eligible for a repair |
-| `AUTOFIX_HEALING_API_KEY` | unset | Sent as `x-api-key` to the healing service. Self-hosted installs don't need it; with no key set, the install announces its anonymous install id instead. Only relevant if Manifest issues you one |
+| `AUTOFIX_HEALING_API_KEY` | unset | Sent as `x-api-key` to the healing service. Self-hosted installs don't need it; with no key set, the install announces its anonymous install id instead. Only relevant when provided by the hosted healing service |
 | `AUTOFIX_REPORT_ALL_4XX` | `false` | Opt-in. Also report request-side 4xx errors (except `401`/`402`/`403`/`429`) from harnesses with Autofix on, as diagnostic evidence with the secret-scrubbed request body. Bodies over 256 KB are dropped, not truncated. No fix comes back from it |
 
 ## Email
@@ -127,11 +127,14 @@ Each provider activates automatically when both `*_CLIENT_ID` and `*_CLIENT_SECR
 
 | Variable | Provider |
 |---|---|
-| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | Google |
-| `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` | GitHub |
-| `DISCORD_CLIENT_ID` / `DISCORD_CLIENT_SECRET` | Discord |
+| `GOOGLE_CLIENT_ID` | Google OAuth client ID |
+| `GOOGLE_CLIENT_SECRET` | Google OAuth client secret |
+| `GITHUB_CLIENT_ID` | GitHub OAuth client ID |
+| `GITHUB_CLIENT_SECRET` | GitHub OAuth client secret |
+| `DISCORD_CLIENT_ID` | Discord OAuth client ID |
+| `DISCORD_CLIENT_SECRET` | Discord OAuth client secret |
 
-Subscription OAuth (ChatGPT, Claude, MiniMax) uses Manifest-side client IDs by default. Override only if you've registered your own app:
+Subscription OAuth (ChatGPT, Claude, MiniMax) uses gateway-provided client IDs by default. Override only if you've registered your own app:
 
 | Variable | Description |
 |---|---|
@@ -170,7 +173,7 @@ Sentry is opt-in and stays off unless you give it a DSN.
 
 ## Postgres bundled volume
 
-When you run the bundled compose file, Manifest brings up its own Postgres container. To use a stronger password than the default, set **both** of these. They must agree, and special characters in the password must be percent-encoded in `DATABASE_URL`:
+When you run the bundled compose file, the gateway brings up its own Postgres container. To use a stronger password than the default, set **both** of these. They must agree, and special characters in the password must be percent-encoded in `DATABASE_URL`:
 
 | Variable | Description |
 |---|---|

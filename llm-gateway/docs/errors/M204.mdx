@@ -1,7 +1,7 @@
 ---
 title: "M204: Monthly request limit reached"
 sidebarTitle: "M204"
-description: "Manifest error M204 fires when a Manifest Cloud Free workspace uses all monthly requests. Returns HTTP 402 with PLAN_LIMIT_REQUESTS. Fix: upgrade to Pro or wait for the monthly reset."
+description: "M204 is returned when a free LLM Gateway Cloud workspace reaches its monthly request allowance."
 icon: "badge-alert"
 keywords:
   ["M204", "Manifest M204", "PLAN_LIMIT_REQUESTS", "monthly request limit", "free plan request limit", "Manifest billing", "402 Payment Required", "upgrade to Pro"]
@@ -19,7 +19,7 @@ SDK and tool callers receive an HTTP 402 JSON error with `error.code` set to `PL
 
 ## Why it happened
 
-Your Manifest Cloud workspace reached the Free plan monthly request quota. This is a Manifest plan restriction, not a provider error and not a limit you configured on a harness.
+Your LLM Gateway Cloud workspace reached the Free plan monthly request quota. This is a Cloud plan restriction, not a provider error and not a limit you configured on a harness.
 
 ## How to fix it
 

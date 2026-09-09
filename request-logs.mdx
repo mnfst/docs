@@ -1,6 +1,6 @@
 ---
 title: "Request logs"
-description: "Store the full request and response body of every provider attempt, and read them back as a conversation from the Requests page. One toggle per harness."
+description: "Inspect the request received from your client and the body and response for each provider attempt."
 icon: "logs"
 keywords:
   ["request logs", "message recording", "request body", "response body", "LLM conversation log", "prompt logging", "full body log", "tool calls", "log retention", "S3 log storage"]
@@ -12,7 +12,7 @@ canonical: "https://manifest.build/llm-gateway/docs/request-logs"
   <button type="button" data-deploy-mode="selfhosted">Self-hosted</button>
 </div>
 
-The [Requests page](/llm-gateway/docs/observability) tells you what a request cost and which model served it. Request logs tell you what was actually said: the body Manifest sent to the provider, and the body that came back. The dashboard calls this feature **Logs**.
+The [Requests page](/llm-gateway/docs/observability) tells you what a request cost and which model served it. Request logs tell you what was actually said: the body the gateway sent to the provider, and the body that came back. The dashboard calls this feature **Logs**.
 
 It's one toggle per harness.
 
@@ -22,11 +22,11 @@ Recording happens per **provider attempt**, not per request. A request that fall
 
 | | What's stored |
 |---|---|
-| **Request** | The body Manifest forwarded to the provider, after routing rewrote the model and translated the protocol. Not the body your client sent |
+| **Request** | The body the gateway forwarded to the provider, after routing rewrote the model and translated the protocol. Not the body your client sent |
 | **Response** | The parsed JSON body, or for a streamed attempt, the raw SSE stream as it arrived |
 | **Wire format** | Which protocol the exchange used, so the drawer can render it correctly |
 
-A request Manifest blocked itself, on a [hard limit](/llm-gateway/docs/llm-gateway#hard-limits) or a malformed body, still lists one attempt, labelled with the model you asked for or **No provider**. It carries the failure status and no **Messages**, **Tools**, or **Raw** tab: Manifest sent nothing to a provider, so there is nothing to read back.
+A request blocked by the gateway, on a [hard limit](/llm-gateway/docs/llm-gateway#hard-limits) or a malformed body, still lists one attempt, labelled with the model you asked for or **No provider**. It carries the failure status and no **Messages**, **Tools**, or **Raw** tab: the gateway sent nothing to a provider, so there is nothing to read back.
 
 ## Reading it back
 
@@ -53,9 +53,9 @@ New harnesses have it on. To make sure a harness records its logs, check **Setti
 </Frame>
 
 <Note>
-  Recording stores your prompts and completions. Everything else Manifest keeps
+  Recording stores your prompts and completions. Everything else the gateway keeps
   is metadata ([Data and telemetry](/llm-gateway/docs/reference/telemetry) covers the
-  distinction). If a harness handles data you'd rather Manifest never hold onto,
+  distinction). If a harness handles data you'd rather the gateway never hold onto,
   leave recording off for that harness.
 </Note>
 
@@ -79,7 +79,7 @@ Self-hosted installs can override this with `REQUEST_RECORDING_RETENTION_DAYS`. 
 
 <Note>
   Logs were reintroduced in **v6.18.0**. On an older self-hosted install,
-  [upgrade Manifest](/llm-gateway/docs/self-hosted#upgrading) first.
+  [upgrade the gateway](/llm-gateway/docs/self-hosted#upgrading) first.
 </Note>
 
 </div>
@@ -89,14 +89,14 @@ Recordings don't live in Postgres. They're gzipped and written to object storage
 <Tabs>
   <Tab title="Docker (default)">
     The bundled compose file mounts a named volume `manifest_request_recordings`
-    at `/data/request-recordings` and points Manifest at it. Nothing to
+    at `/data/request-recordings` and points the gateway at it. Nothing to
     configure when your compose file includes that volume; an install from
     before v6.18.0 needs [one upgrade step](/llm-gateway/docs/self-hosted#upgrading) first. The
     volume survives `docker compose down` the same way the Postgres volume
     does.
   </Tab>
   <Tab title="S3-compatible">
-    Set a bucket and region, and Manifest writes there instead. Required for
+    Set a bucket and region, and the gateway writes there instead. Required for
     multi-replica deploys, since replicas can't share a local disk, and for any
     platform without a persistent volume.
 
@@ -116,7 +116,7 @@ Recordings don't live in Postgres. They're gzipped and written to object storage
 `REQUEST_RECORDING_STORAGE` defaults to `auto`, which picks the backend by what you've configured: any S3 setting present means S3, otherwise the mounted filesystem path. Set it to `s3`, `filesystem`, or `disabled` to decide explicitly.
 
 <Warning>
-  Under `auto`, setting *some* S3 variables commits Manifest to S3. A bucket
+  Under `auto`, setting *some* S3 variables commits the gateway to S3. A bucket
   without a region, or one access-key half without the other, leaves recording
   with no working backend instead of falling back to local disk. Configure it
   fully or not at all.
@@ -132,7 +132,7 @@ A storage problem never stops traffic, and the dashboard never mentions it. Flip
 docker compose logs manifest | grep "Request recording storage"
 ```
 
-A line reading `Request recording storage unavailable: <reason>` means Manifest is storing nothing, and the reason names what to fix. No such line means the backend resolved.
+A line reading `Request recording storage unavailable: <reason>` means the gateway is storing nothing, and the reason names what to fix. No such line means the backend resolved.
 
 ### Platforms without a persistent disk
 
@@ -142,5 +142,5 @@ The one-click templates set this up for you. Render mounts a persistent disk. Ra
 
 - [Observability](/llm-gateway/docs/observability) — the request log these recordings hang off
 - [Autofix](/llm-gateway/docs/autofix) — comparing a failed request against its patched retry
-- [Data and telemetry](/llm-gateway/docs/reference/telemetry) — what Manifest stores by default
+- [Data and telemetry](/llm-gateway/docs/reference/telemetry) — what the gateway stores by default
 - [Environment variables](/llm-gateway/docs/reference/environment-variables#request-recordings)

@@ -1,7 +1,7 @@
 ---
 title: "M300: Missing messages array"
 sidebarTitle: "M300"
-description: "Manifest error M300 fires when the /v1/chat/completions body has no messages array (missing, not an array, or empty). Returns HTTP 400."
+description: "M300 is returned when /v1/chat/completions receives no usable messages array."
 icon: "message-square-warning"
 keywords:
   ["M300", "Manifest M300", "messages array required", "empty messages", "400 Bad Request", "OpenAI compatible API", "chat completions validation", "Manifest validation"]
@@ -17,7 +17,7 @@ See https://manifest.build/llm-gateway/docs/errors/M300
 
 ## Why it happened
 
-The OpenAI-compatible chat completions API requires a `messages` array with at least one entry. Manifest got a body where `messages` was missing, not an array, or empty.
+The OpenAI-compatible chat completions API requires a `messages` array with at least one entry. The gateway received a body where `messages` was missing, not an array, or empty.
 
 ## How to fix it
 
@@ -36,6 +36,6 @@ The OpenAI SDK handles this for you. If you're hand-rolling the request, eyeball
 
 ## Related
 
-- [M303: Local provider unavailable on Manifest Cloud](/llm-gateway/docs/errors/M303)
+- [M303: Local provider unavailable on LLM Gateway Cloud](/llm-gateway/docs/errors/M303)
 - [API reference](/llm-gateway/docs/reference/api)
 - [All error codes](/llm-gateway/docs/errors)

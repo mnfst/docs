@@ -1,13 +1,13 @@
 ---
-title: "Deploy Manifest on Coolify"
+title: "Deploy the LLM Gateway on Coolify"
 sidebarTitle: "Coolify"
-description: "Deploy Manifest on Coolify with a Docker Compose service stack, generated secrets, and a private PostgreSQL container."
+description: "Deploy the Manifest LLM Gateway with a Docker Compose service stack, generated secrets, and a private PostgreSQL container."
 icon: "/icons/deploy/coolify.svg"
 keywords:
   [
     "Manifest deployment",
     "Coolify",
-    "self-hosted Manifest",
+    "self-hosted gateway",
     "PostgreSQL",
     "Docker",
   ]
@@ -49,11 +49,11 @@ This stack runs on infrastructure you control through Coolify. Your server, stor
    - `SERVICE_HEX_64_ENCRYPTION`
 7. Deploy.
 
-The Compose file uses Coolify magic environment variables so the app URL, Postgres password, Better Auth secret, and Manifest encryption key are generated and stay stable between deployments.
+The Compose file uses Coolify magic environment variables so the app URL, Postgres password, Better Auth secret, and gateway encryption key are generated and stay stable between deployments.
 
-## Open Manifest
+## Open the gateway
 
-After deployment, open the generated Manifest URL and create the first admin account. Fresh installs redirect to `/setup`; the first account you create becomes the admin.
+After deployment, open the generated gateway URL and create the first admin account. Fresh installs redirect to `/setup`; the first account you create becomes the admin.
 
 Verify the deployment:
 

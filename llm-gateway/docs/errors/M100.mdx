@@ -1,7 +1,7 @@
 ---
 title: "M100: Provider API key missing"
 sidebarTitle: "M100"
-description: "Manifest error M100 fires when routing picks a provider that has no API key for this harness (OpenAI, Anthropic, Gemini, OpenRouter, etc). Fix: add the key from Providers → Usage-based."
+description: "M100 is returned when routing selects a provider for which the harness has no API key."
 icon: "plug-zap"
 keywords:
   ["M100", "Manifest M100", "provider API key missing", "no OpenAI key", "no Anthropic key", "no Gemini key", "OpenRouter key", "Manifest routing", "provider credentials"]
@@ -15,11 +15,11 @@ canonical: "https://manifest.build/llm-gateway/docs/errors/M100"
 See https://manifest.build/llm-gateway/docs/errors/M100
 ```
 
-The provider name (`anthropic` in the example) varies based on which provider Manifest selected.
+The provider name (`anthropic` in the example) varies based on which provider the gateway selected.
 
 ## Why it happened
 
-Routing picked a provider that has no key on file for this harness. Manifest won't silently swap vendors on you, so the request stops here.
+Routing picked a provider that has no key on file for this harness. The gateway won't silently swap vendors on you, so the request stops here.
 
 ## How to fix it
 

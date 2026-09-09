@@ -1,7 +1,7 @@
 ---
 title: "M500: Internal server error"
 sidebarTitle: "M500"
-description: "Manifest error M500 is a generic 500 fallback for unhandled errors in the proxy. Usually transient. Fix: retry, then check backend logs on self-hosted."
+description: "M500 is returned when the gateway encounters an unhandled internal error."
 icon: "server-crash"
 keywords:
   ["M500", "Manifest M500", "internal server error", "500 Internal Server Error", "5xx", "proxy crash", "Manifest server error", "self-hosted debugging"]
@@ -17,7 +17,7 @@ See https://manifest.build/llm-gateway/docs/errors/M500
 
 ## Why it happened
 
-Manifest hit an unexpected error while handling your request. Usually that's a database hiccup, a downstream provider returning something unparseable, or a real bug. The actual stack trace is logged server-side, but masked in the response so we don't leak internals.
+The gateway hit an unexpected error while handling your request. Usually that's a database hiccup, a downstream provider returning something unparseable, or a real bug. The actual stack trace is logged server-side, but masked in the response so we don't leak internals.
 
 ## How to fix it
 

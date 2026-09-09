@@ -1,10 +1,10 @@
 ---
-title: "Deploy Manifest on AWS"
+title: "Deploy the LLM Gateway on AWS"
 sidebarTitle: "AWS"
-description: "Deploy Manifest on AWS with CloudFormation, ECS Fargate, RDS PostgreSQL, Secrets Manager, and an Application Load Balancer."
+description: "Deploy the Manifest LLM Gateway with CloudFormation, ECS Fargate, RDS PostgreSQL, Secrets Manager, and an Application Load Balancer."
 icon: "/icons/deploy/aws.svg"
 keywords:
-  ["Manifest deployment", "AWS", "self-hosted Manifest", "PostgreSQL", "Docker"]
+  ["Manifest deployment", "AWS", "self-hosted gateway", "PostgreSQL", "Docker"]
 canonical: "https://manifest.build/llm-gateway/docs/deploy/aws"
 ---
 
@@ -19,7 +19,7 @@ canonical: "https://manifest.build/llm-gateway/docs/deploy/aws"
 
 ## Overview
 
-The AWS template deploys Manifest with ECS Fargate, RDS PostgreSQL, Secrets Manager, CloudWatch Logs, and an Application Load Balancer. It is a good fit when you want Manifest in your own AWS account.
+The AWS template deploys the gateway with ECS Fargate, RDS PostgreSQL, Secrets Manager, CloudWatch Logs, and an Application Load Balancer. It is a good fit when you want the gateway in your own AWS account.
 
 ## Prerequisites
 
@@ -65,11 +65,11 @@ The CloudFormation template generates:
 - `BETTER_AUTH_SECRET`.
 - `MANIFEST_ENCRYPTION_KEY`.
 
-Manifest runs with `PORT=2099`, `BIND_ADDRESS=0.0.0.0`, and `MANIFEST_MODE=selfhosted`.
+The gateway runs with `PORT=2099`, `BIND_ADDRESS=0.0.0.0`, and `MANIFEST_MODE=selfhosted`.
 
 The template also creates an S3 bucket for [request logs](/llm-gateway/docs/request-logs). It is retained by design, so deleting the CloudFormation stack leaves the bucket in place. Delete it by hand when you tear the deployment down.
 
-## Open Manifest
+## Open the gateway
 
 After deployment, the script prints `ServiceUrl` and `HealthCheckUrl`.
 
@@ -83,7 +83,7 @@ Open `ServiceUrl` and create the first account. Fresh installs redirect to `/set
 
 ## Production notes
 
-- The default template exposes Manifest over HTTP on the generated load balancer DNS name.
+- The default template exposes the gateway over HTTP on the generated load balancer DNS name.
 - Configure TLS with your own domain and ACM certificate before using the deployment for production authentication traffic.
 - Set database deletion protection if you want to avoid accidental RDS deletion.
 

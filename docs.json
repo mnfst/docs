@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "name": "Manifest",
+  "name": "Manifest LLM Gateway",
   "theme": "maple",
   "logo": {
     "light": "/logo/light.svg",
@@ -11,7 +11,7 @@
   "css": "/style.css",
   "js": "/scripts/no-tab-jump.js",
   "banner": {
-    "content": "**NEW** Manifest is becoming the self-healing layer for APIs. [Read more](https://manifest.build/blog/manifest-is-taking-a-new-direction/)",
+    "content": "You are reading the **Manifest LLM Gateway documentation**. Looking for Manifest, the self-healing API? [Read the Manifest documentation](https://manifest.build/docs).",
     "dismissible": false
   },
   "colors": {
@@ -42,7 +42,7 @@
   "seo": {
     "metatags": {
       "canonical": "https://manifest.build",
-      "og:site_name": "Manifest",
+      "og:site_name": "Manifest LLM Gateway",
       "og:type": "website",
       "twitter:card": "summary_large_image",
       "twitter:site": "@Manifestforai",
@@ -73,12 +73,12 @@
     }
   },
   "search": {
-    "prompt": "Search Manifest docs..."
+    "prompt": "Search LLM Gateway docs..."
   },
   "navbar": {
     "links": [
       {
-        "label": "Dashboard",
+        "label": "Open dashboard",
         "href": "https://app.manifest.build"
       },
       {
@@ -99,7 +99,7 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Documentation",
+        "tab": "LLM Gateway",
         "groups": [
           {
             "group": "Getting Started",

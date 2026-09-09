@@ -1,7 +1,7 @@
 ---
 title: "M001: Missing Authorization header"
 sidebarTitle: "M001"
-description: "Manifest error M001 fires when /v1/chat/completions is called without an Authorization header. Returns HTTP 401. Fix: send `Authorization: Bearer mnfst_<key>`."
+description: "M001 is returned when a request has no Authorization header. Send a Bearer harness key."
 icon: "key-round"
 keywords:
   ["M001", "Manifest M001", "Authorization header missing", "Bearer token", "401 Unauthorized", "OpenAI compatible 401", "Manifest auth error", "chat completions authorization"]
@@ -17,7 +17,7 @@ See https://manifest.build/llm-gateway/docs/errors/M001
 
 ## Why it happened
 
-Your client called `/v1/chat/completions` without an `Authorization` header. Manifest checks a harness API key on every request, so the header has to be there.
+Your client called `/v1/chat/completions` without an `Authorization` header. The gateway checks a harness API key on every request, so the header has to be there.
 
 ## How to fix it
 

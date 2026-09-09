@@ -1,11 +1,11 @@
 ---
-title: "Self-hosting Manifest"
+title: "Deploy the LLM Gateway"
 sidebarTitle: "Overview"
-description: "Every way to run your own Manifest instance: Docker on your machine, a managed platform like Railway, your own AWS or GCP account, or a server panel like Coolify."
+description: "Run the Manifest LLM Gateway with Docker, on a managed platform, or in your cloud account."
 icon: "rocket"
 keywords:
   [
-    "self-hosted Manifest",
+    "self-hosted gateway",
     "Manifest deployment",
     "Docker",
     "Railway",
@@ -19,7 +19,7 @@ keywords:
 canonical: "https://manifest.build/llm-gateway/docs/deploy"
 ---
 
-Everything on this page runs the same open-source Manifest image on infrastructure you control, with your own PostgreSQL database. Pick the path that matches where you want it to live. If you'd rather not run anything yourself, [Manifest Cloud](https://app.manifest.build) is the hosted alternative.
+Everything on this page runs the same open-source gateway image on infrastructure you control, with your own PostgreSQL database. Pick the path that matches where you want it to live. If you'd rather not run anything yourself, [LLM Gateway Cloud](https://app.manifest.build) is the hosted alternative.
 
 ## Your own machine
 
@@ -35,7 +35,7 @@ Someone else runs the infrastructure. Usually a one-click template or deploy but
 
 <CardGroup cols={2}>
   <Card title="Railway" icon="arrow-up-right" href="/llm-gateway/docs/deploy/railway">
-    Best one-click path for most users. The template provisions Manifest and
+    Best one-click path for most users. The template provisions the gateway and
     PostgreSQL.
   </Card>
   <Card title="Render" icon="arrow-up-right" href="/llm-gateway/docs/deploy/render">
@@ -43,12 +43,12 @@ Someone else runs the infrastructure. Usually a one-click template or deploy but
     Render PostgreSQL.
   </Card>
   <Card title="DigitalOcean" icon="arrow-up-right" href="/llm-gateway/docs/deploy/digitalocean">
-    App Platform deploy from the public repository with Manifest and a Dev
+    App Platform deploy from the public repository with the gateway and a Dev
     PostgreSQL database.
   </Card>
   <Card title="Fly.io" icon="arrow-up-right" href="/llm-gateway/docs/deploy/fly">
     CLI-based deploy using the public Docker image, Fly Postgres, and generated
-    Manifest secrets.
+    gateway secrets.
   </Card>
   <Card title="Heroku" icon="arrow-up-right" href="/llm-gateway/docs/deploy/heroku">
     Deploy-button guide with Heroku Postgres, generated secrets, and one

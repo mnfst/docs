@@ -1,13 +1,13 @@
 ---
-title: "Deploy Manifest on Koyeb"
+title: "Deploy the LLM Gateway on Koyeb"
 sidebarTitle: "Koyeb"
-description: "Deploy Manifest on Koyeb from the public Docker image with a Koyeb web service and PostgreSQL connection string."
+description: "Deploy the Manifest LLM Gateway from the public Docker image with a Koyeb web service and PostgreSQL."
 icon: "/icons/deploy/koyeb.svg"
 keywords:
   [
     "Manifest deployment",
     "Koyeb",
-    "self-hosted Manifest",
+    "self-hosted gateway",
     "PostgreSQL",
     "Docker",
   ]
@@ -25,22 +25,22 @@ canonical: "https://manifest.build/llm-gateway/docs/deploy/koyeb"
 
 ## Overview
 
-Koyeb can deploy Manifest from the public Docker image with a Deploy to Koyeb button. The button pre-fills the image, HTTP port, and runtime settings, but you must create PostgreSQL separately and replace the placeholder secrets before deploying.
+Koyeb can deploy the gateway from the public Docker image with a Deploy to Koyeb button. The button pre-fills the image, HTTP port, and runtime settings, but you must create PostgreSQL separately and replace the placeholder secrets before deploying.
 
 ## Prerequisites
 
 - A Koyeb account on a paid plan (Pro or higher) with a valid payment method. Since Koyeb joined Mistral AI, deploying requires a paid plan: on an account without one, the deploy link shows an announcement banner instead of the form.
 - A Koyeb PostgreSQL Database Service.
-- Two random 32+ character secrets for Manifest.
+- Two random 32+ character secrets for the gateway.
 - A private S3-compatible bucket and an access key for it. Koyeb instances have no persistent disk, so request logs need external storage.
 
 This deployment creates paid resources.
 
 ## Create PostgreSQL
 
-In Koyeb, create a PostgreSQL Database Service in the same region you plan to use for Manifest. After it is ready, open the database connection details and copy the connection string.
+In Koyeb, create a PostgreSQL Database Service in the same region you plan to use for the gateway. After it is ready, open the database connection details and copy the connection string.
 
-Manifest uses TLS to connect to Koyeb Postgres, so include `sslmode=require` in the connection string. If the copied URL has no query string, append `?sslmode=require`. If it already has query parameters, append `&sslmode=require`.
+The gateway uses TLS to connect to Koyeb Postgres, so include `sslmode=require` in the connection string. If the copied URL has no query string, append `?sslmode=require`. If it already has query parameters, append `&sslmode=require`.
 
 ## Generate secrets
 
@@ -51,7 +51,7 @@ openssl rand -hex 32
 openssl rand -hex 32
 ```
 
-## Deploy Manifest
+## Deploy the gateway
 
 1. Open the [Koyeb deploy link](https://app.koyeb.com/deploy?type=docker&image=docker.io%2Fmanifestdotbuild%2Fmanifest%3A6&name=manifest&service_type=web&ports=2099%3Bhttp%3B%2F&env%5BPORT%5D=2099&env%5BDATABASE_URL%5D=postgres%3A%2F%2FUSER%3APASSWORD%40HOST%2FDB%3Fsslmode%3Drequire&env%5BBETTER_AUTH_SECRET%5D=replace-with-openssl-rand-hex-32&env%5BMANIFEST_ENCRYPTION_KEY%5D=replace-with-different-openssl-rand-hex-32&env%5BBETTER_AUTH_URL%5D=https%3A%2F%2F%7B%7B+KOYEB_PUBLIC_DOMAIN+%7D%7D&env%5BMANIFEST_MODE%5D=selfhosted&env%5BBIND_ADDRESS%5D=0.0.0.0&env%5BDB_POOL_MAX%5D=8&env%5BAUTH_DB_POOL_MAX%5D=4&env%5BREQUEST_RECORDING_STORAGE%5D=s3&env%5BREQUEST_RECORDING_S3_BUCKET%5D=replace-with-private-bucket&env%5BREQUEST_RECORDING_S3_ENDPOINT%5D=https%3A%2F%2Fs3.example.com&env%5BREQUEST_RECORDING_S3_REGION%5D=us-east-1&env%5BREQUEST_RECORDING_S3_ACCESS_KEY_ID%5D=replace-with-limited-access-key&env%5BREQUEST_RECORDING_S3_SECRET_ACCESS_KEY%5D=replace-with-secret-key&env%5BREQUEST_RECORDING_S3_FORCE_PATH_STYLE%5D=false).
 2. Replace `DATABASE_URL` with your Koyeb Postgres connection string.
@@ -64,7 +64,7 @@ openssl rand -hex 32
 
 The button deploys `docker.io/manifestdotbuild/manifest:6` and exposes port `2099` over HTTP.
 
-## Open Manifest
+## Open the gateway
 
 After the deployment is live, open the public Koyeb domain and create the first account. Fresh installs redirect to `/setup`; the first account you create becomes the admin.
 

@@ -1,7 +1,7 @@
 ---
-title: "M303: Local provider unavailable on Manifest Cloud"
+title: "M303: Local provider unavailable on Cloud"
 sidebarTitle: "M303"
-description: "Manifest error M303 fires when a Manifest Cloud request routes to Ollama, LM Studio, or llama.cpp. Returns HTTP 400. Fix: self-host, or expose the runtime as a custom provider."
+description: "M303 is returned when LLM Gateway Cloud is asked to use Ollama, LM Studio, or llama.cpp."
 icon: "server-off"
 keywords:
   ["M303", "Manifest M303", "local provider cloud", "Ollama Manifest Cloud", "LM Studio", "llama.cpp", "400 Bad Request", "custom provider", "tunnel"]
@@ -17,9 +17,9 @@ See https://manifest.build/llm-gateway/docs/errors/M303
 
 ## Why it happened
 
-The built-in [local provider](/llm-gateway/docs/providers/local-models) tiles (Ollama, LM Studio, llama.cpp) route to `localhost`. On a self-hosted install that's your machine, which is the whole point. On Manifest Cloud, `localhost` is our server, which has no model running on it and no route back to your laptop.
+The built-in [local provider](/llm-gateway/docs/providers/local-models) tiles (Ollama, LM Studio, llama.cpp) route to `localhost`. On a self-hosted install that's your machine, which is the whole point. On LLM Gateway Cloud, `localhost` is our server, which has no model running on it and no route back to your laptop.
 
-Rather than dial an address that can't be yours, Manifest stops the request here.
+Rather than dial an address that can't be yours, the gateway stops the request here.
 
 ## How to fix it
 

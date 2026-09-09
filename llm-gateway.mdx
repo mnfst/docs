@@ -1,13 +1,13 @@
 ---
 title: "LLM Gateway"
-description: "Every request passes through the gateway: limits check it, routing picks the model, and fallback catches it when that model fails."
+description: "Route requests across models, enforce limits, and use fallbacks when a provider fails."
 icon: "split"
 keywords:
   ["LLM gateway", "model routing", "LLM router", "fallback chain", "hard limit", "custom tier", "default model", "fallback exhausted", "429 too many requests"]
 canonical: "https://manifest.build/llm-gateway/docs/llm-gateway"
 ---
 
-Point your client at Manifest instead of a provider, and every request goes through the gateway. Three things happen there: limits decide whether the request runs at all, routing picks the model, and fallback steps in when that model fails.
+Point your client at the gateway instead of a provider, and every request goes through the gateway. Three things happen there: limits decide whether the request runs at all, routing picks the model, and fallback steps in when that model fails.
 
 ## How a request flows
 
@@ -22,7 +22,7 @@ Point your client at Manifest instead of a provider, and every request goes thro
     A custom tier matches on a request header, or the request goes to your default tier. Send a real model ID instead of `auto` to skip routing. A matching custom tier header still wins.
   </Step>
   <Step title="Forward">
-    Manifest calls the resolved provider with your credentials and streams the response back.
+    The gateway calls the resolved provider with your credentials and streams the response back.
   </Step>
   <Step title="Recovery">
     If the provider returns an error, [Autofix](/llm-gateway/docs/autofix) may repair and resend the request once. Anything still failing moves down the fallback chain.
@@ -33,7 +33,7 @@ Routing runs in-process. There's no extra network call and no added latency.
 
 ## Routing
 
-Instead of hard-coding one model into every client, you point your client at Manifest and let it pick. Send `auto` as the model, and Manifest resolves the real model based on the rules you set on the dashboard **Routing** page.
+Instead of hard-coding one model into every client, you point your client at the gateway and let it pick. Send `auto` as the model, and the gateway resolves the real model based on the rules you set on the dashboard **Routing** page.
 
 <CardGroup cols={2}>
   <Card title="Default" icon="route" href="#default-tier">
@@ -50,7 +50,7 @@ Every harness has a default tier: one model plus up to five fallbacks. You set i
 
 ### Custom tiers
 
-Custom tiers route by request header. You create a tier on the dashboard, give it a header key and value, and pin it to a model with its own fallbacks. When an incoming request carries that header, Manifest sends it to that tier's model instead of the default. The header wins even when the body names an explicit model ID.
+Custom tiers route by request header. You create a tier on the dashboard, give it a header key and value, and pin it to a model with its own fallbacks. When an incoming request carries that header, the gateway sends it to that tier's model instead of the default. The header wins even when the body names an explicit model ID.
 
 The header key is yours to choose (lowercase letters, numbers, and hyphens). A few names are reserved and rejected, including `authorization`, `cookie`, and `x-api-key`. Send the header from your client like any other:
 
@@ -73,7 +73,7 @@ Create as many tiers as you need, each with its own model and parameters. This i
 
 ### Route a specific model
 
-To skip routing for a single request, send a real model ID instead of `auto`. Manifest forwards it straight to that model's provider, with no tier lookup and no fallbacks. A matching [custom tier](#custom-tiers) header is the exception. The request then runs on the tier's model and the tier's fallbacks. Call [`GET /v1/models`](/llm-gateway/docs/reference/api#listing-models) to list the model IDs your harness can reach.
+To skip routing for a single request, send a real model ID instead of `auto`. The gateway forwards it straight to that model's provider, with no tier lookup and no fallbacks. A matching [custom tier](#custom-tiers) header is the exception. The request then runs on the tier's model and the tier's fallbacks. Call [`GET /v1/models`](/llm-gateway/docs/reference/api#listing-models) to list the model IDs your harness can reach.
 
 ```bash
 curl -X POST https://app.manifest.build/v1/chat/completions \
@@ -87,11 +87,11 @@ curl -X POST https://app.manifest.build/v1/chat/completions \
 
 The response comes back with `X-Manifest-Tier: direct`, so you can tell a direct call from a routed one. A direct model ID works on all three endpoints: `/v1/chat/completions`, `/v1/responses`, and the Anthropic `/v1/messages`.
 
-The model list is scoped to the harness key. A model may be missing because its provider is not connected yet, or because the provider exists in your workspace but is not enabled for this harness. If you send a model ID that has no connected provider route, Manifest returns [M302: Model not available](/llm-gateway/docs/errors/M302). Send `auto` to use routing.
+The model list is scoped to the harness key. A model may be missing because its provider is not connected yet, or because the provider exists in your workspace but is not enabled for this harness. If you send a model ID that has no connected provider route, the gateway returns [M302: Model not available](/llm-gateway/docs/errors/M302). Send `auto` to use routing.
 
 ## Fallback
 
-When a model fails (provider outage, rate limit, bad request), Manifest retries with a backup model from the same tier. Your agent gets a response instead of an error.
+When a model fails (provider outage, rate limit, bad request), the gateway retries with a backup model from the same tier. Your agent gets a response instead of an error.
 
 ### What triggers a fallback
 
@@ -132,9 +132,9 @@ Fallback models are configured **per tier**. Each tier holds up to **5 fallback 
 
 ### Hung providers and the per-attempt timeout
 
-A provider that opens a connection but never returns eventually triggers a fallback via Manifest's per-attempt timeout (default 180 seconds), which surfaces as a synthetic `504 Gateway Timeout` and moves to the next model in the chain.
+A provider that opens a connection but never returns eventually triggers a fallback via the gateway's per-attempt timeout (default 180 seconds), which surfaces as a synthetic `504 Gateway Timeout` and moves to the next model in the chain.
 
-If your upstream client has its own timeout that fires at the same time, the client may disconnect first and Manifest will give up before reaching a healthy fallback. On self-hosted installs, lower [`PROVIDER_TIMEOUT_MS`](/llm-gateway/docs/reference/environment-variables) strictly below your client's timeout so the chain has room to run inside the client's window.
+If your upstream client has its own timeout that fires at the same time, the client may disconnect first and the gateway will give up before reaching a healthy fallback. On self-hosted installs, lower [`PROVIDER_TIMEOUT_MS`](/llm-gateway/docs/reference/environment-variables) strictly below your client's timeout so the chain has room to run inside the client's window.
 
 ### Response headers
 
@@ -151,7 +151,7 @@ A limit rule can block requests as well as email you. When a rule's action inclu
 The check runs before any provider is contacted, so a blocked request costs nothing. The block clears on its own at the start of the next period, or immediately if you raise the threshold.
 
 <Note>
-  On Manifest Cloud, running out of the Free plan's monthly requests is a
+  On LLM Gateway Cloud, running out of the Free plan's monthly requests is a
   different thing entirely: that returns [M204](/llm-gateway/docs/errors/M204) with HTTP `402`
   and isn't something you configured.
 </Note>

@@ -1,7 +1,7 @@
 ---
 title: "M200: Usage limit exceeded"
 sidebarTitle: "M200"
-description: "Manifest error M200 fires when a harness crosses a cost or token cap you configured on the Limits page. It comes back as an HTTP 200 assistant message, not a 429. Fix: raise the threshold or wait for the period to reset."
+description: "M200 is returned when a harness exceeds a cost or token limit configured in the dashboard."
 icon: "gauge"
 keywords:
   ["M200", "Manifest M200", "usage limit exceeded", "cost limit", "token limit", "spending cap", "budget cap", "monthly budget LLM", "Manifest limits", "HTTP 200 assistant message"]
@@ -21,9 +21,9 @@ The response arrives as HTTP 200 with this text in the assistant message content
 
 ## Why it happened
 
-You set a limit on the harness's [Limits](/llm-gateway/docs/observability#spend-alerts) page (say, "$10/day" or "500k tokens/hour"), and the current period's usage just crossed it. Manifest blocks every following request until the period resets or you raise the cap.
+You set a limit on the harness's [Limits](/llm-gateway/docs/observability#spend-alerts) page (say, "$10/day" or "500k tokens/hour"), and the current period's usage just crossed it. The gateway blocks every following request until the period resets or you raise the cap.
 
-This is different from [M204](/llm-gateway/docs/errors/M204), which is the Manifest Cloud Free plan monthly request quota, and different from provider 402 errors such as "insufficient credits" from OpenRouter.
+This is different from [M204](/llm-gateway/docs/errors/M204), which is the LLM Gateway Cloud Free plan monthly request quota, and different from provider 402 errors such as "insufficient credits" from OpenRouter.
 
 ## How to fix it
 

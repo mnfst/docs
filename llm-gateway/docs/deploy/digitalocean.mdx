@@ -1,13 +1,13 @@
 ---
-title: "Deploy Manifest on DigitalOcean"
+title: "Deploy the LLM Gateway on DigitalOcean"
 sidebarTitle: "DigitalOcean"
-description: "Deploy Manifest on DigitalOcean App Platform with the Deploy to DigitalOcean flow and a Dev PostgreSQL database."
+description: "Deploy the Manifest LLM Gateway on App Platform with the Deploy to DigitalOcean flow and a PostgreSQL database."
 icon: "/icons/deploy/digitalocean.svg"
 keywords:
   [
     "Manifest deployment",
     "DigitalOcean",
-    "self-hosted Manifest",
+    "self-hosted gateway",
     "PostgreSQL",
     "Docker",
   ]
@@ -19,13 +19,13 @@ canonical: "https://manifest.build/llm-gateway/docs/deploy/digitalocean"
   icon="external-link"
   href="https://cloud.digitalocean.com/apps/new?repo=https://github.com/mnfst/manifest/tree/main"
 >
-  App Platform deploy from the public repository with Manifest and a Dev
+  App Platform deploy from the public repository with the gateway and a Dev
   PostgreSQL database.
 </Card>
 
 ## Overview
 
-DigitalOcean App Platform can create a Manifest app from the public repository template. The template uses the public Manifest Docker image and provisions a Dev PostgreSQL database.
+DigitalOcean App Platform can create a gateway app from the public repository template. The template uses the public Manifest Docker image and provisions a Dev PostgreSQL database.
 
 ## Prerequisites
 
@@ -51,9 +51,9 @@ openssl rand -hex 32
 6. Fill in the recording storage secrets with your Space's settings: `REQUEST_RECORDING_S3_BUCKET`, `REQUEST_RECORDING_S3_ENDPOINT`, `REQUEST_RECORDING_S3_ACCESS_KEY_ID`, and `REQUEST_RECORDING_S3_SECRET_ACCESS_KEY`. The region defaults to `us-east-1`, which DigitalOcean Spaces accepts as a signing region.
 7. Create the app.
 
-DigitalOcean reads `.do/deploy.template.yaml` from the Manifest repository. The template includes the Manifest service and a Dev PostgreSQL database.
+DigitalOcean reads `.do/deploy.template.yaml` from the Manifest repository. The template includes the gateway service and a Dev PostgreSQL database.
 
-## Open Manifest
+## Open the gateway
 
 After App Platform finishes deploying, open the app URL and create the first account. Fresh installs redirect to `/setup`; the first account you create becomes the admin.
 

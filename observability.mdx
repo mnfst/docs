@@ -1,6 +1,6 @@
 ---
 title: "Observability"
-description: "See what every harness spent, which models served it, and what failed. Set email alerts when spending crosses a threshold."
+description: "Track cost, latency, models, providers, and failures across requests and provider attempts."
 icon: "activity"
 keywords:
   ["LLM observability", "AI cost tracking", "token usage", "spend alerts", "request log", "LLM analytics", "cost per agent", "cost per harness", "provider errors"]
@@ -16,14 +16,14 @@ Every request through the gateway is recorded: which model served it, what it co
 
 ## Requests and provider attempts
 
-Manifest tracks two things, and the difference matters once fallback is involved:
+The gateway tracks two things, and the difference matters once fallback is involved:
 
 | | What it is | When you get more than one |
 |---|---|---|
-| **Request** | One call from your agent to Manifest | Never. One call in, one Request. |
-| **Provider attempt** | One call from Manifest to a provider | Every fallback step and every [Autofix](/llm-gateway/docs/autofix) retry adds another |
+| **Request** | One call from your agent to the gateway | Never. One call in, one Request. |
+| **Provider attempt** | One call from the gateway to a provider | Every fallback step and every [Autofix](/llm-gateway/docs/autofix) retry adds another |
 
-A request that succeeds on the first try is one Request with one attempt. A request that fails twice before succeeding is still one Request, with three attempts. A request Manifest blocked itself, like a [hard limit](/llm-gateway/docs/llm-gateway#hard-limits) or a malformed body, is one Request with one attempt that never reached a provider. That attempt is listed under the model you asked for, or **No provider** when the request named none, and carries the error that stopped it.
+A request that succeeds on the first try is one Request with one attempt. A request that fails twice before succeeding is still one Request, with three attempts. A request blocked by the gateway, like a [hard limit](/llm-gateway/docs/llm-gateway#hard-limits) or a malformed body, is one Request with one attempt that never reached a provider. That attempt is listed under the model you asked for, or **No provider** when the request named none, and carries the error that stopped it.
 
 This is why the request count and the provider call count don't match, and why cost is attributed to attempts: a failed attempt can still burn tokens.
 
@@ -52,13 +52,13 @@ On the Free plan, the Overview covers up to 7 days of history; the 30-, 90-, and
 
 ### What's on each request
 
-Opening a request in the log shows the whole story: the tier that routed it, the model and provider that served it, input and output tokens, computed cost, latency, the auth type used ([API key, subscription, or local](/llm-gateway/docs/reference/glossary#auth-type)), and every fallback hop with its own status. Failures carry an error code, so a Manifest rejection like [M100](/llm-gateway/docs/errors/M100) reads differently from a provider's own 500.
+Opening a request in the log shows the whole story: the tier that routed it, the model and provider that served it, input and output tokens, computed cost, latency, the auth type used ([API key, subscription, or local](/llm-gateway/docs/reference/glossary#auth-type)), and every fallback hop with its own status. Failures carry an error code, so a gateway rejection like [M100](/llm-gateway/docs/errors/M100) reads differently from a provider's own 500.
 
 That's all metadata. To read the messages themselves, turn on [request logs](/llm-gateway/docs/request-logs) for the harness. Open a request, pick an attempt, and its **Messages** tab shows the body sent to the provider and the body that came back.
 
 <Tip>
   Local models record `cost = 0` with real token counts and latency, since
-  nothing was billed. Custom providers do the same, because Manifest can't
+  nothing was billed. Custom providers do the same, because the gateway can't
   infer pricing for a model it doesn't know.
 </Tip>
 

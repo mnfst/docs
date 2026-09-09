@@ -1,6 +1,6 @@
 ---
 title: "Autofix"
-description: "Repair a malformed request and resend it once, before the fallback chain runs. Turn it on per harness."
+description: "Use Manifest Autofix through the LLM Gateway to repair a malformed request and retry it once before fallback."
 icon: "wrench"
 keywords:
   ["auto-fix", "autofix", "self-healing", "LLM request repair", "malformed request", "400 bad request", "422 unprocessable", "model not found", "agent debugging", "harness debugging"]
@@ -14,7 +14,7 @@ canonical: "https://manifest.build/llm-gateway/docs/autofix"
 
 Some requests fail because of the request, not the model. A parameter the provider doesn't accept, a tool schema in the wrong shape, a model name that moved. Switching to a fallback model doesn't help, because the next model rejects the same body.
 
-Autofix handles that case. When a request fails with a repairable error, Manifest sends the failed request and the provider's error to a healing service, gets a corrected request back, and sends it once more. It runs **before** the fallback chain, so fallback is still the safety net if the repair doesn't land.
+Autofix handles that case. When a request fails with a repairable error, the gateway sends the failed request and the provider's error to a healing service, gets a corrected request back, and sends it once more. It runs **before** the fallback chain, so fallback is still the safety net if the repair doesn't land.
 
 ## When it runs
 
@@ -28,25 +28,25 @@ Autofix only touches request-side 4xx errors, where the provider is telling you 
 
 It deliberately skips `401`, `403`, `429`, and every `5xx`. A bad key, a rate limit, or a provider outage isn't something a rewritten body can fix, so those go straight to [fallback](/llm-gateway/docs/llm-gateway#fallback).
 
-Renamed models are covered through the provider itself. When a request names a model Manifest hasn't catalogued but the provider and credentials are unambiguous, Manifest forwards it anyway. The provider answers with its real error, typically a `404` for a model that no longer exists, and that error goes through the normal Autofix path. A patch that corrects the model name serves the request.
+Renamed models are covered through the provider itself. When a request names a model the gateway hasn't catalogued but the provider and credentials are unambiguous, the gateway forwards it anyway. The provider answers with its real error, typically a `404` for a model that no longer exists, and that error goes through the normal Autofix path. A patch that corrects the model name serves the request.
 
 ## How it works
 
 <Steps>
   <Step title="The request fails">
-    A provider returns a repairable 4xx. Manifest normalizes the error into a
+    A provider returns a repairable 4xx. The gateway normalizes the error into a
     message, type, and parameter.
   </Step>
-  <Step title="Manifest asks for a patch">
+  <Step title="The gateway asks for a patch">
     The failed request and the normalized error go to the hosted healing
     service, which returns a corrected request body.
   </Step>
   <Step title="One retry">
-    Manifest sends the patched request. There is no retry budget: it tries
+    The gateway sends the patched request. There is no retry budget: it tries
     exactly once.
   </Step>
   <Step title="Fallback if it still fails">
-    If the patched request fails too, Manifest reports the outcome and hands
+    If the patched request fails too, the gateway reports the outcome and hands
     off to your fallback chain as normal.
   </Step>
 </Steps>
@@ -59,7 +59,7 @@ Autofix is a per-harness toggle, and you meet it at two moments.
 
 <div data-deploy="selfhosted">
 
-Nothing to deploy or configure: your install talks to Manifest's hosted healing service directly.
+Nothing to deploy or configure: your install talks to the hosted Manifest Autofix service directly.
 
 </div>
 
@@ -73,11 +73,11 @@ The Connect Harness modal shows an Autofix toggle under the name field, pre-set 
 
 ### Harnesses you already have
 
-A harness that existed before Autofix keeps its state: Manifest never flips the toggle for you.
+A harness that existed before Autofix keeps its state: the gateway never flips the toggle for you.
 
 <div data-deploy="cloud">
 
-On Manifest Cloud, those harnesses are already on. You can switch any of them off on its **Settings** page.
+On LLM Gateway Cloud, those harnesses are already on. You can switch any of them off on its **Settings** page.
 
 </div>
 
@@ -113,7 +113,7 @@ The first time you enable Autofix, your install records a one-time consent: enab
 
 </div>
 
-When Autofix repairs a request, Manifest sends the failed request, including its message content, plus the provider's error response to the healing service.
+When Autofix repairs a request, the gateway sends the failed request, including its message content, plus the provider's error response to the healing service.
 
 Provider API keys and OAuth tokens are never sent: credentials travel in request headers, which are not part of the payload sent to the healing service. The provider's error response is scrubbed for secrets before it is sent.
 
@@ -132,9 +132,9 @@ See the [privacy policy](https://manifest.build/privacy/) and the [terms](https:
 Autofix is built to stay out of the way when it isn't working:
 
 - **One attempt.** A patched request is sent once. It never loops.
-- **Failures degrade quietly.** If the healing service errors or times out, your agent gets the original provider error. Autofix never turns a provider's 400 into a Manifest 500.
-- **A slow healer stops being asked.** After three consecutive transport failures, Manifest stops calling it for 30 seconds so a down service doesn't add latency to every failing request. One successful call clears the streak.
-- **Startup never waits.** In production, Manifest pings the healing service once at boot, fire-and-forget, and logs a warning if it's unreachable. It never blocks startup, and it's skipped entirely when Autofix is disabled globally.
+- **Failures degrade quietly.** If the healing service errors or times out, your agent gets the original provider error. Autofix never turns a provider's 400 into a gateway 500.
+- **A slow healer stops being asked.** After three consecutive transport failures, the gateway stops calling it for 30 seconds so a down service doesn't add latency to every failing request. One successful call clears the streak.
+- **Startup never waits.** In production, the gateway pings the healing service once at boot, fire-and-forget, and logs a warning if it's unreachable. It never blocks startup, and it's skipped entirely when Autofix is disabled globally.
 - **Fallback still runs.** Autofix sits in front of the chain, it doesn't replace it.
 
 ## Seeing what it did
@@ -162,7 +162,7 @@ Both **Recovered** cards link through to the matching filter on the request log.
 ## Environment variables
 
 <Note>
-  Self-hosted only. On [Manifest Cloud](https://app.manifest.build) there is no
+  Self-hosted only. On [LLM Gateway Cloud](https://app.manifest.build) there is no
   server to configure: everything Autofix related lives in the dashboard.
 </Note>
 
@@ -173,7 +173,7 @@ Autofix needs no setup. Every variable below is optional and adjusts behavior:
 | `AUTOFIX_GLOBAL_ENABLED`      | `true`        | Set `false` to turn Autofix off for the whole deployment. No call reaches the healing service, including the boot health check |
 | `AUTOFIX_TIMEOUT_MS`          | `10000`       | Timeout per healing call, in milliseconds              |
 | `AUTOFIX_REPAIRABLE_STATUSES` | `400,404,422` | Which provider statuses are eligible for a repair      |
-| `AUTOFIX_HEALING_API_KEY`     | unset         | Sent as `x-api-key` to the healing service. Only relevant if Manifest issues you one |
+| `AUTOFIX_HEALING_API_KEY`     | unset         | Sent as `x-api-key` to the healing service. Only relevant when provided by the hosted healing service |
 | `AUTOFIX_REPORT_ALL_4XX`      | `false`       | Opt-in. Also report request-side 4xx errors (except `401`/`402`/`403`/`429`) from harnesses with Autofix on, as diagnostic evidence with the secret-scrubbed request body. Bodies over 256 KB are dropped, not truncated. No fix comes back from it |
 
 You don't need `AUTOFIX_HEALING_API_KEY`. With no key set, the install announces its anonymous install id instead. The full list of variables lives in [Environment variables](/llm-gateway/docs/reference/environment-variables).

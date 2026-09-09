@@ -1,14 +1,14 @@
 ---
 title: "Subscription-based providers"
 sidebarTitle: "Subscription-based"
-description: "Reuse a paid plan you already have: ChatGPT, Claude, Gemini, Grok, GitHub Copilot, GLM Coding Plan, Kimi, Mistral Vibe, and more."
+description: "Use supported subscriptions such as ChatGPT, Claude, Gemini, Grok, GitHub Copilot, GLM Coding Plan, Kimi, and Mistral Vibe."
 icon: "credit-card"
 keywords:
   ["ChatGPT Plus", "Claude Max", "GitHub Copilot", "GLM Coding Plan", "Mistral Vibe", "Gemini", "Grok", "Kimi", "OAuth", "device code"]
 canonical: "https://manifest.build/llm-gateway/docs/providers/subscription-based-providers"
 ---
 
-If you already pay for ChatGPT Plus, Claude Max, GitHub Copilot, or one of the other plans listed below, Manifest can route through the subscription instead of an API key. Auth is OAuth, a device code, or a pasted subscription token, depending on the provider.
+If you already pay for ChatGPT Plus, Claude Max, GitHub Copilot, or one of the other plans listed below, the gateway can route through the subscription instead of an API key. Auth is OAuth, a device code, or a pasted subscription token, depending on the provider.
 
 ## Supported subscriptions
 
@@ -48,7 +48,7 @@ If you already pay for ChatGPT Plus, Claude Max, GitHub Copilot, or one of the o
     **Connect** on the provider.
   </Step>
   <Step title="Complete the auth flow">
-    Manifest opens the provider's OAuth page, shows you a device code to enter,
+    The gateway opens the provider's OAuth page, shows you a device code to enter,
     or asks you to paste a token, depending on the provider. Once it's saved,
     you're routed.
   </Step>
@@ -66,19 +66,19 @@ A model your plan just gained doesn't show up on its own. Click **Refresh models
   </Tab>
   <Tab title="Claude">
     Generate a token with the Claude CLI (`claude setup-token`) and paste it into
-    Manifest. Requests carry the `anthropic-beta: oauth-2025-04-20` header so
+    the gateway. Requests carry the `anthropic-beta: oauth-2025-04-20` header so
     Anthropic recognizes the subscription token. Available models match what your
     plan grants in claude.ai.
   </Tab>
   <Tab title="GitHub Copilot">
-    GitHub's device-code flow. Manifest gives you a short user code, you visit
+    GitHub's device-code flow. The gateway gives you a short user code, you visit
     [github.com/login/device](https://github.com/login/device), paste it, and
     approve. No API key is ever issued. Requests then go to
-    `api.githubcopilot.com/chat/completions` using a short-lived token Manifest
+    `api.githubcopilot.com/chat/completions` using a short-lived token the gateway
     refreshes for you.
   </Tab>
   <Tab title="MiniMax">
-    MiniMax's device-code flow. Manifest gives you a short user code to approve,
+    MiniMax's device-code flow. The gateway gives you a short user code to approve,
     then requests use the Anthropic protocol via `api.minimax.io/anthropic`
     (international) or `api.minimaxi.com/anthropic` (China).
   </Tab>
@@ -95,7 +95,7 @@ A model your plan just gained doesn't show up on its own. Click **Refresh models
 </Tabs>
 
 <Note>
-  Subscription auth is rate-limited by the provider's plan, not by Manifest. If
+  Subscription auth is rate-limited by the provider's plan, not by the gateway. If
   you hit a plan ceiling, requests fall through to your next
   [fallback](/llm-gateway/docs/llm-gateway#fallback) model, usually a different provider on an API key.
 </Note>
@@ -104,4 +104,4 @@ A model your plan just gained doesn't show up on its own. Click **Refresh models
 
 A common setup: subscription as the primary (predictable monthly cost), API-key provider as the fallback for when you hit the plan limit or want a model the subscription doesn't include.
 
-Pin your subscription model to your default or a custom tier and add API-key models to the [fallback list](/llm-gateway/docs/llm-gateway#configuration). Manifest handles the switch.
+Pin your subscription model to your default or a custom tier and add API-key models to the [fallback list](/llm-gateway/docs/llm-gateway#configuration). The gateway handles the switch.

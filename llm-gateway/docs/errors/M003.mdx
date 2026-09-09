@@ -1,7 +1,7 @@
 ---
 title: "M003: Invalid key format"
 sidebarTitle: "M003"
-description: "Manifest error M003 fires when the Bearer token doesn't start with mnfst_. Often a provider key (sk-...) pasted in the wrong field. Returns HTTP 401."
+description: "M003 is returned when the Bearer token does not start with mnfst_. Use a harness key, not a provider key."
 icon: "key-round"
 keywords:
   ["M003", "Manifest M003", "invalid API key format", "mnfst_ prefix", "wrong API key", "OpenAI sk- key", "401 Unauthorized", "Manifest auth error"]
@@ -17,7 +17,7 @@ See https://manifest.build/llm-gateway/docs/errors/M003
 
 ## Why it happened
 
-Manifest keys always start with `mnfst_`. Your token has a different prefix, which almost always means a provider key (OpenAI, Anthropic, etc.) got pasted into the wrong field.
+harness keys always start with `mnfst_`. Your token has a different prefix, which almost always means a provider key (OpenAI, Anthropic, etc.) got pasted into the wrong field.
 
 ## How to fix it
 

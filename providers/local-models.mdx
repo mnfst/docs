@@ -1,16 +1,16 @@
 ---
 title: "Local models"
-description: "Run any GGUF model on your own hardware with Ollama, LM Studio, or llama.cpp. No API costs, no data leaving your machine."
+description: "Connect a self-hosted LLM Gateway to Ollama, LM Studio, or llama.cpp on your own hardware."
 icon: "server"
 keywords:
   ["Ollama", "LM Studio", "llama.cpp", "GGUF", "local LLM", "self-hosted inference", "host.docker.internal"]
 canonical: "https://manifest.build/llm-gateway/docs/providers/local-models"
 ---
 
-Local model providers run entirely on your own hardware. Manifest detects the running server, fetches the model list, and routes requests to `http://localhost:<port>` like any other provider. No API key, no network egress, no per-token cost.
+Local model providers run entirely on your own hardware. The gateway detects the running server, fetches the model list, and routes requests to `http://localhost:<port>` like any other provider. No API key, no network egress, no per-token cost.
 
 <Note>
-  The built-in Ollama, LM Studio, and llama.cpp connections are self-hosted only. To reach a local model from [Manifest Cloud](https://app.manifest.build), expose the runtime on a public URL or tunnel and add it as a [custom provider](/llm-gateway/docs/providers/custom-providers).
+  The built-in Ollama, LM Studio, and llama.cpp connections are self-hosted only. To reach a local model from [LLM Gateway Cloud](https://app.manifest.build), expose the runtime on a public URL or tunnel and add it as a [custom provider](/llm-gateway/docs/providers/custom-providers).
 </Note>
 
 ## Supported runtimes
@@ -46,7 +46,7 @@ All three speak OpenAI-compatible `/v1/chat/completions` and accept any GGUF mod
   </Tab>
 </Tabs>
 
-## Connect to Manifest
+## Connect to the gateway
 
 <Steps>
   <Step title="Open the Local page">
@@ -54,16 +54,16 @@ All three speak OpenAI-compatible `/v1/chat/completions` and accept any GGUF mod
     your runtime (Ollama, LM Studio, or llama.cpp).
   </Step>
   <Step title="Confirm the server is reachable">
-    Manifest probes `http://localhost:<default-port>/v1/models`. If the probe succeeds, every loaded model appears for routing.
+    The gateway probes `http://localhost:<default-port>/v1/models`. If the probe succeeds, every loaded model appears for routing.
   </Step>
   <Step title="Pin a model to a tier">
     Open your default or a custom tier and pick a local model as the primary. You can mix local and cloud models in the same fallback chain.
   </Step>
 </Steps>
 
-## Running Manifest in Docker
+## Running the gateway in Docker
 
-If you self-host Manifest in Docker, the container can't reach a local server bound to `127.0.0.1` on the host. Two of the three runtimes default to loopback and need an explicit override:
+If you self-host the gateway in Docker, the container can't reach a local server bound to `127.0.0.1` on the host. Two of the three runtimes default to loopback and need an explicit override:
 
 <Tabs>
   <Tab title="LM Studio">
@@ -90,8 +90,8 @@ If you self-host Manifest in Docker, the container can't reach a local server bo
 </Tabs>
 
 <Note>
-  Inside the Manifest container, the host is reachable as
-  `host.docker.internal`. Manifest sets this automatically when probing local
+  Inside the gateway container, the host is reachable as
+  `host.docker.internal`. The gateway sets this automatically when probing local
   providers.
 </Note>
 

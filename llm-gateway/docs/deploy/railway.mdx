@@ -1,13 +1,13 @@
 ---
-title: "Deploy Manifest on Railway"
+title: "Deploy the LLM Gateway on Railway"
 sidebarTitle: "Railway"
-description: "Deploy Manifest on Railway with the published template, including the Manifest service and PostgreSQL."
+description: "Deploy the Manifest LLM Gateway with the published Railway template, PostgreSQL, and request-log storage."
 icon: "/icons/deploy/railway.svg"
 keywords:
   [
     "Manifest deployment",
     "Railway",
-    "self-hosted Manifest",
+    "self-hosted gateway",
     "PostgreSQL",
     "Docker",
   ]
@@ -19,13 +19,13 @@ canonical: "https://manifest.build/llm-gateway/docs/deploy/railway"
   icon="external-link"
   href="https://railway.com/deploy/wild-wild"
 >
-  Best one-click path for most users. The template provisions Manifest,
+  Best one-click path for most users. The template provisions the gateway,
   PostgreSQL, and a bucket for request logs.
 </Card>
 
 ## Overview
 
-Railway is the fastest hosted path for Manifest. Use the published Manifest template to create a project with the Manifest app, a PostgreSQL database, and a storage bucket for [request logs](/llm-gateway/docs/request-logs), then open the generated domain and create the first admin account.
+Railway is the fastest hosted path for the gateway. Use the published Manifest template to create a project with the gateway app, a PostgreSQL database, and a storage bucket for [request logs](/llm-gateway/docs/request-logs), then open the generated domain and create the first admin account.
 
 ## Prerequisites
 
@@ -36,14 +36,14 @@ Railway is the fastest hosted path for Manifest. Use the published Manifest temp
 ## Deploy
 
 1. Open the [Manifest Railway template](https://railway.com/deploy/wild-wild).
-2. Choose the Railway workspace and project where you want to deploy Manifest.
+2. Choose the Railway workspace and project where you want to deploy the gateway.
 3. Review the services that will be created.
 4. Deploy the template.
-5. Wait for the Manifest service and PostgreSQL database to finish provisioning.
+5. Wait for the gateway service and PostgreSQL database to finish provisioning.
 
 The template includes the app service, the database, and a `messages-recordings` bucket, so you do not need to create PostgreSQL or recording storage separately.
 
-## Open Manifest
+## Open the gateway
 
 Open the generated Railway domain and create the first account. Fresh installs redirect to `/setup`; the first account you create becomes the admin.
 

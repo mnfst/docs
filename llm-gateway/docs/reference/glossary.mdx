@@ -1,6 +1,6 @@
 ---
 title: "Glossary"
-description: "Definitions for harness, request, attempt, Autofix, tier, default and custom routing, direct routing, fallback chain, auto, and provider auth types."
+description: "Definitions for the concepts used by the Manifest LLM Gateway."
 icon: "book"
 keywords:
   ["agent", "harness", "request", "attempt", "autofix", "tier", "custom tier", "default routing", "direct routing", "fallback chain", "auto", "provider", "auth type"]
@@ -9,11 +9,11 @@ canonical: "https://manifest.build/llm-gateway/docs/reference/glossary"
 
 ## Harness
 
-A configured client connection that sends requests through Manifest. Each harness has its own API key (`mnfst_...`), its own routing rules, and its own usage page. A harness typically corresponds to one tool or workflow (your IDE plugin, a Slack bot, a scheduled job), not one user.
+A configured client connection that sends requests through the gateway. Each harness has its own API key (`mnfst_...`), its own routing rules, and its own usage page. A harness typically corresponds to one tool or workflow (your IDE plugin, a Slack bot, a scheduled job), not one user.
 
 ## Request
 
-One call your client makes through Manifest. The dashboard's **Requests** page lists every request with its model, cost, and status. A single request can contain several [attempts](#attempt) when fallback or Autofix stepped in.
+One call your client makes through the gateway. The dashboard's **Requests** page lists every request with its model, cost, and status. A single request can contain several [attempts](#attempt) when fallback or Autofix stepped in.
 
 ## Attempt
 
@@ -21,11 +21,11 @@ One provider call inside a request. The initial call, each [fallback](#fallback)
 
 ## Autofix
 
-The repair step for requests that fail because of the request itself: a parameter the provider rejects, a tool schema in the wrong shape, a model name that moved. Manifest corrects the failing request and sends it once more, before fallback. See [Autofix](/llm-gateway/docs/autofix).
+The repair step for requests that fail because of the request itself: a parameter the provider rejects, a tool schema in the wrong shape, a model name that moved. The gateway corrects the failing request and sends it once more, before fallback. See [Autofix](/llm-gateway/docs/autofix).
 
 ## Auth type
 
-The credential category Manifest uses to talk to a provider:
+The credential category the gateway uses to talk to a provider:
 
 - **`api_key`** — classic per-token API key (most providers)
 - **`subscription`** — OAuth or a subscription token tied to a paid plan (ChatGPT Plus, Claude Max, GLM Coding Plan, and others)
@@ -35,7 +35,7 @@ Auth type is recorded on every request and shows up in the dashboard's distribut
 
 ## Auto
 
-The model ID you send to opt into routing. When Manifest sees `auto`, it applies your routing rules and picks the real model. Send a real model ID instead to skip routing and target one provider directly (see [Direct routing](#direct-routing)).
+The model ID you send to opt into routing. When the gateway sees `auto`, it applies your routing rules and picks the real model. Send a real model ID instead to skip routing and target one provider directly (see [Direct routing](#direct-routing)).
 
 ## Custom tier
 
@@ -43,19 +43,19 @@ A routing rule matched on a request header. You choose the header key and value 
 
 ## Direct routing
 
-Sending a real model ID (one that `GET /v1/models` lists) instead of `auto`. Manifest forwards the request straight to that provider and skips tiers and fallbacks. The response carries `X-Manifest-Tier: direct`. One exception: if the request also carries a matching custom-tier header, the header wins.
+Sending a real model ID (one that `GET /v1/models` lists) instead of `auto`. The gateway forwards the request straight to that provider and skips tiers and fallbacks. The response carries `X-Manifest-Tier: direct`. One exception: if the request also carries a matching custom-tier header, the header wins.
 
 ## Fallback
 
-The retry mechanism that kicks in when the primary model fails. Manifest tries the next model in the tier's fallback list, then the next, until one succeeds or the list is exhausted. See [Fallback](/llm-gateway/docs/llm-gateway#fallback) for triggers and config.
+The retry mechanism that kicks in when the primary model fails. The gateway tries the next model in the tier's fallback list, then the next, until one succeeds or the list is exhausted. See [Fallback](/llm-gateway/docs/llm-gateway#fallback) for triggers and config.
 
 ## Fallback chain
 
-The ordered list of models tried for a single tier, primary first. Up to 5 models. When all of them fail, Manifest returns the primary model's real error status, plus the header `X-Manifest-Fallback-Exhausted: true`.
+The ordered list of models tried for a single tier, primary first. Up to 5 models. When all of them fail, the gateway returns the primary model's real error status, plus the header `X-Manifest-Fallback-Exhausted: true`.
 
 ## Provider
 
-An upstream LLM service Manifest can route to. There are four kinds:
+An upstream LLM service the gateway can route to. There are four kinds:
 
 - [API key](/llm-gateway/docs/providers/api-key-providers) — pay-per-token (OpenAI, Anthropic, Google, and more)
 - [Subscription](/llm-gateway/docs/providers/subscription-based-providers) — a plan you already pay for (ChatGPT Plus, Claude Max, and more)
@@ -64,7 +64,7 @@ An upstream LLM service Manifest can route to. There are four kinds:
 
 ## Routing
 
-The step that decides which model handles a request. Manifest checks your custom tiers first, then sends anything that doesn't match to your default model. It runs in-process with no extra network call. See [Routing](/llm-gateway/docs/llm-gateway).
+The step that decides which model handles a request. The gateway checks your custom tiers first, then sends anything that doesn't match to your default model. It runs in-process with no extra network call. See [Routing](/llm-gateway/docs/llm-gateway).
 
 ## Tier
 
