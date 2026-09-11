@@ -11,7 +11,7 @@
   "css": "/style.css",
   "js": "/scripts/no-tab-jump.js",
   "banner": {
-    "content": "You are reading the **Manifest LLM Gateway documentation**. Looking for Manifest, the self-healing API? [Read the Manifest documentation](https://manifest.build/docs).",
+    "content": "You are reading the **Manifest LLM Gateway documentation**. Looking for the self-healing API documentation? [Read the docs](https://manifest.build/docs).",
     "dismissible": false
   },
   "colors": {
