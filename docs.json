@@ -158,6 +158,14 @@
             ]
           },
           {
+            "group": "CLI & MCP",
+            "icon": "terminal",
+            "boost": 2,
+            "pages": [
+              "cli"
+            ]
+          },
+          {
             "group": "Providers",
             "boost": 2,
             "pages": [
