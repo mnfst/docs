@@ -109,6 +109,14 @@
             ]
           },
           {
+            "group": "CLI",
+            "icon": "terminal",
+            "boost": 2,
+            "pages": [
+              "cli"
+            ]
+          },
+          {
             "group": "Self-hosting",
             "boost": 2,
             "pages": [
