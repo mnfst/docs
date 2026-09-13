@@ -1,0 +1,188 @@
+---
+title: "MCP server"
+description: "Connect Claude, Cursor, VS Code, and other MCP clients to Manifest over a remote Model Context Protocol server with OAuth 2.1, then manage harnesses, providers, routing, and request logs from your AI client."
+icon: "server"
+keywords:
+  [
+    "MCP",
+    "Model Context Protocol",
+    "remote MCP server",
+    "Manifest MCP",
+    "OAuth 2.1",
+    "Claude connector",
+    "Cursor MCP",
+    "VS Code MCP",
+    "manage Manifest with AI",
+    "MCP tools",
+  ]
+---
+
+<div className="deploy-mode-toggle" role="group" aria-label="Deployment mode">
+  <button type="button" data-deploy-mode="cloud">Cloud</button>
+  <button type="button" data-deploy-mode="selfhosted">Self-hosted</button>
+</div>
+
+Manifest runs a remote [Model Context Protocol](https://modelcontextprotocol.io) server. Any MCP client — Claude, Cursor, VS Code, and others — can connect to it, sign in with your Manifest account, and manage your workspace with tools: list harnesses, connect providers, change [routing](/llm-gateway), read the [request log](/request-logs), and more.
+
+The server speaks MCP over HTTP and authenticates with **OAuth 2.1**. The client discovers Manifest's authorization server on its own, opens a browser consent screen the first time, and then holds a short-lived, revocable, workspace-scoped token.
+
+<div data-deploy="cloud">
+
+| Field        | Value                                          |
+| ------------ | ---------------------------------------------- |
+| **Server URL** | `https://app.manifest.build/api/v1/mcp`       |
+
+</div>
+
+<div data-deploy="selfhosted">
+
+| Field        | Value                                                              |
+| ------------ | ------------------------------------------------------------------ |
+| **Server URL** | `{your origin}/api/v1/mcp`, for example `http://localhost:2099/api/v1/mcp` |
+
+</div>
+
+The tools act on the workspace of the user who authorized the client. They are tenant-scoped exactly like the dashboard and the API: a token can never see or change another workspace.
+
+## Connect a client
+
+<Steps>
+  <Step title="Add a remote MCP server">
+    In your MCP client, add a server of type **HTTP** (sometimes called **Streamable HTTP**) and paste the server URL above. Some clients call this **Add custom connector**.
+
+    For clients that use a JSON config file, the Cursor-style shape is:
+
+    ```json
+    {
+      "mcpServers": {
+        "manifest": {
+          "url": "https://app.manifest.build/api/v1/mcp"
+        }
+      }
+    }
+    ```
+  </Step>
+  <Step title="Authorize in the browser">
+    The client opens a browser tab and asks you to sign in to Manifest, then shows a consent screen listing the access the client requested. Review it and select **Allow access**.
+  </Step>
+  <Step title="Use the tools">
+    The client now lists the Manifest tools. Ask it to run one — for example, "list my Manifest harnesses" — or call **Diagnose the workspace** to check the connection.
+  </Step>
+</Steps>
+
+If the client supports **read-only** connections, keep it to the `mcp:read` scope. Add `mcp:write` only for clients that should be able to create and change things.
+
+## Scopes
+
+The consent screen asks for scopes, and the tools you get depend on the scopes the token carries.
+
+| Scope            | Grants                                                                                     |
+| ---------------- | ------------------------------------------------------------------------------------------ |
+| `mcp:read`       | Read harnesses, provider connections, routing, models, prices, and the request log.        |
+| `mcp:write`      | Create, update, and delete harnesses, providers, and routing, and reveal harness keys.     |
+| `offline_access` | A refresh token, so the client stays connected after the short-lived access token expires. |
+
+A token without `mcp:write` does not merely fail on writes — the write tools are not exposed to the client at all, so a read-only connection cannot be talked into a change.
+
+## Discovery
+
+An MCP client starts from the server URL and reads Manifest's OAuth metadata to find the authorization server. You do not configure any of this by hand; it is listed here for reference and for debugging with tools like the [MCP Inspector](https://modelcontextprotocol.io/docs/tools/inspector).
+
+| Document                        | URL                                                            |
+| ------------------------------- | -------------------------------------------------------------- |
+| Protected resource metadata     | `{origin}/.well-known/oauth-protected-resource`                |
+| Authorization server metadata   | `{origin}/.well-known/oauth-authorization-server`              |
+| Authorization endpoint          | `{origin}/api/auth/oauth2/authorize`                           |
+| Token endpoint                  | `{origin}/api/auth/oauth2/token`                               |
+| Signing keys (JWKS)             | `{origin}/api/auth/jwks`                                       |
+
+Manifest follows [RFC 9728](https://datatracker.ietf.org/doc/html/rfc9728) for the protected-resource document and [RFC 8414](https://datatracker.ietf.org/doc/html/rfc8414) for the authorization server. Clients are identified with [Client ID Metadata Documents](https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization/client-registration), the MCP 2026-07-28 profile. Anonymous dynamic client registration is disabled, so a client must be able to present a verified metadata document to register itself.
+
+## Tools
+
+The tool names are grouped below. Each is prefixed with `manifest_`. `read` tools are always present; `write` tools require the `mcp:write` scope.
+
+### Harnesses
+
+| Tool                          | Access | What it does                                                                 |
+| ----------------------------- | ------ | ---------------------------------------------------------------------------- |
+| `manifest_agent_list`         | read   | List harnesses with usage rollups.                                           |
+| `manifest_agent_get`          | read   | Fetch one harness by name.                                                   |
+| `manifest_agent_platforms`    | read   | List valid platforms and categories for create and update.                   |
+| `manifest_agent_setup`        | read   | Platform setup instructions. Pass `reveal` (needs `mcp:write`) to embed the key. |
+| `manifest_agent_create`       | write  | Create a harness and return its ingest key once.                             |
+| `manifest_agent_update`       | write  | Rename a harness or change its category or platform.                         |
+| `manifest_agent_delete`       | write  | Delete a harness and deactivate its key.                                     |
+| `manifest_agent_rotate_key`   | write  | Rotate a harness key and return the new key once.                            |
+| `manifest_agent_key_show`     | write  | Return a harness key.                                                        |
+| `manifest_agent_env`          | write  | Return the `MANIFEST_AGENT_KEY` and `MANIFEST_AGENT_URL` export lines.       |
+
+### Providers
+
+| Tool                                  | Access | What it does                                                          |
+| ------------------------------------- | ------ | --------------------------------------------------------------------- |
+| `manifest_provider_list`              | read   | List provider connections and cached model counts.                    |
+| `manifest_provider_catalog`           | read   | List everything connectable with its auth types.                      |
+| `manifest_provider_custom_list`       | read   | List custom (OpenAI- or Anthropic-compatible) providers.              |
+| `manifest_provider_connect`           | write  | Connect a provider for the workspace and discover its models.         |
+| `manifest_provider_disconnect`        | write  | Remove a provider connection.                                         |
+| `manifest_provider_refresh`           | write  | Re-run model discovery for a provider or a harness.                   |
+| `manifest_provider_custom_add`        | write  | Register a custom provider endpoint.                                  |
+| `manifest_provider_custom_remove`     | write  | Delete a custom provider registration.                                |
+| `manifest_agent_provider_enable`      | write  | Grant a provider connection to a harness.                             |
+| `manifest_agent_provider_disable`     | write  | Revoke a provider connection from a harness.                          |
+
+### Routing
+
+| Tool                              | Access | What it does                                                                 |
+| --------------------------------- | ------ | ---------------------------------------------------------------------------- |
+| `manifest_routing_status`         | read   | Report whether a harness can route yet, and why not.                         |
+| `manifest_routing_fallbacks_get`  | read   | Read a tier's fallback chain.                                                |
+| `manifest_routing_custom_list`    | read   | List a harness's custom (header-triggered) tiers.                            |
+| `manifest_routing_autofix_get`    | read   | Report whether [Autofix](/autofix) is effective for a harness.               |
+| `manifest_routing_recording_get`  | read   | Report whether request recording is on for a harness.                        |
+| `manifest_agent_configure`        | write  | Set the default route and fallbacks, or a custom tier, and toggle Autofix or recording. |
+| `manifest_routing_fallbacks_set`  | write  | Replace a tier's fallback chain.                                             |
+| `manifest_routing_fallbacks_clear`| write  | Clear a tier's fallback chain.                                               |
+| `manifest_routing_custom_create`  | write  | Create a custom tier, with an optional route and fallbacks.                  |
+| `manifest_routing_custom_delete`  | write  | Delete a custom tier.                                                        |
+| `manifest_routing_autofix_set`    | write  | Enable or disable Autofix for a harness.                                     |
+| `manifest_routing_recording_set`  | write  | Turn request recording on or off for a harness.                              |
+| `manifest_routing_test`           | write  | Send one real request through the harness route to prove it works.           |
+
+### Models, requests, and diagnostics
+
+| Tool                      | Access | What it does                                                    |
+| ------------------------- | ------ | --------------------------------------------------------------- |
+| `manifest_models_list`    | read   | List the models a harness can route to.                         |
+| `manifest_model_prices`   | read   | Install-wide model pricing.                                     |
+| `manifest_requests_get`   | read   | List recent requests with cursor pagination.                    |
+| `manifest_whoami`         | read   | Return the acting user, workspace, and granted scopes.          |
+| `manifest_doctor`         | read   | Run config, credential, provider, and agent checks in order.    |
+| `manifest_guide`          | read   | Return the recommended management workflow.                     |
+
+## Revoke a client
+
+Signing out of Manifest ends the browser session, and an access token stops working when it expires. To revoke a client's access on the spot, remove its consent from your account, or rotate the harness keys it may have read. Access tokens are short-lived (15 minutes), so a revoked connection falls back to the consent screen on its next request.
+
+<div data-deploy="selfhosted">
+
+## Self-hosted notes
+
+- **The server URL follows `BETTER_AUTH_URL`.** The issuer, the protected-resource identifier, and every URL in the metadata are derived from it. Set `BETTER_AUTH_URL` to the origin your MCP client actually reaches, then restart. A mismatch makes clients refuse the token.
+- **Remote clients need HTTPS.** OAuth metadata requires an `https://` resource except on loopback. For local development the client may connect to `http://localhost:<port>/api/v1/mcp`. To connect from another machine, terminate TLS in front of Manifest and set `BETTER_AUTH_URL` to that `https://` origin.
+- **Let the well-known routes through your proxy.** Forward `/.well-known/oauth-protected-resource` and `/.well-known/oauth-authorization-server` to Manifest. If your reverse proxy only forwards `/api`, discovery fails and the client never reaches the consent screen.
+- **The OAuth tables are created on boot.** Manifest runs Better Auth's own migrations at startup, which adds the client, token, consent, and JWKS tables. No manual step is needed.
+
+</div>
+
+## Troubleshooting
+
+| Symptom                                                     | Cause and fix                                                                                                             |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Client reports it cannot connect, or never opens the browser | The client cannot read the protected-resource metadata. Confirm `{origin}/.well-known/oauth-protected-resource` returns JSON and is reachable from the client. |
+| Consent screen says the request has an invalid signature     | The authorization request was tampered with or started from a stale tab. Start the connection again from the client.     |
+| Tools are missing after connecting                           | The token is read-only. Reconnect and grant `mcp:write` if the client should change things.                               |
+| A write tool returns "insufficient scope"                    | The client requested only `mcp:read`. Reconnect with `mcp:write`.                                                         |
+| `401` on every tool call                                     | The access token expired and the client has no refresh token. Reconnect; keep `offline_access` for long-lived sessions.   |
+| Self-hosted client rejects the token as the wrong audience   | `BETTER_AUTH_URL` does not match the URL the client used. Set it to the exact origin and restart.                        |
