@@ -22,9 +22,9 @@ Manifest tracks two things, and the difference matters once fallback is involved
 | **Request** | One call from your agent to Manifest | Never. One call in, one Request. |
 | **Provider attempt** | One call from Manifest to a provider | Every fallback step and every [Autofix](/autofix) retry adds another |
 
-A request that succeeds on the first try is one Request with one attempt. A request that fails twice before succeeding is still one Request, with three attempts. A request Manifest blocked itself, like a [hard limit](/llm-gateway#hard-limits) or a malformed body, is one Request with one attempt that never reached a provider. That attempt is listed under the model you asked for, or **No provider** when the request named none, and carries the error that stopped it.
+A request that succeeds on the first try is one Request with one attempt. A request that fails twice before succeeding is still one Request, with three attempts. A request Manifest blocked itself, like a [hard limit](/llm-gateway#hard-limits) or a malformed body, is one Request with one attempt that never reached a provider. That attempt is listed under the model you asked for, or **No provider** when the request named none, and carries the error that stopped it. A request that is still running has no attempt yet and shows as **Pending**. A request whose caller disconnected shows as **Cancelled**, and it keeps the attempt that had already started, if there was one.
 
-This is why the request count and the provider call count don't match, and why cost is attributed to attempts: a failed attempt can still burn tokens.
+This is why the request count and the provider call count don't match. Manifest records cost and tokens on the attempt, not on the request. Only a successful attempt carries them. A failed attempt keeps its error and reads zero tokens with no cost.
 
 ## The dashboard
 
@@ -39,13 +39,15 @@ This is why the request count and the provider call count don't match, and why c
     Per-provider usage, spend, and error rates. Useful for spotting one provider degrading.
   </Card>
   <Card title="Limits" icon="shield-alert">
-    Threshold rules per harness, plus email provider setup.
+    Threshold rules per harness.
   </Card>
 </CardGroup>
 
+The Overview counts finished requests only. The Requests log's **Failed** filter returns everything that did not succeed, including pending and cancelled requests. So the Overview's **Failed requests** card links to a list longer than the number on the card.
+
 <div data-deploy="cloud">
 
-On the Free plan, the Overview covers up to 7 days of history; the 30-, 90-, and 365-day ranges need Pro.
+On the Free plan, the 30-, 90- and 365-day ranges need Pro. The lock applies on the Overview and on the Requests log. The log's **All time** option is not locked, so you can still list every request you ever sent.
 
 </div>
 
@@ -57,13 +59,16 @@ That's all metadata. To read the messages themselves, turn on [request logs](/re
 
 <Tip>
   Local models record `cost = 0` with real token counts and latency, since
-  nothing was billed. Custom providers do the same, because Manifest can't
-  infer pricing for a model it doesn't know.
+  nothing was billed. You price a custom provider yourself: its connect form
+  takes **Input / 1M tokens** and **Output / 1M tokens** for each model, and
+  Manifest computes cost from those figures like any other provider. Leave both
+  prices empty and Manifest has nothing to compute from, so the model records
+  `cost = 0` too.
 </Tip>
 
 ## Spend alerts
 
-A limit rule watches one metric for one harness over a rolling period, and acts when the threshold is crossed.
+A limit rule watches one metric for one harness over the current period, and acts when the threshold is crossed. The period is a calendar window on the clock of the server running Manifest. A day starts at midnight, a week starts on Monday, and a month starts on the 1st. An hour period starts at the top of the previous clock hour. The count restarts at the next boundary.
 
 | Field | Options |
 |---|---|
@@ -89,7 +94,7 @@ Blocking is the gateway half of this and is covered in [hard limits](/llm-gatewa
   </Step>
 </Steps>
 
-Alerts are evaluated hourly, so an email can lag the threshold by up to an hour. Blocking is not: it's checked on every request. Each rule emails once per period, so a rule that stays over its threshold won't flood your inbox.
+Alerts are evaluated hourly, so an email can lag the threshold by up to an hour. Blocking is not: it's checked on every request. Each rule emails once per period, so a rule that stays over its threshold won't flood your inbox. Manifest records the crossing before it sends the email, and it does not retry inside the period. A send that fails leaves that period without an email. The **Triggered** count on the Limits page still goes up, because it counts threshold crossings and not deliveries.
 
 ### Email delivery
 
@@ -101,7 +106,7 @@ Alerts go to your account email. Check it's current in your profile settings.
 
 <div data-deploy="selfhosted">
 
-On the **Limits** page, under **Configure email provider**, pick Resend, Mailgun, or SendGrid. Enter the API key. Mailgun also asks for a sending domain. **Notification email** defaults to your account email; change it to send alerts elsewhere. **Test & Connect** sends a real test email and saves nothing if it fails. The saved provider appears as a card on the same page, where you can edit or remove it.
+On the **Limits** page, under **Configure email provider**, pick Resend, Mailgun, or SendGrid. Enter the API key. Mailgun also asks for a sending domain. **Notification email** defaults to your account email; change it to send alerts elsewhere. **Test & Connect** sends a real test email and saves nothing if it fails. The saved provider appears as a card on the same page, where you can edit or remove it. Edit it and click **Send test email** to check the sender still works.
 
 Your workspace holds one provider, shared by every harness. Removing it stops alerts for all of them.
 
@@ -116,14 +121,52 @@ Without an email provider from either path, alerts are skipped. Blocking rules s
 A harness can query its own numbers with its `mnfst_` key, which is useful for showing a budget in your own UI or stopping work before a limit blocks you.
 
 ```bash
-curl https://app.manifest.build/api/v1/agent/usage \
+curl "https://app.manifest.build/api/v1/agent/usage?range=24h" \
   -H "Authorization: Bearer mnfst_YOUR_KEY"
 ```
 
-| Endpoint | Returns |
-|---|---|
-| `GET /api/v1/agent/usage` | Token usage for the calling harness |
-| `GET /api/v1/agent/costs` | Cost data for the calling harness |
+| Endpoint | Returns | Default `range` |
+|---|---|---|
+| `GET /api/v1/agent/usage` | Token usage for the calling harness | `24h` |
+| `GET /api/v1/agent/costs` | Cost data for the calling harness | `7d` |
+
+Both endpoints take a `range` parameter. It accepts `1h`, `6h`, `24h`, `7d`, `30d`, `90d` or `365d`, and any other value gets a `400`. The two defaults differ, so send `range` yourself whenever you compare the two responses.
+
+A range counts back from now, while a limit rule's period starts at a calendar boundary ([Spend alerts](#spend-alerts)). No range lines up with a rule's window, so read these numbers as how close you are, not as the figure the rule reads.
+
+`GET /api/v1/agent/usage` returns:
+
+```json
+{
+  "range": "24h",
+  "total_tokens": 128400,
+  "input_tokens": 96200,
+  "output_tokens": 32200,
+  "cache_read_tokens": 41000,
+  "cache_creation_tokens": 5200,
+  "cache_read_rate": 0.43,
+  "cache_write_rate": 0.05,
+  "message_count": 312,
+  "trend_pct": 12.4,
+  "agentName": "billing-bot"
+}
+```
+
+`GET /api/v1/agent/costs` returns:
+
+```json
+{
+  "range": "7d",
+  "total_cost_usd": 18.42,
+  "trend_pct": -6.1,
+  "by_model": [
+    { "model": "openai/gpt-4o", "cost_usd": 11.9, "input_tokens": 820000, "output_tokens": 140000 },
+    { "model": "anthropic/claude-sonnet-4-6", "cost_usd": 6.52, "input_tokens": 210000, "output_tokens": 48000 }
+  ]
+}
+```
+
+`message_count` counts successful requests only. A failed or in-flight request is not in it.
 
 <div data-deploy="selfhosted">
 
