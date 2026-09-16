@@ -589,6 +589,46 @@ html.dark .docs-book-call {
   color: #0f172a !important;
 }
 
+/* Secondary CTA to the main Manifest Self-Healing documentation */
+.docs-self-healing {
+  position: fixed;
+  top: calc(7.5px + var(--banner-height, 40px));
+  right: 166px;
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 13px;
+  border: 1px solid #d8d3ca;
+  border-radius: 10px;
+  background: #f8f6f1;
+  color: #475569 !important;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+.docs-self-healing svg {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+}
+.docs-self-healing:hover {
+  border-color: #b8b1a6;
+  color: #0f172a !important;
+}
+html.dark .docs-self-healing {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: #252525;
+  color: #d1d5db !important;
+  box-shadow: none;
+}
+html.dark .docs-self-healing:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #ffffff !important;
+}
+
 /* Below lg the banner scrolls with the page instead of staying fixed, so the
    fixed elements keep their original offsets */
 @media (max-width: 1023px) {
@@ -597,6 +637,17 @@ html.dark .docs-book-call {
   }
   .docs-book-call {
     top: 7.5px;
+  }
+  .docs-self-healing {
+    top: 7.5px;
+  }
+}
+
+/* Keep the compact header usable on tablets and phones. The Self-Healing
+   destination remains available from the announcement banner. */
+@media (max-width: 767px) {
+  .docs-self-healing {
+    display: none;
   }
 }
 
