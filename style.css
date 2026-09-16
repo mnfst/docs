@@ -206,8 +206,8 @@ body > div > div.fixed.inset-0.z-40 {
   --tw-bg-opacity: 1;
 }
 
-/* Sidebar bottom links: Book a call is already top right and Dashboard is in
-   the footer, so only GitHub and Discord stay */
+/* Sidebar bottom links: Book a call is already top right, so only GitHub and
+   Discord stay */
 #sidebar li[id="https://app.manifest.build"],
 #sidebar li[id="https://calendly.com/sebastien-manifest/30min"] {
   display: none;
@@ -361,9 +361,9 @@ div.rounded-2xl svg.text-gray-300 {
   color: #d1d5db !important;
 }
 
-/* Hide Mintlify footer branding */
-#footer a[href*="mintlify"] {
-  display: none;
+/* No page footer: its links and theme switch already live in the sidebar */
+#footer {
+  display: none !important;
 }
 
 /* Callouts: tighter spacing & smaller radii */

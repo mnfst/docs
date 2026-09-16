@@ -24,12 +24,12 @@ All three paths end in the same place: a running stack at [http://localhost:2099
     One command. The installer downloads the compose file into `~/manifest`, generates the secrets, and brings up the stack. First boot pulls the app image and Postgres, so give it up to a couple of minutes.
 
     ```bash
-    bash <(curl -sSL https://raw.githubusercontent.com/mnfst/manifest/main/docker/install.sh)
+    bash <(curl -sSL https://raw.githubusercontent.com/mnfst/llm-gateway/main/docker/install.sh)
     ```
 
     <Accordion title="Prefer to review the script before running it?">
       ```bash
-      curl -sSLO https://raw.githubusercontent.com/mnfst/manifest/main/docker/install.sh
+      curl -sSLO https://raw.githubusercontent.com/mnfst/llm-gateway/main/docker/install.sh
       less install.sh
       bash install.sh
       ```
@@ -47,8 +47,8 @@ All three paths end in the same place: a running stack at [http://localhost:2099
     <Steps>
       <Step title="Download the compose file and the env template">
         ```bash
-        curl -O https://raw.githubusercontent.com/mnfst/manifest/main/docker/docker-compose.yml
-        curl -O https://raw.githubusercontent.com/mnfst/manifest/main/docker/.env.example
+        curl -O https://raw.githubusercontent.com/mnfst/llm-gateway/main/docker/docker-compose.yml
+        curl -O https://raw.githubusercontent.com/mnfst/llm-gateway/main/docker/.env.example
         cp .env.example .env
         ```
       </Step>
@@ -175,7 +175,7 @@ Published images are signed with cosign keyless signing (Sigstore). Verify befor
 
 ```bash
 cosign verify manifestdotbuild/manifest:<version> \
-  --certificate-identity-regexp="^https://github.com/mnfst/manifest/" \
+  --certificate-identity-regexp="^https://github.com/mnfst/llm-gateway/" \
   --certificate-oidc-issuer="https://token.actions.githubusercontent.com"
 ```
 
@@ -262,7 +262,7 @@ The two commands above only pull new images. Your `docker-compose.yml` stays as 
   **Upgrading from before v6.18.0 and using [logs](/request-logs)?** Run the installer once with the upgrade flag, or log bodies are written inside the container and lost when it is recreated:
 
   ```bash
-  curl -sSLO https://raw.githubusercontent.com/mnfst/manifest/main/docker/install.sh
+  curl -sSLO https://raw.githubusercontent.com/mnfst/llm-gateway/main/docker/install.sh
   bash install.sh --upgrade
   ```
 
