@@ -11,7 +11,7 @@
   "css": "/style.css",
   "js": "/scripts/no-tab-jump.js",
   "banner": {
-    "content": "**NEW** Manifest is becoming the self-healing layer for APIs. [Read more](https://manifest.build/blog/manifest-is-taking-a-new-direction/)",
+    "content": "**NEW LAUNCH** The self-healing layer for APIs. [Read more](https://manifest.build/blog/manifest-is-taking-a-new-direction/)",
     "dismissible": false
   },
   "colors": {
@@ -73,7 +73,7 @@
     }
   },
   "search": {
-    "prompt": "Search Manifest docs..."
+    "prompt": "Search in docs..."
   },
   "navbar": {
     "links": [
@@ -83,7 +83,7 @@
       },
       {
         "type": "github",
-        "href": "https://github.com/mnfst/manifest"
+        "href": "https://github.com/mnfst/llm-gateway"
       },
       {
         "type": "discord",
@@ -200,7 +200,7 @@
   },
   "footer": {
     "socials": {
-      "github": "https://github.com/mnfst/manifest",
+      "github": "https://github.com/mnfst/llm-gateway",
       "discord": "https://discord.gg/FepAked3W7"
     },
     "links": [
@@ -256,7 +256,7 @@
         "items": [
           {
             "label": "GitHub",
-            "href": "https://github.com/mnfst/manifest"
+            "href": "https://github.com/mnfst/llm-gateway"
           },
           {
             "label": "Discord",
@@ -329,7 +329,7 @@
     },
     {
       "source": "/contributing",
-      "destination": "https://github.com/mnfst/manifest"
+      "destination": "https://github.com/mnfst/llm-gateway"
     },
     {
       "source": "/message-recording",
