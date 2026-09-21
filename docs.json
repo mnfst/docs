@@ -105,26 +105,26 @@
             "group": "Getting Started",
             "boost": 3,
             "pages": [
-              "introduction"
+              "llm-gateway/docs/introduction"
             ]
           },
           {
             "group": "Self-hosting",
             "boost": 2,
             "pages": [
-              "deploy",
-              "self-hosted",
+              "llm-gateway/docs/deploy",
+              "llm-gateway/docs/self-hosted",
               {
                 "group": "Managed platforms",
                 "icon": "cloud",
                 "expanded": false,
                 "pages": [
-                  "deploy/railway",
-                  "deploy/render",
-                  "deploy/digitalocean",
-                  "deploy/fly",
-                  "deploy/heroku",
-                  "deploy/koyeb"
+                  "llm-gateway/docs/deploy/railway",
+                  "llm-gateway/docs/deploy/render",
+                  "llm-gateway/docs/deploy/digitalocean",
+                  "llm-gateway/docs/deploy/fly",
+                  "llm-gateway/docs/deploy/heroku",
+                  "llm-gateway/docs/deploy/koyeb"
                 ]
               },
               {
@@ -132,8 +132,8 @@
                 "icon": "server",
                 "expanded": false,
                 "pages": [
-                  "deploy/aws",
-                  "deploy/gcp"
+                  "llm-gateway/docs/deploy/aws",
+                  "llm-gateway/docs/deploy/gcp"
                 ]
               },
               {
@@ -141,8 +141,8 @@
                 "icon": "panel-top",
                 "expanded": false,
                 "pages": [
-                  "deploy/coolify",
-                  "deploy/easypanel"
+                  "llm-gateway/docs/deploy/coolify",
+                  "llm-gateway/docs/deploy/easypanel"
                 ]
               }
             ]
@@ -151,10 +151,10 @@
             "group": "Features",
             "boost": 2,
             "pages": [
-              "llm-gateway",
-              "autofix",
-              "observability",
-              "request-logs"
+              "llm-gateway/docs/llm-gateway",
+              "llm-gateway/docs/autofix",
+              "llm-gateway/docs/observability",
+              "llm-gateway/docs/request-logs"
             ]
           },
           {
@@ -162,36 +162,36 @@
             "icon": "terminal",
             "boost": 2,
             "pages": [
-              "cli"
+              "llm-gateway/docs/cli"
             ]
           },
           {
             "group": "Providers",
             "boost": 2,
             "pages": [
-              "providers/api-key-providers",
-              "providers/subscription-based-providers",
-              "providers/custom-providers",
-              "providers/local-models"
+              "llm-gateway/docs/providers/api-key-providers",
+              "llm-gateway/docs/providers/subscription-based-providers",
+              "llm-gateway/docs/providers/custom-providers",
+              "llm-gateway/docs/providers/local-models"
             ]
           },
           {
             "group": "Integrations",
             "boost": 2,
             "pages": [
-              "integrations/n8n",
-              "integrations/mcp"
+              "llm-gateway/docs/integrations/n8n",
+              "llm-gateway/docs/integrations/mcp"
             ]
           },
           {
             "group": "Reference",
             "pages": [
-              "reference/api",
-              "reference/headers",
-              "reference/environment-variables",
-              "reference/telemetry",
-              "errors",
-              "reference/glossary"
+              "llm-gateway/docs/reference/api",
+              "llm-gateway/docs/reference/headers",
+              "llm-gateway/docs/reference/environment-variables",
+              "llm-gateway/docs/reference/telemetry",
+              "llm-gateway/docs/errors",
+              "llm-gateway/docs/reference/glossary"
             ]
           }
         ]
