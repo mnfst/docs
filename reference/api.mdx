@@ -80,7 +80,7 @@ curl http://localhost:2099/v1/models \
   -H "Authorization: Bearer mnfst_YOUR_KEY_HERE"
 ```
 
-Send `auto` to let the gateway route, or send any listed model ID to skip routing and go straight to that provider. If you send a model ID that no connected provider can serve, the gateway returns [M302: Model not available](/llm-gateway/docs/errors/M302). See [Routing → Route a specific model](/llm-gateway/docs/llm-gateway#route-a-specific-model).
+Send `auto` to let the gateway route, or send any listed model ID to skip routing and go straight to that provider. If you send a model ID that no connected provider can serve, the gateway returns [M302: Model not available](/errors/M302). See [Routing → Route a specific model](/llm-gateway#route-a-specific-model).
 
 ### Inspect model capabilities
 
@@ -204,18 +204,18 @@ Errors come in two shapes, depending on the caller. A tool or SDK call gets a re
 | Status | Meaning |
 |---|---|
 | `401` | Invalid or missing `Authorization` header |
-| `402` | LLM Gateway Cloud Free plan quota reached (`error.code = PLAN_LIMIT_REQUESTS`, [M204](/llm-gateway/docs/errors/M204)), or provider billing/quota error from the upstream |
-| `429` | gateway rate limit tripped ([M201](/llm-gateway/docs/errors/M201), [M202](/llm-gateway/docs/errors/M202), [M203](/llm-gateway/docs/errors/M203)), or a rate limit the provider itself returned |
-| `5xx` | Upstream provider error (triggers [fallback](/llm-gateway/docs/llm-gateway#fallback)) |
+| `402` | LLM Gateway Cloud Free plan quota reached (`error.code = PLAN_LIMIT_REQUESTS`, [M204](/errors/M204)), or provider billing/quota error from the upstream |
+| `429` | gateway rate limit tripped ([M201](/errors/M201), [M202](/errors/M202), [M203](/errors/M203)), or a rate limit the provider itself returned |
+| `5xx` | Upstream provider error (triggers [fallback](/llm-gateway#fallback)) |
 
-A [hard limit](/llm-gateway/docs/llm-gateway#hard-limits) block ([M200](/llm-gateway/docs/errors/M200)) is not in this table: it comes back as an HTTP `200` chat completion whose assistant message carries the block text. When the fallback chain is exhausted, the response keeps the primary model's real error status and carries `X-Manifest-Fallback-Exhausted: true`; the body keeps the provider's own error code, or `fallback_exhausted` when there is none.
+A [hard limit](/llm-gateway#hard-limits) block ([M200](/errors/M200)) is not in this table: it comes back as an HTTP `200` chat completion whose assistant message carries the block text. When the fallback chain is exhausted, the response keeps the primary model's real error status and carries `X-Manifest-Fallback-Exhausted: true`; the body keeps the provider's own error code, or `fallback_exhausted` when there is none.
 
 ## Rate limits
 
-The gateway enforces three caps. A workspace can send **200 requests per minute** ([M201](/llm-gateway/docs/errors/M201)). An IP can send **500 requests per minute** ([M202](/llm-gateway/docs/errors/M202)). A workspace can have **10 requests in flight at once** ([M203](/llm-gateway/docs/errors/M203)). The caps are the same on Cloud and self-hosted. No setting changes them.
+The gateway enforces three caps. A workspace can send **200 requests per minute** ([M201](/errors/M201)). An IP can send **500 requests per minute** ([M202](/errors/M202)). A workspace can have **10 requests in flight at once** ([M203](/errors/M203)). The caps are the same on Cloud and self-hosted. No setting changes them.
 
-Your Cloud plan sets your monthly request quota ([M204](/llm-gateway/docs/errors/M204)). The per-minute caps stay the same on every plan.
+Your Cloud plan sets your monthly request quota ([M204](/errors/M204)). The per-minute caps stay the same on every plan.
 
 ## Response headers
 
-Routed responses carry [routing headers](/llm-gateway/docs/reference/headers). They tell your client which model and tier handled the request, with no need to parse the response body. A request rejected before routing (bad key, quota, rate limit) carries none.
+Routed responses carry [routing headers](/reference/headers). They tell your client which model and tier handled the request, with no need to parse the response body. A request rejected before routing (bad key, quota, rate limit) carries none.

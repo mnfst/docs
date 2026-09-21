@@ -25,7 +25,7 @@ canonical: "https://manifest.build/llm-gateway/docs/deploy/railway"
 
 ## Overview
 
-Railway is the fastest hosted path for the gateway. Use the published Manifest template to create a project with the gateway app, a PostgreSQL database, and a storage bucket for [request logs](/llm-gateway/docs/request-logs), then open the generated domain and create the first admin account.
+Railway is the fastest hosted path for the gateway. Use the published Manifest template to create a project with the gateway app, a PostgreSQL database, and a storage bucket for [request logs](/request-logs), then open the generated domain and create the first admin account.
 
 ## Prerequisites
 
@@ -57,7 +57,7 @@ curl -fsS https://<your-railway-domain>/api/v1/health
 
 - Use a custom domain before configuring production OAuth callbacks.
 - Keep PostgreSQL backups enabled for production data.
-- The template provisions a `messages-recordings` bucket for [request logs](/llm-gateway/docs/request-logs), so they survive redeploys without extra setup.
+- The template provisions a `messages-recordings` bucket for [request logs](/request-logs), so they survive redeploys without extra setup.
 - Use the Railway service logs when debugging failed boots or database connection issues.
 
 Relevant Railway links:

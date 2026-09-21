@@ -6,7 +6,7 @@ launched via the `agent` script, repos under `~/repos`).
 ## Schedules
 
 - **Every 2 hours** — light watch: step 1 of the skill only. If no new
-  merged PR on mnfst/manifest since `lastAuditedPr`, exit silently
+  merged PR on mnfst/llm-gateway since `lastAuditedPr`, exit silently
   (near-zero cost). If there are, run the full loop.
 - **00:00 nightly** — full audit regardless, as a safety net (catches
   anything the watch missed, plus docs drift not tied to a PR).
@@ -29,9 +29,9 @@ mirrors so the repo stays self-explanatory.
 ## VM prerequisites (to install at wiring time — warn Seb before
 touching the VM, he may be using it live)
 
-1. Clones of mnfst/docs and mnfst/manifest under `~/repos`, pulled at
+1. Clones of mnfst/docs and mnfst/llm-gateway under `~/repos`, pulled at
    each run.
-2. `gh` token: issues:write on mnfst/docs, read on mnfst/manifest.
+2. `gh` token: issues:write on mnfst/docs, read on mnfst/llm-gateway.
 3. Supabase schema `docs_harness` created on the existing instance.
 4. Cron entries for the two schedules, launching the Claude Code agent
    with the `/docs-sync` skill.

@@ -9,14 +9,14 @@ establish the TRUTH of the platform, from code, not from docs and not
 from memory. You never read the documentation: your report must be
 uncontaminated by what the docs claim.
 
-Input: a list of merged PR numbers on mnfst/manifest, and the local
+Input: a list of merged PR numbers on mnfst/llm-gateway, and the local
 platform clone (`~/codebase/manifest/manifest` on Seb's Mac,
 `~/repos/manifest` on the VM).
 
 Method:
 
-1. For each PR: `gh pr view <n> --repo mnfst/manifest` and
-   `gh pr diff <n> --repo mnfst/manifest`. Read the description AND the
+1. For each PR: `gh pr view <n> --repo mnfst/llm-gateway` and
+   `gh pr diff <n> --repo mnfst/llm-gateway`. Read the description AND the
    diff; descriptions lie by omission.
 2. For every behavior you report, verify it in the local clone (Grep
    the code, read the file). Do not trust the diff alone: the

@@ -27,7 +27,7 @@ canonical: "https://manifest.build/llm-gateway/docs/deploy/heroku"
 
 Heroku can deploy the gateway with the repository `app.json` and `heroku.yml`. The deploy button creates a Cedar container-stack app, provisions Heroku Postgres, generates gateway secrets, and builds a tiny Heroku Dockerfile that uses the public Manifest image.
 
-Heroku asks for a few values before it can deploy. Set `BETTER_AUTH_URL` to the public URL for the app name you choose. Heroku dynos have an ephemeral filesystem, so [request logs](/llm-gateway/docs/request-logs) write to external S3-compatible storage rather than local disk: set the bucket, region, and access key for that storage too.
+Heroku asks for a few values before it can deploy. Set `BETTER_AUTH_URL` to the public URL for the app name you choose. Heroku dynos have an ephemeral filesystem, so [request logs](/request-logs) write to external S3-compatible storage rather than local disk: set the bucket, region, and access key for that storage too.
 
 ## Prerequisites
 
@@ -74,7 +74,7 @@ heroku logs --tail -a <your-app-name>
 - `PGSSLMODE=no-verify` enables TLS for Heroku Postgres without editing the managed `DATABASE_URL`.
 - `DB_POOL_MAX=8` and `AUTH_DB_POOL_MAX=4` leave headroom under the Essential-0 connection limit.
 - Use a custom domain before configuring production OAuth callbacks.
-- Heroku's filesystem is ephemeral, which is why the deploy collects S3-compatible storage for [request logs](/llm-gateway/docs/request-logs) up front. Recordings live in your bucket, not on the dyno.
+- Heroku's filesystem is ephemeral, which is why the deploy collects S3-compatible storage for [request logs](/request-logs) up front. Recordings live in your bucket, not on the dyno.
 
 ## Tearing it down
 

@@ -12,13 +12,13 @@ canonical: "https://manifest.build/llm-gateway/docs/request-logs"
   <button type="button" data-deploy-mode="selfhosted">Self-hosted</button>
 </div>
 
-The [Requests page](/llm-gateway/docs/observability) tells you what a request cost and which model served it. Request logs tell you what was actually said: the body the gateway sent to the provider, and the body that came back. The dashboard calls this feature **Logs**.
+The [Requests page](/observability) tells you what a request cost and which model served it. Request logs tell you what was actually said: the body the gateway sent to the provider, and the body that came back. The dashboard calls this feature **Logs**.
 
 It's one toggle per harness.
 
 ## What gets recorded
 
-Recording happens per **provider attempt**, not per request. A request that falls back twice before succeeding produces three recordings, each with its own body pair, so you can see how the conversation was reshaped for each provider. An [Autofix](/llm-gateway/docs/autofix) retry is its own attempt too, which is how you compare the request that failed against the patched one that worked.
+Recording happens per **provider attempt**, not per request. A request that falls back twice before succeeding produces three recordings, each with its own body pair, so you can see how the conversation was reshaped for each provider. An [Autofix](/autofix) retry is its own attempt too, which is how you compare the request that failed against the patched one that worked.
 
 | | What's stored |
 |---|---|
@@ -26,11 +26,11 @@ Recording happens per **provider attempt**, not per request. A request that fall
 | **Response** | The parsed JSON body, or for a streamed attempt, the raw SSE stream as it arrived |
 | **Wire format** | Which protocol the exchange used, so the drawer can render it correctly |
 
-A request blocked by the gateway, on a [hard limit](/llm-gateway/docs/llm-gateway#hard-limits) or a malformed body, still lists one attempt, labelled with the model you asked for or **No provider**. It carries the failure status and no **Messages**, **Tools**, or **Raw** tab: the gateway sent nothing to a provider, so there is nothing to read back.
+A request blocked by the gateway, on a [hard limit](/llm-gateway#hard-limits) or a malformed body, still lists one attempt, labelled with the model you asked for or **No provider**. It carries the failure status and no **Messages**, **Tools**, or **Raw** tab: the gateway sent nothing to a provider, so there is nothing to read back.
 
 ## Reading it back
 
-Open a request in the dashboard's **Requests** page and pick an attempt in the **Attempts** list. The initial call, each fallback, and an [Autofix](/llm-gateway/docs/autofix) retry are separate attempts, and each one shows its own conversation. The **Messages**, **Tools**, and **Raw** tabs appear when that attempt has a recording.
+Open a request in the dashboard's **Requests** page and pick an attempt in the **Attempts** list. The initial call, each fallback, and an [Autofix](/autofix) retry are separate attempts, and each one shows its own conversation. The **Messages**, **Tools**, and **Raw** tabs appear when that attempt has a recording.
 
 <Frame caption="A request with two attempts: the failed call and its Autofix retry, each with its own tabs.">
   <img src="/images/request-logs-drawer.png" alt="A request opened on the Requests page, showing the Attempts list and the per-attempt tabs" />
@@ -54,7 +54,7 @@ New harnesses have it on. To make sure a harness records its logs, check **Setti
 
 <Note>
   Recording stores your prompts and completions. Everything else the gateway keeps
-  is metadata ([Data and telemetry](/llm-gateway/docs/reference/telemetry) covers the
+  is metadata ([Data and telemetry](/reference/telemetry) covers the
   distinction). If a harness handles data you'd rather the gateway never hold onto,
   leave recording off for that harness.
 </Note>
@@ -79,7 +79,7 @@ Self-hosted installs can override this with `REQUEST_RECORDING_RETENTION_DAYS`. 
 
 <Note>
   Logs were reintroduced in **v6.18.0**. On an older self-hosted install,
-  [upgrade the gateway](/llm-gateway/docs/self-hosted#upgrading) first.
+  [upgrade the gateway](/self-hosted#upgrading) first.
 </Note>
 
 </div>
@@ -91,7 +91,7 @@ Recordings don't live in Postgres. They're gzipped and written to object storage
     The bundled compose file mounts a named volume `manifest_request_recordings`
     at `/data/request-recordings` and points the gateway at it. Nothing to
     configure when your compose file includes that volume; an install from
-    before v6.18.0 needs [one upgrade step](/llm-gateway/docs/self-hosted#upgrading) first. The
+    before v6.18.0 needs [one upgrade step](/self-hosted#upgrading) first. The
     volume survives `docker compose down` the same way the Postgres volume
     does.
   </Tab>
@@ -122,7 +122,7 @@ Recordings don't live in Postgres. They're gzipped and written to object storage
   fully or not at all.
 </Warning>
 
-Full variable list: [Environment variables](/llm-gateway/docs/reference/environment-variables#request-recordings).
+Full variable list: [Environment variables](/reference/environment-variables#request-recordings).
 
 ### Check it's working
 
@@ -140,7 +140,7 @@ The one-click templates set this up for you. Render mounts a persistent disk. Ra
 
 ## Related
 
-- [Observability](/llm-gateway/docs/observability) — the request log these recordings hang off
-- [Autofix](/llm-gateway/docs/autofix) — comparing a failed request against its patched retry
-- [Data and telemetry](/llm-gateway/docs/reference/telemetry) — what the gateway stores by default
-- [Environment variables](/llm-gateway/docs/reference/environment-variables#request-recordings)
+- [Observability](/observability) — the request log these recordings hang off
+- [Autofix](/autofix) — comparing a failed request against its patched retry
+- [Data and telemetry](/reference/telemetry) — what the gateway stores by default
+- [Environment variables](/reference/environment-variables#request-recordings)

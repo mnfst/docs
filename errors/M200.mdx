@@ -21,9 +21,9 @@ The response arrives as HTTP 200 with this text in the assistant message content
 
 ## Why it happened
 
-You set a limit on the harness's [Limits](/llm-gateway/docs/observability#spend-alerts) page (say, "$10/day" or "500k tokens/hour"), and the current period's usage just crossed it. The gateway blocks every following request until the period resets or you raise the cap.
+You set a limit on the harness's [Limits](/observability#spend-alerts) page (say, "$10/day" or "500k tokens/hour"), and the current period's usage just crossed it. The gateway blocks every following request until the period resets or you raise the cap.
 
-This is different from [M204](/llm-gateway/docs/errors/M204), which is the LLM Gateway Cloud Free plan monthly request quota, and different from provider 402 errors such as "insufficient credits" from OpenRouter.
+This is different from [M204](/errors/M204), which is the LLM Gateway Cloud Free plan monthly request quota, and different from provider 402 errors such as "insufficient credits" from OpenRouter.
 
 ## How to fix it
 
@@ -33,10 +33,10 @@ This is different from [M204](/llm-gateway/docs/errors/M204), which is the LLM G
 
 ## Related
 
-- [Spend alerts](/llm-gateway/docs/observability#spend-alerts)
-- [Hard limits](/llm-gateway/docs/llm-gateway#hard-limits)
-- [M201: Per-user rate limit](/llm-gateway/docs/errors/M201)
-- [M202: Per-IP rate limit](/llm-gateway/docs/errors/M202)
-- [M203: Concurrency limit](/llm-gateway/docs/errors/M203)
-- [M204: Monthly request limit reached](/llm-gateway/docs/errors/M204)
-- [All error codes](/llm-gateway/docs/errors)
+- [Spend alerts](/observability#spend-alerts)
+- [Hard limits](/llm-gateway#hard-limits)
+- [M201: Per-user rate limit](/errors/M201)
+- [M202: Per-IP rate limit](/errors/M202)
+- [M203: Concurrency limit](/errors/M203)
+- [M204: Monthly request limit reached](/errors/M204)
+- [All error codes](/errors)

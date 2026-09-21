@@ -12,9 +12,9 @@ Two separate things happen to data as requests flow through the gateway: what yo
 
 ## What the gateway stores
 
-The gateway always keeps metadata about each request: model, provider, tier, token counts, cost, latency, and an error message. Error text is scrubbed for secrets before it lands, and the request headers the gateway stores drop credentials and IP addresses. The usage and cost views in the dashboard are built from that metadata alone. See [Observability](/llm-gateway/docs/observability) for what the record looks like in practice.
+The gateway always keeps metadata about each request: model, provider, tier, token counts, cost, latency, and an error message. Error text is scrubbed for secrets before it lands, and the request headers the gateway stores drop credentials and IP addresses. The usage and cost views in the dashboard are built from that metadata alone. See [Observability](/observability) for what the record looks like in practice.
 
-Message bodies are separate, and optional. With [request logs](/llm-gateway/docs/request-logs) on for a harness, the gateway also stores the request and response bodies of each provider attempt so you can read them back in the dashboard. New harnesses have it enabled; to make sure a harness records its logs, check its **Settings → Logs**.
+Message bodies are separate, and optional. With [request logs](/request-logs) on for a harness, the gateway also stores the request and response bodies of each provider attempt so you can read them back in the dashboard. New harnesses have it enabled; to make sure a harness records its logs, check its **Settings → Logs**.
 
 A stored body is exactly what went over the wire: every message, system instruction, tool definition and inline image, at full length. The gateway doesn't redact or truncate it, and there is no size limit. Stored bodies are held outside the database, in the object storage your instance is configured for, and deleted on a retention schedule. With logs off for a harness, that harness's prompts and completions stay between you and the provider.
 
@@ -92,6 +92,6 @@ Your collector receives the same payload documented above, and nothing is sent t
 
 ## Related
 
-- [Observability](/llm-gateway/docs/observability) — what the recorded metadata gets you
-- [Environment variables](/llm-gateway/docs/reference/environment-variables) — `MANIFEST_TELEMETRY_DISABLED` and `TELEMETRY_ENDPOINT` in context
-- [Self-hosting with Docker](/llm-gateway/docs/self-hosted) — where to put these variables
+- [Observability](/observability) — what the recorded metadata gets you
+- [Environment variables](/reference/environment-variables) — `MANIFEST_TELEMETRY_DISABLED` and `TELEMETRY_ENDPOINT` in context
+- [Self-hosting with Docker](/self-hosted) — where to put these variables

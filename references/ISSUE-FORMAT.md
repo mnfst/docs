@@ -10,7 +10,7 @@ label per finding category present. No findings = no issue = no noise.
 ## Body structure
 
 ```
-Audited: mnfst/manifest PRs #<from> to #<to> (<n> merged PRs), against
+Audited: mnfst/llm-gateway PRs #<from> to #<to> (<n> merged PRs), against
 the docs at <docs commit sha>.
 
 ## Findings
@@ -92,7 +92,7 @@ Element by element:
    sentence may add ONE fact that changes how Seb decides; never
    restate the first sentence.
 2. **Page** (visible): the LIVE docs URL where the problem sits
-   (`https://manifest.build/docs/<slug>`), with the section named in
+   (`https://manifest.build/llm-gateway/docs/<slug>`), with the section named in
    words ("First request, the Send a request step"). Seb opens it and
    sees the problem. The file path stays in the details block.
 3. **What actually happens** (visible, not folded): the user journey
@@ -148,7 +148,7 @@ verification.
 
 ### 3 · [WRONG] The doc says an unknown model name "falls back to your routing config". False: the request fails with M302
 
-Page: https://manifest.build/docs/self-hosted (First request, the "Send a request" step)
+Page: https://manifest.build/llm-gateway/docs/self-hosted (First request, the "Send a request" step)
 
 What actually happens:
 1. Your app sends a request with a model name.

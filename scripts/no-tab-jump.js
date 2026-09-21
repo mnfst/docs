@@ -27,7 +27,7 @@ if (window.location.hash && document.querySelector('[role="tab"]')) {
 
     var link = document.createElement('a');
     link.className = 'docs-self-healing';
-    link.href = 'https://manifest.build/docs';
+    link.href = 'https://docs.manifest.build';
     link.setAttribute('aria-label', 'Open the Manifest Self-Healing documentation');
     link.innerHTML =
       '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">' +

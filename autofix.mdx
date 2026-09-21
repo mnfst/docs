@@ -26,7 +26,7 @@ Autofix only touches request-side 4xx errors, where the provider is telling you 
 | `404`  | Not found, usually a model name that moved     |
 | `422`  | Unprocessable, usually a schema the API rejects |
 
-It deliberately skips `401`, `403`, `429`, and every `5xx`. A bad key, a rate limit, or a provider outage isn't something a rewritten body can fix, so those go straight to [fallback](/llm-gateway/docs/llm-gateway#fallback).
+It deliberately skips `401`, `403`, `429`, and every `5xx`. A bad key, a rate limit, or a provider outage isn't something a rewritten body can fix, so those go straight to [fallback](/llm-gateway#fallback).
 
 Renamed models are covered through the provider itself. When a request names a model the gateway hasn't catalogued but the provider and credentials are unambiguous, the gateway forwards it anyway. The provider answers with its real error, typically a `404` for a model that no longer exists, and that error goes through the normal Autofix path. A patch that corrects the model name serves the request.
 
@@ -109,7 +109,7 @@ Here is exactly what Autofix sends to the healing service, and when nothing is s
 
 Self-hosting is often a privacy choice, so here is exactly what leaves your machine, and when nothing does.
 
-The first time you enable Autofix, your install records a one-time consent: enabling it means you agree that failing requests are sent to the hosted healing service, as set out in the [terms](https://manifest.build/terms/). Any enable path records it. Your install identifies itself with an anonymous install id, the same id [telemetry](/llm-gateway/docs/reference/telemetry) uses.
+The first time you enable Autofix, your install records a one-time consent: enabling it means you agree that failing requests are sent to the hosted healing service, as set out in the [terms](https://manifest.build/terms/). Any enable path records it. Your install identifies itself with an anonymous install id, the same id [telemetry](/reference/telemetry) uses.
 
 </div>
 
@@ -145,7 +145,7 @@ Open any request in the dashboard's request log. Requests that went through Auto
   <img src="/images/autofix-request-panel.png" alt="The request drawer on a repaired request, with the failed and patched attempts listed and the Autofix panel showing what changed" />
 </Frame>
 
-The failed original and its patched retry are separate [provider attempts](/llm-gateway/docs/observability#requests-and-provider-attempts), so with [request logs](/llm-gateway/docs/request-logs) on you can read both bodies side by side and see exactly which field was rewritten.
+The failed original and its patched retry are separate [provider attempts](/observability#requests-and-provider-attempts), so with [request logs](/request-logs) on you can read both bodies side by side and see exactly which field was rewritten.
 
 The **Overview** page aggregates the same data across a time range:
 
@@ -176,13 +176,13 @@ Autofix needs no setup. Every variable below is optional and adjusts behavior:
 | `AUTOFIX_HEALING_API_KEY`     | unset         | Sent as `x-api-key` to the healing service. Only relevant when provided by the hosted healing service |
 | `AUTOFIX_REPORT_ALL_4XX`      | `false`       | Opt-in. Also report request-side 4xx errors (except `401`/`402`/`403`/`429`) from harnesses with Autofix on, as diagnostic evidence with the secret-scrubbed request body. Bodies over 256 KB are dropped, not truncated. No fix comes back from it |
 
-You don't need `AUTOFIX_HEALING_API_KEY`. With no key set, the install announces its anonymous install id instead. The full list of variables lives in [Environment variables](/llm-gateway/docs/reference/environment-variables).
+You don't need `AUTOFIX_HEALING_API_KEY`. With no key set, the install announces its anonymous install id instead. The full list of variables lives in [Environment variables](/reference/environment-variables).
 
 </div>
 
 ## Related
 
-- [LLM Gateway](/llm-gateway/docs/llm-gateway): where Autofix sits in the request flow
-- [Observability](/llm-gateway/docs/observability): finding failing requests in the log
-- [Request logs](/llm-gateway/docs/request-logs): reading the original and patched bodies
-- [Error codes](/llm-gateway/docs/errors)
+- [LLM Gateway](/llm-gateway): where Autofix sits in the request flow
+- [Observability](/observability): finding failing requests in the log
+- [Request logs](/request-logs): reading the original and patched bodies
+- [Error codes](/errors)

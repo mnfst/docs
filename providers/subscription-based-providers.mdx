@@ -97,11 +97,11 @@ A model your plan just gained doesn't show up on its own. Click **Refresh models
 <Note>
   Subscription auth is rate-limited by the provider's plan, not by the gateway. If
   you hit a plan ceiling, requests fall through to your next
-  [fallback](/llm-gateway/docs/llm-gateway#fallback) model, usually a different provider on an API key.
+  [fallback](/llm-gateway#fallback) model, usually a different provider on an API key.
 </Note>
 
 ## Why mix subscriptions and API keys
 
 A common setup: subscription as the primary (predictable monthly cost), API-key provider as the fallback for when you hit the plan limit or want a model the subscription doesn't include.
 
-Pin your subscription model to your default or a custom tier and add API-key models to the [fallback list](/llm-gateway/docs/llm-gateway#configuration). The gateway handles the switch.
+Pin your subscription model to your default or a custom tier and add API-key models to the [fallback list](/llm-gateway#configuration). The gateway handles the switch.

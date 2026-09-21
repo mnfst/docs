@@ -2,8 +2,11 @@
 # .git, .github, .claude, .agents, .idea, node_modules,
 # README.md, LICENSE.md, CHANGELOG.md, CONTRIBUTING.md
 
-# Non-docs files
+# Non-docs files: the harness the agents read, never published
 AGENTS.md
+CLAUDE.md
+references/
+scripts/
 
 # Draft content
 drafts/

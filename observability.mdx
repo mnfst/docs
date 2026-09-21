@@ -21,9 +21,9 @@ The gateway tracks two things, and the difference matters once fallback is invol
 | | What it is | When you get more than one |
 |---|---|---|
 | **Request** | One call from your agent to the gateway | Never. One call in, one Request. |
-| **Provider attempt** | One call from the gateway to a provider | Every fallback step and every [Autofix](/llm-gateway/docs/autofix) retry adds another |
+| **Provider attempt** | One call from the gateway to a provider | Every fallback step and every [Autofix](/autofix) retry adds another |
 
-A request that succeeds on the first try is one Request with one attempt. A request that fails twice before succeeding is still one Request, with three attempts. A request blocked by the gateway, like a [hard limit](/llm-gateway/docs/llm-gateway#hard-limits) or a malformed body, is one Request with one attempt that never reached a provider. That attempt is listed under the model you asked for, or **No provider** when the request named none, and carries the error that stopped it.
+A request that succeeds on the first try is one Request with one attempt. A request that fails twice before succeeding is still one Request, with three attempts. A request blocked by the gateway, like a [hard limit](/llm-gateway#hard-limits) or a malformed body, is one Request with one attempt that never reached a provider. That attempt is listed under the model you asked for, or **No provider** when the request named none, and carries the error that stopped it.
 
 This is why the request count and the provider call count don't match, and why cost is attributed to attempts: a failed attempt can still burn tokens.
 
@@ -52,9 +52,9 @@ On the Free plan, the Overview covers up to 7 days of history; the 30-, 90-, and
 
 ### What's on each request
 
-Opening a request in the log shows the whole story: the tier that routed it, the model and provider that served it, input and output tokens, computed cost, latency, the auth type used ([API key, subscription, or local](/llm-gateway/docs/reference/glossary#auth-type)), and every fallback hop with its own status. Failures carry an error code, so a gateway rejection like [M100](/llm-gateway/docs/errors/M100) reads differently from a provider's own 500.
+Opening a request in the log shows the whole story: the tier that routed it, the model and provider that served it, input and output tokens, computed cost, latency, the auth type used ([API key, subscription, or local](/reference/glossary#auth-type)), and every fallback hop with its own status. Failures carry an error code, so a gateway rejection like [M100](/errors/M100) reads differently from a provider's own 500.
 
-That's all metadata. To read the messages themselves, turn on [request logs](/llm-gateway/docs/request-logs) for the harness. Open a request, pick an attempt, and its **Messages** tab shows the body sent to the provider and the body that came back.
+That's all metadata. To read the messages themselves, turn on [request logs](/request-logs) for the harness. Open a request, pick an attempt, and its **Messages** tab shows the body sent to the provider and the body that came back.
 
 <Tip>
   Local models record `cost = 0` with real token counts and latency, since
@@ -73,7 +73,7 @@ A limit rule watches one metric for one harness over a rolling period, and acts 
 | **Period** | Hour, day, week, or month |
 | **Action** | Every rule emails you. Turn on blocking to also stop requests over the threshold |
 
-Blocking is the gateway half of this and is covered in [hard limits](/llm-gateway/docs/llm-gateway#hard-limits). The rest of this section is the alerting half.
+Blocking is the gateway half of this and is covered in [hard limits](/llm-gateway#hard-limits). The rest of this section is the alerting half.
 
 <Steps>
   <Step title="Open the Limits page">
@@ -106,7 +106,7 @@ On the **Limits** page, under **Configure email provider**, pick Resend, Mailgun
 
 Your workspace holds one provider, shared by every harness. Removing it stops alerts for all of them.
 
-Alerts use the saved provider first, and fall back to the [`EMAIL_*` environment variables](/llm-gateway/docs/reference/environment-variables) when no provider is saved. Those variables also send verification and password-reset email, which the saved provider never handles.
+Alerts use the saved provider first, and fall back to the [`EMAIL_*` environment variables](/reference/environment-variables) when no provider is saved. Those variables also send verification and password-reset email, which the saved provider never handles.
 
 Without an email provider from either path, alerts are skipped. Blocking rules still work, since they don't need to send anything.
 
@@ -132,14 +132,14 @@ Self-hosted installs swap the base URL for their own host.
 
 ## Anonymous telemetry
 
-Separately from your dashboard, each self-hosted install sends a small daily report so the project can see version adoption and which providers deserve attention. It's aggregates only, never prompts or content, and one environment variable turns it off. Full field list and opt-out: [Data and telemetry](/llm-gateway/docs/reference/telemetry).
+Separately from your dashboard, each self-hosted install sends a small daily report so the project can see version adoption and which providers deserve attention. It's aggregates only, never prompts or content, and one environment variable turns it off. Full field list and opt-out: [Data and telemetry](/reference/telemetry).
 
 </div>
 
 ## Related
 
-- [LLM Gateway](/llm-gateway/docs/llm-gateway) — routing, fallback, and hard limits
-- [Request logs](/llm-gateway/docs/request-logs) — the request and response bodies
-- [Autofix](/llm-gateway/docs/autofix)
-- [Error codes](/llm-gateway/docs/errors)
-- [Glossary](/llm-gateway/docs/reference/glossary)
+- [LLM Gateway](/llm-gateway) — routing, fallback, and hard limits
+- [Request logs](/request-logs) — the request and response bodies
+- [Autofix](/autofix)
+- [Error codes](/errors)
+- [Glossary](/reference/glossary)

@@ -37,7 +37,7 @@ Typical causes:
 - A pasted subscription token is no longer valid
 - Provider-side session invalidation after a password change or security reset
 
-This is different from [M100](/llm-gateway/docs/errors/M100): M100 means there is no key on file. M102 means a subscription row exists and was elected, but the unwrap/refresh step failed.
+This is different from [M100](/errors/M100): M100 means there is no key on file. M102 means a subscription row exists and was elected, but the unwrap/refresh step failed.
 
 When fallback routes are configured, the gateway records the M102 hop and continues the chain. You only see a terminal M102 response when no usable fallback remains.
 
@@ -45,14 +45,14 @@ When fallback routes are configured, the gateway records the M102 hop and contin
 
 1. Open the dashboard link in the error message. It goes straight to the harness's **Routing** page.
 2. Open **Providers → Subscriptions** in the sidebar, click **Connect** on the provider, and redo the auth: OAuth, device code, or a fresh token.
-3. Optionally add a working [API key](/llm-gateway/docs/providers/api-key-providers) or another [subscription](/llm-gateway/docs/providers/subscription-based-providers) as a fallback so a dead primary does not block traffic.
+3. Optionally add a working [API key](/providers/api-key-providers) or another [subscription](/providers/subscription-based-providers) as a fallback so a dead primary does not block traffic.
 4. Retry the request.
 
 ## Related
 
-- [M100: Provider API key missing](/llm-gateway/docs/errors/M100)
-- [M101: No providers configured](/llm-gateway/docs/errors/M101)
-- [Subscription-based providers](/llm-gateway/docs/providers/subscription-based-providers)
-- [API key providers](/llm-gateway/docs/providers/api-key-providers)
-- [Routing](/llm-gateway/docs/llm-gateway)
-- [All error codes](/llm-gateway/docs/errors)
+- [M100: Provider API key missing](/errors/M100)
+- [M101: No providers configured](/errors/M101)
+- [Subscription-based providers](/providers/subscription-based-providers)
+- [API key providers](/providers/api-key-providers)
+- [Routing](/llm-gateway)
+- [All error codes](/errors)
