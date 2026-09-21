@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "name": "Manifest",
+  "name": "Manifest Gateway",
   "theme": "maple",
   "logo": {
     "light": "/logo/light.svg",
