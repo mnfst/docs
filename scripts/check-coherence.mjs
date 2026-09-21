@@ -42,6 +42,16 @@ const PLATFORM_SIDE = new Set([
   "SERVICE_HEX_64_ENCRYPTION",
 ]);
 
+// Variables set on the user's machine for the mnfst CLI or an MCP client.
+// The reference lists server variables only, so these never belong there.
+const CLIENT_SIDE = new Set([
+  "MANIFEST_URL",       // mnfst CLI: server address (cli.mdx)
+  "MANIFEST_API_KEY",   // mnfst CLI: account key (cli.mdx)
+  "MANIFEST_AGENT_URL", // CLI and MCP client: gateway address
+  "MANIFEST_AGENT_KEY", // CLI and MCP client: harness key
+  "OPENAI_API_KEY",     // the user's own provider key in a CLI example
+]);
+
 // M-codes deliberately documented as retired (cited to explain absence).
 const RETIRED_CODES = new Set(["M301"]);
 
@@ -75,7 +85,7 @@ for (const f of files) {
     if (rel === "reference/environment-variables.mdx") return; // its own rows
     for (const m of line.matchAll(ENV_RE)) {
       const v = m[1];
-      if (NOT_ENV_VARS.has(v) || PLATFORM_SIDE.has(v)) continue;
+      if (NOT_ENV_VARS.has(v) || PLATFORM_SIDE.has(v) || CLIENT_SIDE.has(v)) continue;
       if (!defined.has(v)) {
         violations.push(`${rel}:${i + 1}  env var \`${v}\` cited but not defined in the environment-variables reference`);
       }

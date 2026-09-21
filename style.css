@@ -103,13 +103,111 @@ a[href="https://manifest.build"] img {
   width: auto !important;
 }
 
+/* Docs switcher: chevrons next to the logo, menu opened by a logo click */
+.docs-switcher-trigger {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 2px;
+}
+.docs-switcher-chevron {
+  position: relative;
+  top: 4px;
+  display: inline-flex;
+  flex-shrink: 0;
+  color: #64748b;
+}
+.docs-switcher-trigger:hover .docs-switcher-chevron {
+  color: #0f172a;
+}
+html.dark .docs-switcher-chevron {
+  color: #94a3b8;
+}
+html.dark .docs-switcher-trigger:hover .docs-switcher-chevron {
+  color: #f9f8f5;
+}
+#docs-switcher-menu {
+  position: fixed;
+  z-index: 70;
+  min-width: 240px;
+  padding: 4px;
+  border: 1px solid #e8e2d9;
+  border-radius: 6px;
+  background: #fcfaf5;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+html.dark #docs-switcher-menu {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: #1c1c1c;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+.docs-switcher-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 10px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151 !important;
+  text-decoration: none !important;
+  border-bottom: none !important;
+}
+a.docs-switcher-item:hover {
+  background: rgba(15, 23, 42, 0.05);
+  color: #0f172a !important;
+}
+.docs-switcher-item.is-active {
+  font-weight: 600;
+  color: #0f172a !important;
+  cursor: default;
+}
+.docs-switcher-item svg {
+  flex-shrink: 0;
+  color: #64748b;
+}
+.docs-switcher-item.is-active svg {
+  color: #0f172a;
+}
+html.dark .docs-switcher-item {
+  color: #d1d5db !important;
+}
+html.dark a.docs-switcher-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #f9f8f5 !important;
+}
+html.dark .docs-switcher-item.is-active,
+html.dark .docs-switcher-item.is-active svg {
+  color: #f9f8f5 !important;
+}
+
+/* Theme switch moves under GitHub and Discord at the sidebar bottom, so the
+   logo keeps the whole header width */
+@media (min-width: 1024px) {
+  #sidebar [data-theme-preference-switch] {
+    position: fixed !important;
+    left: 22px;
+    bottom: 14px;
+    z-index: 30;
+  }
+  #sidebar li[id="https://app.manifest.build"] ~ li:last-child {
+    margin-bottom: 36px;
+  }
+}
+
+/* Search dialog and its backdrop sit above the banner (45), the Book a call
+   button and floating toggle (60), and the docs switcher menu (70) */
+body > div > div.fixed.inset-0.z-40 {
+  z-index: 80 !important;
+}
+
 /* Warm sidebar background */
 #sidebar {
   --tw-bg-opacity: 1;
 }
 
-/* Sidebar bottom links: Book a call is already top right and Dashboard is in
-   the footer, so only GitHub and Discord stay */
+/* Sidebar bottom links: Book a call is already top right, so only GitHub and
+   Discord stay */
 #sidebar li[id="https://app.manifest.build"],
 #sidebar li[id="https://calendly.com/sebastien-manifest/30min"] {
   display: none;
@@ -263,9 +361,9 @@ div.rounded-2xl svg.text-gray-300 {
   color: #d1d5db !important;
 }
 
-/* Hide Mintlify footer branding */
-#footer a[href*="mintlify"] {
-  display: none;
+/* No page footer: its links and theme switch already live in the sidebar */
+#footer {
+  display: none !important;
 }
 
 /* Callouts: tighter spacing & smaller radii */
@@ -491,6 +589,46 @@ html.dark .docs-book-call {
   color: #0f172a !important;
 }
 
+/* Secondary CTA to the main Manifest Self-Healing documentation */
+.docs-self-healing {
+  position: fixed;
+  top: calc(7.5px + var(--banner-height, 40px));
+  right: 166px;
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 13px;
+  border: 1px solid #d8d3ca;
+  border-radius: 10px;
+  background: #f8f6f1;
+  color: #475569 !important;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+.docs-self-healing svg {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+}
+.docs-self-healing:hover {
+  border-color: #b8b1a6;
+  color: #0f172a !important;
+}
+html.dark .docs-self-healing {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: #252525;
+  color: #d1d5db !important;
+  box-shadow: none;
+}
+html.dark .docs-self-healing:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #ffffff !important;
+}
+
 /* Below lg the banner scrolls with the page instead of staying fixed, so the
    fixed elements keep their original offsets */
 @media (max-width: 1023px) {
@@ -499,6 +637,17 @@ html.dark .docs-book-call {
   }
   .docs-book-call {
     top: 7.5px;
+  }
+  .docs-self-healing {
+    top: 7.5px;
+  }
+}
+
+/* Keep the compact header usable on tablets and phones. The Self-Healing
+   destination remains available from the announcement banner. */
+@media (max-width: 767px) {
+  .docs-self-healing {
+    display: none;
   }
 }
 
