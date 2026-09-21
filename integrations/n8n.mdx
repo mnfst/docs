@@ -23,7 +23,7 @@ The gateway ships as a verified n8n community node, [`n8n-nodes-manifest`](https
   </Card>
 </CardGroup>
 
-Both nodes are plain HTTP clients for the [gateway](/llm-gateway/docs/llm-gateway). Nothing about routing, limits, or [Autofix](/llm-gateway/docs/autofix) changes because the caller is n8n.
+Both nodes are plain HTTP clients for the [gateway](/llm-gateway). Nothing about routing, limits, or [Autofix](/autofix) changes because the caller is n8n.
 
 ## Install the node
 
@@ -74,7 +74,7 @@ Select **Test** on the credential. It calls `GET /v1/models`, so a passing test 
 The credential test fails with a connection error when n8n cannot reach the gateway. Where the two run decides the address:
 
 - **n8n and the gateway in Docker on the same host.** `localhost` inside the n8n container is n8n itself. Put both containers on a shared Docker network and use the gateway service name as the host, or use `http://host.docker.internal:2099` on Docker Desktop.
-- **n8n on another machine.** The bundled compose file binds the gateway to `127.0.0.1` only. Set `HOST_BIND_ADDRESS=0.0.0.0` in the gateway's `.env`, as described in [Exposing on the LAN](/llm-gateway/docs/self-hosted#exposing-on-the-lan), so the port answers on the network.
+- **n8n on another machine.** The bundled compose file binds the gateway to `127.0.0.1` only. Set `HOST_BIND_ADDRESS=0.0.0.0` in the gateway's `.env`, as described in [Exposing on the LAN](/self-hosted#exposing-on-the-lan), so the port answers on the network.
 - **Plain `http://` is fine.** The calls are server to server. The dashboard's browser security rules do not apply to them.
 
 The keyless loopback shortcut that a development build of the gateway accepts does not exist in the production image. n8n always needs a real `mnfst_` key.
@@ -88,14 +88,14 @@ The keyless loopback shortcut that a development build of the gateway accepts do
     On an **AI Agent** or **Basic LLM Chain** node, select the **Model** connector and choose **Manifest Chat Model**.
   </Step>
   <Step title="Pick the credential and model">
-    Select the **Manifest API** credential. The model list is loaded from your instance. Leave it on `auto` to let your [routing rules](/llm-gateway/docs/llm-gateway#routing) pick the model, or choose a model ID to pin one.
+    Select the **Manifest API** credential. The model list is loaded from your instance. Leave it on `auto` to let your [routing rules](/llm-gateway#routing) pick the model, or choose a model ID to pin one.
   </Step>
   <Step title="Run the workflow">
     Streaming and tool calling work as they do with the OpenAI Chat Model, so agent tools run unchanged. Each call appears on the harness's **Requests** page with the model that served it and its cost.
   </Step>
 </Steps>
 
-An option on the sub-node switches it from Chat Completions to the [Responses API](/llm-gateway/docs/reference/api#endpoints). Leave it off unless a model you route to needs Responses.
+An option on the sub-node switches it from Chat Completions to the [Responses API](/reference/api#endpoints). Leave it off unless a model you route to needs Responses.
 
 ## Call the gateway from a workflow
 
@@ -124,4 +124,4 @@ Your routing decides whether the route answers with buffered JSON or a stream. T
 | Credential test fails with a connection error                  | n8n cannot reach the Base URL. See [Reaching a self-hosted instance](#reaching-a-self-hosted-instance-from-n8n).                  |
 | Credential test fails with `401`                               | The key is not a valid `mnfst_` harness key. Copy it again from the harness **Settings** page.                                      |
 | Every call returns `404`                                       | The Base URL ends in `/v1`. Remove it.                                                                                             |
-| The model list shows only `auto`, or calls fail with [M100](/llm-gateway/docs/errors/M100) or [M101](/llm-gateway/docs/errors/M101) | No provider is connected to the harness yet. Connect one on the harness's **Providers** tab.                |
+| The model list shows only `auto`, or calls fail with [M100](/errors/M100) or [M101](/errors/M101) | No provider is connected to the harness yet. Connect one on the harness's **Providers** tab.                |

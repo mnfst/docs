@@ -16,10 +16,10 @@ The gateway reads a few request headers, and returns a set of `X-Manifest-*` res
 | `Authorization`         | `Bearer mnfst_<key>` | **Required.** Authenticates the harness.                                                                                                             |
 | `Content-Type`          | `application/json`   | **Required.**                                                                                                                                      |
 | `anthropic-version`     | `2023-06-01`         | Accepted and ignored. Anthropic SDKs send it on their own. The gateway picks the version it sends upstream.                                            |
-| Your custom tier header | your value           | Routes the request to a [custom tier](/llm-gateway/docs/llm-gateway#custom-tiers). You set the key and value when you create the tier, so the exact header name is up to you. |
+| Your custom tier header | your value           | Routes the request to a [custom tier](/llm-gateway#custom-tiers). You set the key and value when you create the tier, so the exact header name is up to you. |
 | `x-session-key`         | any string           | Groups requests into a session. The gateway keeps a session on the same upstream where the provider supports it, for sticky routing and prompt caching. |
 
-The custom tier header is the only one that changes routing: send the header you configured on a tier and the request goes to that tier's model. The header wins even when the body names an explicit model ID. See [Routing → Custom](/llm-gateway/docs/llm-gateway#custom-tiers).
+The custom tier header is the only one that changes routing: send the header you configured on a tier and the request goes to that tier's model. The header wins even when the body names an explicit model ID. See [Routing → Custom](/llm-gateway#custom-tiers).
 
 ## Response headers (routed requests)
 

@@ -23,7 +23,7 @@ Everything on this page runs the same open-source gateway image on infrastructur
 
 ## Your own machine
 
-<Card title="Docker" icon="arrow-up-right" href="/llm-gateway/docs/self-hosted">
+<Card title="Docker" icon="arrow-up-right" href="/self-hosted">
   The most direct path. One install command, or docker-compose if you want to
   edit the config first. Also covers upgrades, backups, and bringing your own
   PostgreSQL.
@@ -34,27 +34,27 @@ Everything on this page runs the same open-source gateway image on infrastructur
 Someone else runs the infrastructure. Usually a one-click template or deploy button.
 
 <CardGroup cols={2}>
-  <Card title="Railway" icon="arrow-up-right" href="/llm-gateway/docs/deploy/railway">
+  <Card title="Railway" icon="arrow-up-right" href="/deploy/railway">
     Best one-click path for most users. The template provisions the gateway and
     PostgreSQL.
   </Card>
-  <Card title="Render" icon="arrow-up-right" href="/llm-gateway/docs/deploy/render">
+  <Card title="Render" icon="arrow-up-right" href="/deploy/render">
     Blueprint-based deploy using the public Docker image, generated secrets, and
     Render PostgreSQL.
   </Card>
-  <Card title="DigitalOcean" icon="arrow-up-right" href="/llm-gateway/docs/deploy/digitalocean">
+  <Card title="DigitalOcean" icon="arrow-up-right" href="/deploy/digitalocean">
     App Platform deploy from the public repository with the gateway and a Dev
     PostgreSQL database.
   </Card>
-  <Card title="Fly.io" icon="arrow-up-right" href="/llm-gateway/docs/deploy/fly">
+  <Card title="Fly.io" icon="arrow-up-right" href="/deploy/fly">
     CLI-based deploy using the public Docker image, Fly Postgres, and generated
     gateway secrets.
   </Card>
-  <Card title="Heroku" icon="arrow-up-right" href="/llm-gateway/docs/deploy/heroku">
+  <Card title="Heroku" icon="arrow-up-right" href="/deploy/heroku">
     Deploy-button guide with Heroku Postgres, generated secrets, and one
     required BETTER_AUTH_URL value.
   </Card>
-  <Card title="Koyeb" icon="arrow-up-right" href="/llm-gateway/docs/deploy/koyeb">
+  <Card title="Koyeb" icon="arrow-up-right" href="/deploy/koyeb">
     Deploy-button guide for Koyeb using the public Docker image, manual Postgres
     URL, and runtime secrets.
   </Card>
@@ -65,11 +65,11 @@ Someone else runs the infrastructure. Usually a one-click template or deploy but
 Your own cloud account, provisioned with the provider's own infrastructure tooling.
 
 <CardGroup cols={2}>
-  <Card title="AWS" icon="arrow-up-right" href="/llm-gateway/docs/deploy/aws">
+  <Card title="AWS" icon="arrow-up-right" href="/deploy/aws">
     CloudFormation quick-create for ECS Fargate, RDS PostgreSQL, Secrets
     Manager, and ALB.
   </Card>
-  <Card title="GCP" icon="arrow-up-right" href="/llm-gateway/docs/deploy/gcp">
+  <Card title="GCP" icon="arrow-up-right" href="/deploy/gcp">
     Cloud Shell guided deploy for Cloud Run, Cloud SQL PostgreSQL, and Secret
     Manager.
   </Card>
@@ -80,11 +80,11 @@ Your own cloud account, provisioned with the provider's own infrastructure tooli
 A PaaS you run on your own server, so you get deploy buttons on hardware you own.
 
 <CardGroup cols={2}>
-  <Card title="Coolify" icon="arrow-up-right" href="/llm-gateway/docs/deploy/coolify">
+  <Card title="Coolify" icon="arrow-up-right" href="/deploy/coolify">
     Docker Compose stack using Coolify magic variables and a private PostgreSQL
     container.
   </Card>
-  <Card title="Easypanel" icon="arrow-up-right" href="/llm-gateway/docs/deploy/easypanel">
+  <Card title="Easypanel" icon="arrow-up-right" href="/deploy/easypanel">
     Easypanel app service using PostgreSQL and the Manifest Docker image.
   </Card>
 </CardGroup>
@@ -95,4 +95,4 @@ Most hosted deployments create paid resources. Review each provider's pricing be
 
 For public deployments, make sure `BETTER_AUTH_URL` matches the exact browser URL. If it does not, Better Auth can reject login with an invalid-origin error.
 
-Whichever path you pick, [Environment variables](/llm-gateway/docs/reference/environment-variables) is the full configuration list, and [Data and telemetry](/llm-gateway/docs/reference/telemetry) covers what your instance stores and what it reports back.
+Whichever path you pick, [Environment variables](/reference/environment-variables) is the full configuration list, and [Data and telemetry](/reference/telemetry) covers what your instance stores and what it reports back.

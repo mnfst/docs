@@ -65,7 +65,7 @@ curl -fsS https://<your-app-url>/api/v1/health
 
 ## Notes
 
-- App Platform has no persistent volumes, so [request logs](/llm-gateway/docs/request-logs) write to your DigitalOcean Space over S3.
+- App Platform has no persistent volumes, so [request logs](/request-logs) write to your DigitalOcean Space over S3.
 - The template appends `uselibpqcompat=true` to DigitalOcean's PostgreSQL URL so Node `pg` handles the platform's `sslmode=require` connection string correctly.
 - Upgrade the Dev Database to a managed database for production data.
 - Use a custom domain before configuring production OAuth callbacks.

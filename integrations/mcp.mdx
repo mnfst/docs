@@ -22,7 +22,7 @@ keywords:
   <button type="button" data-deploy-mode="selfhosted">Self-hosted</button>
 </div>
 
-Manifest runs a remote [Model Context Protocol](https://modelcontextprotocol.io) server. Any MCP client — Claude, Cursor, VS Code, and others — can connect to it, sign in with your Manifest account, and manage your workspace with tools: list harnesses, connect providers, change [routing](/llm-gateway/docs/llm-gateway), read the [request log](/llm-gateway/docs/request-logs), and more.
+Manifest runs a remote [Model Context Protocol](https://modelcontextprotocol.io) server. Any MCP client — Claude, Cursor, VS Code, and others — can connect to it, sign in with your Manifest account, and manage your workspace with tools: list harnesses, connect providers, change [routing](/llm-gateway), read the [request log](/request-logs), and more.
 
 The server speaks MCP over HTTP and authenticates with **OAuth 2.1**. The client discovers Manifest's authorization server on its own, opens a browser consent screen the first time, and then holds a short-lived, revocable, workspace-scoped token.
 
@@ -139,7 +139,7 @@ The tool names are grouped below. Each is prefixed with `manifest_`. `read` tool
 | `manifest_routing_status`         | read   | Report whether a harness can route yet, and why not.                         |
 | `manifest_routing_fallbacks_get`  | read   | Read a tier's fallback chain.                                                |
 | `manifest_routing_custom_list`    | read   | List a harness's custom (header-triggered) tiers.                            |
-| `manifest_routing_autofix_get`    | read   | Report whether [Autofix](/llm-gateway/docs/autofix) is effective for a harness.               |
+| `manifest_routing_autofix_get`    | read   | Report whether [Autofix](/autofix) is effective for a harness.               |
 | `manifest_routing_recording_get`  | read   | Report whether request recording is on for a harness.                        |
 | `manifest_agent_configure`        | write  | Set the default route and fallbacks, or a custom tier, and toggle Autofix or recording. |
 | `manifest_routing_fallbacks_set`  | write  | Replace a tier's fallback chain.                                             |

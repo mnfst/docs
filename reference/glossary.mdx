@@ -21,7 +21,7 @@ One provider call inside a request. The initial call, each [fallback](#fallback)
 
 ## Autofix
 
-The repair step for requests that fail because of the request itself: a parameter the provider rejects, a tool schema in the wrong shape, a model name that moved. The gateway corrects the failing request and sends it once more, before fallback. See [Autofix](/llm-gateway/docs/autofix).
+The repair step for requests that fail because of the request itself: a parameter the provider rejects, a tool schema in the wrong shape, a model name that moved. The gateway corrects the failing request and sends it once more, before fallback. See [Autofix](/autofix).
 
 ## Auth type
 
@@ -39,7 +39,7 @@ The model ID you send to opt into routing. When the gateway sees `auto`, it appl
 
 ## Custom tier
 
-A routing rule matched on a request header. You choose the header key and value on the dashboard and pin the tier to its own model and fallback chain. When a request carries that header, it routes to the tier's model instead of the default. That holds even when the body names an explicit model ID. See [Routing → Custom](/llm-gateway/docs/llm-gateway#custom-tiers).
+A routing rule matched on a request header. You choose the header key and value on the dashboard and pin the tier to its own model and fallback chain. When a request carries that header, it routes to the tier's model instead of the default. That holds even when the body names an explicit model ID. See [Routing → Custom](/llm-gateway#custom-tiers).
 
 ## Direct routing
 
@@ -47,7 +47,7 @@ Sending a real model ID (one that `GET /v1/models` lists) instead of `auto`. The
 
 ## Fallback
 
-The retry mechanism that kicks in when the primary model fails. The gateway tries the next model in the tier's fallback list, then the next, until one succeeds or the list is exhausted. See [Fallback](/llm-gateway/docs/llm-gateway#fallback) for triggers and config.
+The retry mechanism that kicks in when the primary model fails. The gateway tries the next model in the tier's fallback list, then the next, until one succeeds or the list is exhausted. See [Fallback](/llm-gateway#fallback) for triggers and config.
 
 ## Fallback chain
 
@@ -57,15 +57,15 @@ The ordered list of models tried for a single tier, primary first. Up to 5 model
 
 An upstream LLM service the gateway can route to. There are four kinds:
 
-- [API key](/llm-gateway/docs/providers/api-key-providers) — pay-per-token (OpenAI, Anthropic, Google, and more)
-- [Subscription](/llm-gateway/docs/providers/subscription-based-providers) — a plan you already pay for (ChatGPT Plus, Claude Max, and more)
-- [Local](/llm-gateway/docs/providers/local-models) — runs on your hardware (Ollama, LM Studio, llama.cpp)
-- [Custom](/llm-gateway/docs/providers/custom-providers) — any OpenAI- or Anthropic-compatible HTTP endpoint
+- [API key](/providers/api-key-providers) — pay-per-token (OpenAI, Anthropic, Google, and more)
+- [Subscription](/providers/subscription-based-providers) — a plan you already pay for (ChatGPT Plus, Claude Max, and more)
+- [Local](/providers/local-models) — runs on your hardware (Ollama, LM Studio, llama.cpp)
+- [Custom](/providers/custom-providers) — any OpenAI- or Anthropic-compatible HTTP endpoint
 
 ## Routing
 
-The step that decides which model handles a request. The gateway checks your custom tiers first, then sends anything that doesn't match to your default model. It runs in-process with no extra network call. See [Routing](/llm-gateway/docs/llm-gateway).
+The step that decides which model handles a request. The gateway checks your custom tiers first, then sends anything that doesn't match to your default model. It runs in-process with no extra network call. See [Routing](/llm-gateway).
 
 ## Tier
 
-A routing lane with its own model and fallback chain. Every harness has a **Default** tier; you can add **Custom** tiers matched on request headers. See [Routing](/llm-gateway/docs/llm-gateway).
+A routing lane with its own model and fallback chain. Every harness has a **Default** tier; you can add **Custom** tiers matched on request headers. See [Routing](/llm-gateway).
