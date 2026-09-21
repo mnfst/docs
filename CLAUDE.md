@@ -35,4 +35,7 @@ Non-negotiables:
   (cloud/self-hosted, fresh/upgrade, existing agents, subscriptions).
 - Findings rejected by Seb (`references/decisions.md`) are never
   re-raised unless the platform changed again on that point.
+- Every page exists twice: `<page>.mdx` at the repo root, published by
+  Mintlify, and `llm-gateway/docs/<page>.mdx`, its dead twin. Edit both, or
+  the change never reaches the site. The coherence check enforces it.
 - Invariants are machine-checked: `node scripts/check-coherence.mjs` must be GREEN before any issue is filed or any docs PR is pushed. Reversing a recorded decision requires the written derivation of the reversal protocol (see the docs-sync skill).

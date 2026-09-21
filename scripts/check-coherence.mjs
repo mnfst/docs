@@ -6,6 +6,10 @@
  *    must have its row in reference/environment-variables.mdx.
  * 2. ERROR-CODE invariant: any M### code cited in a docs page must
  *    have its page at errors/M###.mdx.
+ * 3. TWIN invariant: every page exists twice, at the repo root and under
+ *    llm-gateway/docs/. The root copy is the published one. The two must
+ *    stay identical, so that a correction made in the wrong file is caught
+ *    here instead of silently changing nothing on the site.
  *
  * Usage: node scripts/check-coherence.mjs
  * Exit 0 = GREEN, 1 = violations (each printed with file:line).
@@ -98,6 +102,32 @@ for (const f of files) {
       }
     }
   });
+}
+
+// --- Twin invariant --------------------------------------------------------
+// Mintlify publishes the root copy. The copy under llm-gateway/docs/ is dead
+// weight kept for now, and an edit made there alone changes nothing on the
+// site, so the two must match byte for byte.
+const TWIN_DIR = join(ROOT, "llm-gateway/docs");
+if (existsSync(TWIN_DIR)) {
+  const twins = walk(TWIN_DIR).map((f) => relative(TWIN_DIR, f));
+  for (const page of twins) {
+    const root = join(ROOT, page);
+    if (!existsSync(root)) {
+      violations.push(`llm-gateway/docs/${page}  has no twin at the repo root, so it is never published`);
+      continue;
+    }
+    if (readFileSync(root, "utf8") !== readFileSync(join(TWIN_DIR, page), "utf8")) {
+      violations.push(`${page}  differs from llm-gateway/docs/${page} — edit both, the root copy is the published one`);
+    }
+  }
+  for (const f of walk(ROOT)) {
+    const rel = relative(ROOT, f);
+    if (rel.startsWith("llm-gateway/") || !rel.endsWith(".mdx")) continue;
+    if (!existsSync(join(TWIN_DIR, rel))) {
+      violations.push(`${rel}  has no twin under llm-gateway/docs/`);
+    }
+  }
 }
 
 const unique = [...new Set(violations)];
