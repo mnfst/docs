@@ -15,7 +15,9 @@ import { readFileSync, readdirSync, statSync, existsSync } from "node:fs";
 import { join, relative } from "node:path";
 
 const ROOT = new URL("..", import.meta.url).pathname;
-const REFERENCE = join(ROOT, "reference/environment-variables.mdx");
+// Published pages live under this folder; the folder name is the URL prefix.
+const DOCS = join(ROOT, "llm-gateway/docs");
+const REFERENCE = join(DOCS, "reference/environment-variables.mdx");
 
 // Tokens that look like env vars but are not (each with its reason).
 const NOT_ENV_VARS = new Set([
@@ -82,7 +84,7 @@ for (const f of files) {
   const rel = relative(ROOT, f);
   const lines = readFileSync(f, "utf8").split("\n");
   lines.forEach((line, i) => {
-    if (rel === "reference/environment-variables.mdx") return; // its own rows
+    if (rel === "llm-gateway/docs/reference/environment-variables.mdx") return; // its own rows
     for (const m of line.matchAll(ENV_RE)) {
       const v = m[1];
       if (NOT_ENV_VARS.has(v) || PLATFORM_SIDE.has(v) || CLIENT_SIDE.has(v)) continue;
@@ -93,7 +95,7 @@ for (const f of files) {
     for (const m of line.matchAll(CODE_RE)) {
       const code = `M${m[1]}`;
       if (RETIRED_CODES.has(code)) continue;
-      if (!existsSync(join(ROOT, `errors/${code}.mdx`))) {
+      if (!existsSync(join(DOCS, `errors/${code}.mdx`))) {
         violations.push(`${rel}:${i + 1}  error code ${code} cited but errors/${code}.mdx does not exist`);
       }
     }
