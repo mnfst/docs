@@ -1,0 +1,98 @@
+---
+title: "Deploy the LLM Gateway"
+sidebarTitle: "Overview"
+description: "Run the Manifest LLM Gateway with Docker, on a managed platform, or in your cloud account."
+icon: "rocket"
+keywords:
+  [
+    "self-hosted gateway",
+    "Manifest deployment",
+    "Docker",
+    "Railway",
+    "Render",
+    "AWS",
+    "GCP",
+    "Fly.io",
+    "Easypanel",
+    "Coolify",
+  ]
+canonical: "https://manifest.build/llm-gateway/docs/deploy"
+---
+
+Everything on this page runs the same open-source gateway image on infrastructure you control, with your own PostgreSQL database. Pick the path that matches where you want it to live. If you'd rather not run anything yourself, [LLM Gateway Cloud](https://app.manifest.build) is the hosted alternative.
+
+## Your own machine
+
+<Card title="Docker" icon="arrow-up-right" href="/llm-gateway/docs/self-hosted">
+  The most direct path. One install command, or docker-compose if you want to
+  edit the config first. Also covers upgrades, backups, and bringing your own
+  PostgreSQL.
+</Card>
+
+## Managed platforms
+
+Someone else runs the infrastructure. Usually a one-click template or deploy button.
+
+<CardGroup cols={2}>
+  <Card title="Railway" icon="arrow-up-right" href="/llm-gateway/docs/deploy/railway">
+    Best one-click path for most users. The template provisions the gateway and
+    PostgreSQL.
+  </Card>
+  <Card title="Render" icon="arrow-up-right" href="/llm-gateway/docs/deploy/render">
+    Blueprint-based deploy using the public Docker image, generated secrets, and
+    Render PostgreSQL.
+  </Card>
+  <Card title="DigitalOcean" icon="arrow-up-right" href="/llm-gateway/docs/deploy/digitalocean">
+    App Platform deploy from the public repository with the gateway and a Dev
+    PostgreSQL database.
+  </Card>
+  <Card title="Fly.io" icon="arrow-up-right" href="/llm-gateway/docs/deploy/fly">
+    CLI-based deploy using the public Docker image, Fly Postgres, and generated
+    gateway secrets.
+  </Card>
+  <Card title="Heroku" icon="arrow-up-right" href="/llm-gateway/docs/deploy/heroku">
+    Deploy-button guide with Heroku Postgres, generated secrets, and one
+    required BETTER_AUTH_URL value.
+  </Card>
+  <Card title="Koyeb" icon="arrow-up-right" href="/llm-gateway/docs/deploy/koyeb">
+    Deploy-button guide for Koyeb using the public Docker image, manual Postgres
+    URL, and runtime secrets.
+  </Card>
+</CardGroup>
+
+## Cloud providers
+
+Your own cloud account, provisioned with the provider's own infrastructure tooling.
+
+<CardGroup cols={2}>
+  <Card title="AWS" icon="arrow-up-right" href="/llm-gateway/docs/deploy/aws">
+    CloudFormation quick-create for ECS Fargate, RDS PostgreSQL, Secrets
+    Manager, and ALB.
+  </Card>
+  <Card title="GCP" icon="arrow-up-right" href="/llm-gateway/docs/deploy/gcp">
+    Cloud Shell guided deploy for Cloud Run, Cloud SQL PostgreSQL, and Secret
+    Manager.
+  </Card>
+</CardGroup>
+
+## Server panels
+
+A PaaS you run on your own server, so you get deploy buttons on hardware you own.
+
+<CardGroup cols={2}>
+  <Card title="Coolify" icon="arrow-up-right" href="/llm-gateway/docs/deploy/coolify">
+    Docker Compose stack using Coolify magic variables and a private PostgreSQL
+    container.
+  </Card>
+  <Card title="Easypanel" icon="arrow-up-right" href="/llm-gateway/docs/deploy/easypanel">
+    Easypanel app service using PostgreSQL and the Manifest Docker image.
+  </Card>
+</CardGroup>
+
+## Before you deploy
+
+Most hosted deployments create paid resources. Review each provider's pricing before leaving test apps running.
+
+For public deployments, make sure `BETTER_AUTH_URL` matches the exact browser URL. If it does not, Better Auth can reject login with an invalid-origin error.
+
+Whichever path you pick, [Environment variables](/llm-gateway/docs/reference/environment-variables) is the full configuration list, and [Data and telemetry](/llm-gateway/docs/reference/telemetry) covers what your instance stores and what it reports back.

@@ -1,0 +1,36 @@
+---
+title: "M201: Per-user rate limit exceeded"
+sidebarTitle: "M201"
+description: "M201 is returned when one user exceeds 200 requests per minute."
+icon: "timer"
+keywords:
+  ["M201", "Manifest M201", "rate limit", "429 Too Many Requests", "per-user rate limit", "throttling", "exponential backoff", "Manifest limits"]
+canonical: "https://manifest.build/llm-gateway/docs/errors/M201"
+---
+
+## What you saw
+
+```text
+[🦚 Manifest M201] Too many requests — wait a few seconds and retry.
+See https://manifest.build/llm-gateway/docs/errors/M201
+```
+
+The HTTP status is `429`, which most SDKs treat as retryable and back off from on their own.
+
+## Why it happened
+
+The gateway caps each user at 200 requests per minute. The cap is there mostly to keep runaway loops from melting the proxy. Your agent crossed it inside a 60-second window.
+
+## How to fix it
+
+1. Add a small delay or exponential backoff on retry. Most SDKs handle this automatically when they see a `429`.
+2. If parallel workers are hitting the gateway, throttle them so they share the budget.
+3. The 200 requests/minute cap is a fixed guardrail. No env var or setting changes it, self-hosted included. Lean on the backoff in step 1.
+
+## Related
+
+- [M202: Per-IP rate limit](/llm-gateway/docs/errors/M202)
+- [M203: Concurrency limit](/llm-gateway/docs/errors/M203)
+- [M200: Usage limit exceeded](/llm-gateway/docs/errors/M200)
+- [Self-hosted setup](/llm-gateway/docs/self-hosted)
+- [All error codes](/llm-gateway/docs/errors)

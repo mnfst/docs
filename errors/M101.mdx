@@ -1,0 +1,36 @@
+---
+title: "M101: No providers configured"
+sidebarTitle: "M101"
+description: "M101 is returned when the authenticated harness has no providers configured."
+icon: "plug-zap"
+keywords:
+  ["M101", "Manifest M101", "no providers configured", "first-time setup", "empty agent", "empty harness", "Manifest routing", "connect provider", "OpenRouter setup"]
+canonical: "https://manifest.build/llm-gateway/docs/errors/M101"
+---
+
+## What you saw
+
+```text
+[🦚 Manifest M101] You're connected, but no providers are set up yet. Add one here: https://app.manifest.build/...
+See https://manifest.build/llm-gateway/docs/errors/M101
+```
+
+## Why it happened
+
+You'll usually see this on a fresh harness. Your key works, but no provider credentials are connected yet (OpenAI, Anthropic, OpenRouter, an Ollama instance, anything).
+
+## How to fix it
+
+1. Open the dashboard link in the error message.
+2. The page offers one card per connection type. Pick **Usage-based** to paste an API key, or **Subscriptions** to reuse a plan you already pay for. OpenRouter or OpenAI with an API key is the fastest path.
+3. Retry the request.
+
+## Related
+
+- [M100: Provider API key missing](/llm-gateway/docs/errors/M100)
+- [M102: Provider subscription credentials unusable](/llm-gateway/docs/errors/M102)
+- [Routing](/llm-gateway/docs/llm-gateway)
+- [API key providers](/llm-gateway/docs/providers/api-key-providers)
+- [Subscription-based providers](/llm-gateway/docs/providers/subscription-based-providers)
+- [Local models (Ollama)](/llm-gateway/docs/providers/local-models)
+- [All error codes](/llm-gateway/docs/errors)

@@ -1,0 +1,369 @@
+---
+title: "Self-hosting with Docker"
+sidebarTitle: "Docker"
+description: "Run the Manifest LLM Gateway on your own machine with Docker, including installation, upgrades, and backups."
+icon: "docker"
+keywords:
+  ["self-hosted LLM router", "Docker", "docker-compose", "PostgreSQL", "BETTER_AUTH_SECRET", "docker run", "upgrade", "backup"]
+canonical: "https://manifest.build/llm-gateway/docs/self-hosted"
+---
+
+Run the full gateway stack on your own machine. No Node.js required, just Docker.
+
+To run the gateway somewhere other than your own machine, see the [other self-hosting paths](/llm-gateway/docs/deploy).
+
+All three paths end in the same place: a running stack at [http://localhost:2099](http://localhost:2099). On first access, the gateway takes you to a setup screen where you create the admin account. No demo credentials are pre-seeded.
+
+<Note>
+  The bundled compose file binds port 2099 to `127.0.0.1` only, so the dashboard is reachable on the host machine but not over the LAN. See [Exposing on the LAN](#exposing-on-the-lan) to change this.
+</Note>
+
+## Installation
+
+<Tabs>
+  <Tab title="Quick install (recommended)">
+    One command. The installer downloads the compose file into `~/manifest`, generates the secrets, and brings up the stack. First boot pulls the app image and Postgres, so give it up to a couple of minutes.
+
+    ```bash
+    bash <(curl -sSL https://raw.githubusercontent.com/mnfst/llm-gateway/main/docker/install.sh)
+    ```
+
+    <Accordion title="Prefer to review the script before running it?">
+      ```bash
+      curl -sSLO https://raw.githubusercontent.com/mnfst/llm-gateway/main/docker/install.sh
+      less install.sh
+      bash install.sh
+      ```
+    </Accordion>
+
+    Useful flags: `--dir <path>` to install elsewhere, `--port <n>` to serve on a port other than 2099, `--dry-run` to preview, `--yes` to skip the confirmation prompt.
+
+    Re-running the installer against an existing install directory resumes it. The compose file and your generated secrets are left untouched.
+
+    When the installer finishes, open [http://localhost:2099](http://localhost:2099): a setup screen asks you to create the admin account. Then connect a provider and send your first request — see [First request](#first-request).
+  </Tab>
+  <Tab title="Docker Compose">
+    Same underlying flow as the install script, but you drive it yourself so you can edit the config before booting the stack.
+
+    <Steps>
+      <Step title="Download the compose file and the env template">
+        ```bash
+        curl -O https://raw.githubusercontent.com/mnfst/llm-gateway/main/docker/docker-compose.yml
+        curl -O https://raw.githubusercontent.com/mnfst/llm-gateway/main/docker/.env.example
+        cp .env.example .env
+        ```
+      </Step>
+      <Step title="Set a real BETTER_AUTH_SECRET">
+        Open `.env` in your editor and set `BETTER_AUTH_SECRET` to a random string. You can generate one with:
+
+        ```bash
+        openssl rand -hex 32
+        ```
+
+        Optional: to use a stronger database password, set both `POSTGRES_PASSWORD` and `DATABASE_URL` in `.env` — they must agree, and any special characters in the password need to be percent-encoded in the URL.
+      </Step>
+      <Step title="Start the stack">
+        ```bash
+        docker compose up -d
+        ```
+
+        Give it up to a couple of minutes on a cold pull — you can watch startup with `docker compose logs -f manifest`.
+      </Step>
+      <Step title="Create your admin account">
+        Go to [http://localhost:2099](http://localhost:2099): a setup screen asks you to create the admin account.
+      </Step>
+      <Step title="Connect a provider">
+        Connect a provider and send your first request — see [First request](#first-request).
+      </Step>
+    </Steps>
+
+    <Warning>
+      Before exposing this instance beyond localhost, double-check that `BETTER_AUTH_SECRET` is a real random value, and if you enable email verification, set `BETTER_AUTH_URL` to a reachable public URL so the verification links resolve.
+    </Warning>
+  </Tab>
+  <Tab title="Docker Run (BYO PostgreSQL)">
+    If you already have a PostgreSQL instance, replace `user`, `pass`, and `host` with your actual database credentials:
+
+    ```bash
+    docker run -d \
+      -p 2099:2099 \
+      -e PORT=2099 \
+      -e DATABASE_URL=postgresql://user:pass@host:5432/manifest \
+      -e BETTER_AUTH_SECRET=$(openssl rand -hex 32) \
+      -e BETTER_AUTH_URL=http://localhost:2099 \
+      manifestdotbuild/manifest
+    ```
+
+    <Accordion title="Windows (PowerShell)">
+      ```powershell
+      $secret = -join ((48..57 + 97..122) | Get-Random -Count 64 | ForEach-Object { [char]$_ })
+
+      docker run -d `
+        -p 2099:2099 `
+        -e PORT=2099 `
+        -e DATABASE_URL=postgresql://user:pass@host:5432/manifest `
+        -e BETTER_AUTH_SECRET=$secret `
+        -e BETTER_AUTH_URL=http://localhost:2099 `
+        manifestdotbuild/manifest
+      ```
+    </Accordion>
+
+    <Accordion title="Windows (CMD)">
+      Generate a 64-character hex secret with any tool you trust, then:
+
+      ```cmd
+      docker run -d ^
+        -p 2099:2099 ^
+        -e PORT=2099 ^
+        -e DATABASE_URL=postgresql://user:pass@host:5432/manifest ^
+        -e BETTER_AUTH_SECRET=<your-64-char-secret> ^
+        -e BETTER_AUTH_URL=http://localhost:2099 ^
+        manifestdotbuild/manifest
+      ```
+    </Accordion>
+  </Tab>
+</Tabs>
+
+## First request
+
+Signing up leaves you with an empty instance. Three steps to a routed request.
+
+<Steps>
+  <Step title="Connect a provider">
+    In the dashboard sidebar, open **Providers** and pick how you want to connect:
+
+    - **Usage-based** — paste an API key (OpenAI, Anthropic, Gemini, DeepSeek, …)
+    - **Subscriptions** — reuse a plan you already pay for (ChatGPT, Claude, GLM Coding Plan, …)
+    - **Local** — Ollama, LM Studio, or llama.cpp running on the host
+
+    The gateway discovers the available models as soon as the connection is saved.
+  </Step>
+  <Step title="Copy your harness's key">
+    Every harness has its own key, shown when you create it and again under the harness's **Settings**. It starts with `mnfst_`.
+  </Step>
+  <Step title="Send a request">
+    The endpoint is OpenAI-compatible, so any SDK or agent that accepts a base URL works — point it at `http://localhost:2099/v1` with the `mnfst_` key. To check it end to end:
+
+    ```bash
+    curl -X POST http://localhost:2099/v1/chat/completions \
+      -H "Authorization: Bearer mnfst_YOUR_KEY_HERE" \
+      -H "Content-Type: application/json" \
+      -d '{"model": "auto", "messages": [{"role": "user", "content": "Hello"}]}'
+    ```
+
+    `"model": "auto"` asks the gateway to route the request. Any other name is treated as an explicit choice: if the model isn't available to your harness, the request fails with [M302](/llm-gateway/docs/errors/M302). Send `auto` to use routing.
+  </Step>
+</Steps>
+
+The request shows up in the dashboard straight away, with the model that served it and what it cost.
+
+You can also do all of this from the terminal. See the [CLI](/llm-gateway/docs/cli), and on a self-hosted instance sign in with `mnfst login --url http://localhost:2099`.
+
+<Note>
+  Errors raised by the gateway itself carry an `M###` code, a plain-English cause, and a link to the matching page under [manifest.build/llm-gateway/docs/errors](/llm-gateway/docs/errors). The three you are most likely to see on a fresh install:
+
+  | Code | Means |
+  | --- | --- |
+  | `M003` | The token isn't a harness key — it doesn't start with `mnfst_` |
+  | `M005` | Well-formed key, but this instance doesn't know it. Copying the literal `mnfst_YOUR_KEY_HERE` above gets you this — replace it with the real key |
+  | `M101` | The key is fine; no provider is connected yet |
+  | `M100` | Routing picked a provider that has no API key on file |
+</Note>
+
+## Verifying the image signature
+
+Published images are signed with cosign keyless signing (Sigstore). Verify before pulling:
+
+```bash
+cosign verify manifestdotbuild/manifest:<version> \
+  --certificate-identity-regexp="^https://github.com/mnfst/llm-gateway/" \
+  --certificate-oidc-issuer="https://token.actions.githubusercontent.com"
+```
+
+## Custom port
+
+If port 2099 is taken, set `PORT` in `.env`. That is the whole change:
+
+```bash
+PORT=8080
+```
+
+The compose file reads `${PORT:-2099}` for both the published host port and the backend's internal listener, and `BETTER_AUTH_URL` defaults to `http://localhost:${PORT:-2099}` — so one line covers all three, with no YAML edit. The install script writes it for you if you pass `--port 8080`.
+
+For a `docker run` install there is no `.env`, so pass the mapping and the URL explicitly. The container keeps listening on 2099 and Docker remaps it:
+
+```bash
+docker run -d \
+  -p 8080:2099 \
+  -e PORT=2099 \
+  -e BETTER_AUTH_URL=http://localhost:8080 \
+  ...
+```
+
+<Warning>If you see an "Invalid origin" error on the login page, `BETTER_AUTH_URL` doesn't match the URL you're accessing the dashboard on. The host matters as much as the port.</Warning>
+
+<Note>
+  **Upgrading from a pre-2099 install?** Your existing stack keeps running on port 3001 with no changes — the backend's own fallback is still `3001`, so the new image works against your old compose file. If you want to refresh your compose file but stay on the legacy port (to avoid reconfiguring OAuth callbacks, reverse proxies, or bookmarks), set `PORT=3001` in `.env` and the bundled compose file will honour it for both the host binding and the internal listener.
+</Note>
+
+## Exposing on the LAN
+
+By default the compose file binds port 2099 to `127.0.0.1` only. The dashboard is reachable from the host but not from other machines on the network. To expose it on the LAN:
+
+<Steps>
+  <Step title="Bind to all interfaces">
+    In `.env`, set:
+
+    ```bash
+    HOST_BIND_ADDRESS=0.0.0.0
+    ```
+
+    Editing `docker-compose.yml` by hand does not survive an upgrade; `.env` does. If you exposed the LAN by editing the `ports:` line in `docker-compose.yml`, move that change to `HOST_BIND_ADDRESS` here: `bash install.sh --upgrade` replaces the compose file and your LAN access goes with it.
+  </Step>
+  <Step title="Set BETTER_AUTH_URL">
+    In `.env`, set `BETTER_AUTH_URL` to the host you'll reach the dashboard on, e.g. `http://192.168.1.20:2099` or `https://manifest.mydomain.com`. This must match the URL in the browser or Better Auth will reject the login with "Invalid origin". If you sign in with Google, GitHub or Discord, update the redirect URI in the provider's console to `${BETTER_AUTH_URL}/api/auth/callback/<provider>`, or the provider rejects the login.
+  </Step>
+  <Step title="Apply">
+    ```bash
+    docker compose up -d
+    ```
+  </Step>
+</Steps>
+
+You can reach the setup screen from another machine while `BETTER_AUTH_URL` still points at localhost. The admin account is created, then sign-in fails with "Invalid origin" and drops you back on the login page. The setup screen does not come back, because the account now exists. That account is fine. Set `BETTER_AUTH_URL` to the URL you type in the browser, run `docker compose up -d`, then sign in with it.
+
+## Image tags
+
+Every release is published with the following tags:
+
+| Tag | Example | Description |
+|-----|---------|-------------|
+| `major.minor.patch` | `6.18.0` | Fully pinned |
+| `major.minor` | `6.18` | Latest patch within a minor |
+| `major` | `6` | Latest minor+patch within a major |
+| `latest` | — | Latest stable release |
+| `sha-<short>` | — | Exact commit for rollback |
+
+Images are built for both `linux/amd64` and `linux/arm64`.
+
+## Upgrading
+
+The gateway ships a new image on every release. To upgrade an existing compose install:
+
+```bash
+docker compose pull
+docker compose up -d
+```
+
+Database migrations run automatically on boot, no manual steps. Your data in the `pgdata` volume is preserved across upgrades. To control when major upgrades happen, pin the image tag with `MANIFEST_VERSION` in `.env`, for example `MANIFEST_VERSION=6`, then run the two commands above. Unset, the compose file pulls `latest`. Pin here rather than in `docker-compose.yml`, which `bash install.sh --upgrade` replaces.
+
+The two commands above only pull new images. Your `docker-compose.yml` stays as it is, hand edits included. `bash install.sh --upgrade` is the other path: it downloads a fresh `docker-compose.yml` and replaces yours, after copying the old one next to it as `docker-compose.yml.backup.<UTC timestamp>`. Your `.env` is left alone. Keep custom compose changes in `docker-compose.override.yml`, which the installer never downloads.
+
+<Note>
+  **Upgrading from before v6.18.0 and using [logs](/llm-gateway/docs/request-logs)?** Run the installer once with the upgrade flag, or log bodies are written inside the container and lost when it is recreated:
+
+  ```bash
+  curl -sSLO https://raw.githubusercontent.com/mnfst/llm-gateway/main/docker/install.sh
+  bash install.sh --upgrade
+  ```
+
+  (`--upgrade` looks for the install in `~/manifest`. Installed elsewhere? Pass `--dir /your/path`, otherwise the script stops with "No installation found at ...".)
+
+  It adds the `manifest_request_recordings` volume to your compose file. Later releases include it from the start.
+
+  <Accordion title="Hand-managed compose file? Add the volume yourself">
+    Declare the named volume and mount it on the backend service:
+
+    ```yaml
+    services:
+      manifest:
+        volumes:
+          - manifest_request_recordings:/data/request-recordings
+
+    volumes:
+      manifest_request_recordings:
+        name: manifest_request_recordings
+    ```
+  </Accordion>
+</Note>
+
+## Backup and persistence
+
+The stack uses two named volumes:
+
+| Volume | Mounted at | Holds |
+|---|---|---|
+| `manifest_pgdata` | `/var/lib/postgresql/data` in `postgres` | Everything: accounts, harnesses, provider credentials, the request log |
+| `manifest_request_recordings` | `/data/request-recordings` in `manifest` | Stored [request logs](/llm-gateway/docs/request-logs) bodies |
+
+The database volume is the one to back up. Losing the recordings volume costs you stored message bodies and nothing else, and those expire on a retention schedule regardless.
+
+Back up (from the host, with the stack running):
+
+```bash
+docker compose exec -T postgres pg_dump -U manifest manifest > manifest-backup-$(date +%F).sql
+```
+
+Restore into a fresh stack:
+
+```bash
+docker compose up -d postgres
+cat manifest-backup.sql | docker compose exec -T postgres psql -U manifest manifest
+docker compose up -d
+```
+
+To list or remove the volume manually:
+
+```bash
+docker volume ls | grep manifest_
+docker compose down -v    # destroys all data
+```
+
+## Environment variables
+
+**Core**
+
+| Variable | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `DATABASE_URL` | Yes | — | PostgreSQL connection string |
+| `BETTER_AUTH_SECRET` | Yes | — | Session signing secret (min 32 chars) |
+| `MANIFEST_ENCRYPTION_KEY` | Recommended | falls back to `BETTER_AUTH_SECRET` | Separate 32+ char key encrypting stored provider keys and OAuth tokens |
+| `BETTER_AUTH_URL` | No | `http://localhost:${PORT}` | Public URL. Must match the URL in your browser |
+| `PORT` | No | `2099` | Dashboard port — sets the published host port and the internal listener |
+| `HOST_BIND_ADDRESS` | No | `127.0.0.1` | Host interface the dashboard port binds to. Set `0.0.0.0` to reach it over the LAN |
+| `MANIFEST_DISABLE_HSTS` | No | unset | Set `1` to silence the boot warning about serving over plain HTTP |
+
+The first two are required and the installer generates both, so a default install boots without you setting anything.
+
+<Warning>
+  The installer also generates `MANIFEST_ENCRYPTION_KEY`. If you are installing by hand, set it too. Left unset, the gateway falls back to `BETTER_AUTH_SECRET` for at-rest encryption and warns on every boot — meaning one leaked session-signing secret also decrypts every stored provider key and OAuth token. Set it **before first boot**: introducing it later means re-encrypting what is already in the database.
+</Warning>
+
+Everything else is optional: provider timeouts, email delivery for alerts and password resets, OAuth logins, connection-pool sizing, recording storage and retention, Autofix, and Sentry. See [Environment variables](/llm-gateway/docs/reference/environment-variables) for the full list with defaults.
+
+<Note>
+  `NODE_ENV` and `SEED_DATA` are fixed by the bundled compose file and are not knobs for a self-hosted install. The image is a production artifact, and the demo-data seeder refuses to run under `NODE_ENV=production` whatever `SEED_DATA` says — use the first-run setup wizard to create your admin account.
+
+  `BIND_ADDRESS` is likewise set by the image (`0.0.0.0`, so the container is reachable through Docker's port mapping); control host exposure with `HOST_BIND_ADDRESS` in `.env`, not this variable.
+</Note>
+
+## Stop and clean up
+
+```bash
+docker compose down       # Stop services (keeps data)
+docker compose down -v    # Stop and delete all data
+```
+
+## Data and privacy
+
+The gateway always keeps metadata about each request — model, provider, tier, token counts, cost, latency. Message bodies are separate and optional: with [request logs](/llm-gateway/docs/request-logs) on for a harness, prompts and completions are stored too, in the recordings volume rather than the database. New harnesses have it enabled. See [Data and telemetry](/llm-gateway/docs/reference/telemetry).
+
+## Telemetry
+
+Once a day, each install sends an anonymous aggregate report: version, provider mix, token and cost totals. Never prompts, keys, or anything tied to a user. Set `MANIFEST_TELEMETRY_DISABLED=1` in your `.env` to turn it off.
+
+Full field list, what's never sent, and how to point it at your own endpoint: [Data and telemetry](/llm-gateway/docs/reference/telemetry).
+
+## Docker Hub
+
+The image is available at [manifestdotbuild/manifest](https://hub.docker.com/r/manifestdotbuild/manifest) on Docker Hub.

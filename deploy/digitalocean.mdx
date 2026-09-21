@@ -1,0 +1,77 @@
+---
+title: "Deploy the LLM Gateway on DigitalOcean"
+sidebarTitle: "DigitalOcean"
+description: "Deploy the Manifest LLM Gateway on App Platform with the Deploy to DigitalOcean flow and a PostgreSQL database."
+icon: "/icons/deploy/digitalocean.svg"
+keywords:
+  [
+    "Manifest deployment",
+    "DigitalOcean",
+    "self-hosted gateway",
+    "PostgreSQL",
+    "Docker",
+  ]
+canonical: "https://manifest.build/llm-gateway/docs/deploy/digitalocean"
+---
+
+<Card
+  title="Open DigitalOcean deploy"
+  icon="external-link"
+  href="https://cloud.digitalocean.com/apps/new?repo=https://github.com/mnfst/llm-gateway/tree/main"
+>
+  App Platform deploy from the public repository with the gateway and a Dev
+  PostgreSQL database.
+</Card>
+
+## Overview
+
+DigitalOcean App Platform can create a gateway app from the public repository template. The template uses the public Manifest Docker image and provisions a Dev PostgreSQL database.
+
+## Prerequisites
+
+- A DigitalOcean account with billing enabled.
+- Access to App Platform in the selected region.
+- A private DigitalOcean Space and an access key pair for it, for request logs.
+
+This stack creates paid resources, including an App Platform service and Dev PostgreSQL database.
+
+## Deploy
+
+1. Open the [DigitalOcean deploy link](https://cloud.digitalocean.com/apps/new?repo=https://github.com/mnfst/llm-gateway/tree/main).
+2. Review the app spec.
+3. Generate two separate secret values:
+
+```bash
+openssl rand -hex 32
+openssl rand -hex 32
+```
+
+4. Paste one value into `BETTER_AUTH_SECRET`.
+5. Paste the other value into `MANIFEST_ENCRYPTION_KEY`.
+6. Fill in the recording storage secrets with your Space's settings: `REQUEST_RECORDING_S3_BUCKET`, `REQUEST_RECORDING_S3_ENDPOINT`, `REQUEST_RECORDING_S3_ACCESS_KEY_ID`, and `REQUEST_RECORDING_S3_SECRET_ACCESS_KEY`. The region defaults to `us-east-1`, which DigitalOcean Spaces accepts as a signing region.
+7. Create the app.
+
+DigitalOcean reads `.do/deploy.template.yaml` from the Manifest repository. The template includes the gateway service and a Dev PostgreSQL database.
+
+## Open the gateway
+
+After App Platform finishes deploying, open the app URL and create the first account. Fresh installs redirect to `/setup`; the first account you create becomes the admin.
+
+Verify the deployment:
+
+```bash
+curl -fsS https://<your-app-url>/api/v1/health
+```
+
+## Notes
+
+- App Platform has no persistent volumes, so [request logs](/llm-gateway/docs/request-logs) write to your DigitalOcean Space over S3.
+- The template appends `uselibpqcompat=true` to DigitalOcean's PostgreSQL URL so Node `pg` handles the platform's `sslmode=require` connection string correctly.
+- Upgrade the Dev Database to a managed database for production data.
+- Use a custom domain before configuring production OAuth callbacks.
+
+Relevant DigitalOcean docs:
+
+- [Deploy to DigitalOcean button](https://docs.digitalocean.com/products/app-platform/how-to/add-deploy-do-button/)
+- [App Platform app spec](https://docs.digitalocean.com/products/app-platform/reference/app-spec/)
+- [Bindable environment variables](https://docs.digitalocean.com/products/app-platform/how-to/use-environment-variables/#using-bindable-variables-within-environment-variables)

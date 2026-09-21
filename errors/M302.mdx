@@ -1,0 +1,44 @@
+---
+title: "M302: Model not available"
+sidebarTitle: "M302"
+description: "M302 is returned when the requested model is unavailable to the authenticated harness."
+icon: "message-square-warning"
+keywords:
+  ["M302", "Manifest M302", "model not available", "model not found", "GET /v1/models", "direct model routing", "provider not connected", "provider not enabled", "agent-visible models", "harness-visible models", "Manifest validation"]
+canonical: "https://manifest.build/llm-gateway/docs/errors/M302"
+---
+
+## What you saw
+
+```text
+[🦚 Manifest M302] Model "openai/gpt-4o" is not available for this agent. Use GET /v1/models to list available model IDs, or make the provider available for this agent here: https://app.manifest.build/...
+See https://manifest.build/llm-gateway/docs/errors/M302
+```
+
+The model name varies based on the `model` value your client sent.
+
+## Why it happened
+
+You sent a concrete model ID instead of `auto` to an OpenAI-format endpoint, but that model is not available to this harness.
+
+This can happen when:
+
+1. The model ID is misspelled or retired.
+2. The provider is not connected yet, or it is connected but not enabled for this harness.
+3. You used a provider-native name when the gateway expects the exact ID returned by `GET /v1/models`.
+4. The gateway refuses the request instead of falling back to automatic routing.
+
+## How to fix it
+
+1. Call `GET /v1/models` with the same harness key.
+2. Use `auto` to let the gateway route, or copy one of the listed model IDs exactly.
+3. If the model should be available, open the dashboard link in the error and enable or connect that provider for this harness.
+4. Retry the request.
+
+## Related
+
+- [Routing: Route a specific model](/llm-gateway/docs/llm-gateway#route-a-specific-model)
+- [API reference: Listing models](/llm-gateway/docs/reference/api#listing-models)
+- [M300: Missing messages array](/llm-gateway/docs/errors/M300)
+- [M303: Local provider unavailable on LLM Gateway Cloud](/llm-gateway/docs/errors/M303)
+- [All error codes](/llm-gateway/docs/errors)

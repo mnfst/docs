@@ -1,0 +1,42 @@
+---
+title: "M200: Usage limit exceeded"
+sidebarTitle: "M200"
+description: "M200 is returned when a harness exceeds a cost or token limit configured in the dashboard."
+icon: "gauge"
+keywords:
+  ["M200", "Manifest M200", "usage limit exceeded", "cost limit", "token limit", "spending cap", "budget cap", "monthly budget LLM", "Manifest limits", "HTTP 200 assistant message"]
+canonical: "https://manifest.build/llm-gateway/docs/errors/M200"
+---
+
+## What you saw
+
+```text
+[🦚 Manifest M200] You hit your cost limit: $12.50 used, $10.00/day allowed. Adjust it here: https://app.manifest.build/...
+See https://manifest.build/llm-gateway/docs/errors/M200
+```
+
+The metric (cost or tokens), used amount, threshold, and period vary based on the rule you tripped.
+
+The response arrives as HTTP 200 with this text in the assistant message content, not as a 429. A client branching on the HTTP status sees a normal completion.
+
+## Why it happened
+
+You set a limit on the harness's [Limits](/llm-gateway/docs/observability#spend-alerts) page (say, "$10/day" or "500k tokens/hour"), and the current period's usage just crossed it. The gateway blocks every following request until the period resets or you raise the cap.
+
+This is different from [M204](/llm-gateway/docs/errors/M204), which is the LLM Gateway Cloud Free plan monthly request quota, and different from provider 402 errors such as "insufficient credits" from OpenRouter.
+
+## How to fix it
+
+1. Open the dashboard link in the error message. It goes straight to the harness's **Limits** page.
+2. Raise the threshold, change the period, or wait for it to reset. The error message tells you which period was hit.
+3. Retry the request.
+
+## Related
+
+- [Spend alerts](/llm-gateway/docs/observability#spend-alerts)
+- [Hard limits](/llm-gateway/docs/llm-gateway#hard-limits)
+- [M201: Per-user rate limit](/llm-gateway/docs/errors/M201)
+- [M202: Per-IP rate limit](/llm-gateway/docs/errors/M202)
+- [M203: Concurrency limit](/llm-gateway/docs/errors/M203)
+- [M204: Monthly request limit reached](/llm-gateway/docs/errors/M204)
+- [All error codes](/llm-gateway/docs/errors)

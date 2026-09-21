@@ -1,0 +1,93 @@
+---
+title: "Deploy the LLM Gateway on Koyeb"
+sidebarTitle: "Koyeb"
+description: "Deploy the Manifest LLM Gateway from the public Docker image with a Koyeb web service and PostgreSQL."
+icon: "/icons/deploy/koyeb.svg"
+keywords:
+  [
+    "Manifest deployment",
+    "Koyeb",
+    "self-hosted gateway",
+    "PostgreSQL",
+    "Docker",
+  ]
+canonical: "https://manifest.build/llm-gateway/docs/deploy/koyeb"
+---
+
+<Card
+  title="Open Koyeb deploy"
+  icon="external-link"
+  href="https://app.koyeb.com/deploy?type=docker&image=docker.io%2Fmanifestdotbuild%2Fmanifest%3A6&name=manifest&service_type=web&ports=2099%3Bhttp%3B%2F&env%5BPORT%5D=2099&env%5BDATABASE_URL%5D=postgres%3A%2F%2FUSER%3APASSWORD%40HOST%2FDB%3Fsslmode%3Drequire&env%5BBETTER_AUTH_SECRET%5D=replace-with-openssl-rand-hex-32&env%5BMANIFEST_ENCRYPTION_KEY%5D=replace-with-different-openssl-rand-hex-32&env%5BBETTER_AUTH_URL%5D=https%3A%2F%2F%7B%7B+KOYEB_PUBLIC_DOMAIN+%7D%7D&env%5BMANIFEST_MODE%5D=selfhosted&env%5BBIND_ADDRESS%5D=0.0.0.0&env%5BDB_POOL_MAX%5D=8&env%5BAUTH_DB_POOL_MAX%5D=4&env%5BREQUEST_RECORDING_STORAGE%5D=s3&env%5BREQUEST_RECORDING_S3_BUCKET%5D=replace-with-private-bucket&env%5BREQUEST_RECORDING_S3_ENDPOINT%5D=https%3A%2F%2Fs3.example.com&env%5BREQUEST_RECORDING_S3_REGION%5D=us-east-1&env%5BREQUEST_RECORDING_S3_ACCESS_KEY_ID%5D=replace-with-limited-access-key&env%5BREQUEST_RECORDING_S3_SECRET_ACCESS_KEY%5D=replace-with-secret-key&env%5BREQUEST_RECORDING_S3_FORCE_PATH_STYLE%5D=false"
+>
+  Deploy-button guide for Koyeb using the public Docker image, manual Postgres
+  URL, and runtime secrets.
+</Card>
+
+## Overview
+
+Koyeb can deploy the gateway from the public Docker image with a Deploy to Koyeb button. The button pre-fills the image, HTTP port, and runtime settings, but you must create PostgreSQL separately and replace the placeholder secrets before deploying.
+
+## Prerequisites
+
+- A Koyeb account on a paid plan (Pro or higher) with a valid payment method. Since Koyeb joined Mistral AI, deploying requires a paid plan: on an account without one, the deploy link shows an announcement banner instead of the form.
+- A Koyeb PostgreSQL Database Service.
+- Two random 32+ character secrets for the gateway.
+- A private S3-compatible bucket and an access key for it. Koyeb instances have no persistent disk, so request logs need external storage.
+
+This deployment creates paid resources.
+
+## Create PostgreSQL
+
+In Koyeb, create a PostgreSQL Database Service in the same region you plan to use for the gateway. After it is ready, open the database connection details and copy the connection string.
+
+The gateway uses TLS to connect to Koyeb Postgres, so include `sslmode=require` in the connection string. If the copied URL has no query string, append `?sslmode=require`. If it already has query parameters, append `&sslmode=require`.
+
+## Generate secrets
+
+Generate separate values for session signing and at-rest provider credential encryption:
+
+```bash
+openssl rand -hex 32
+openssl rand -hex 32
+```
+
+## Deploy the gateway
+
+1. Open the [Koyeb deploy link](https://app.koyeb.com/deploy?type=docker&image=docker.io%2Fmanifestdotbuild%2Fmanifest%3A6&name=manifest&service_type=web&ports=2099%3Bhttp%3B%2F&env%5BPORT%5D=2099&env%5BDATABASE_URL%5D=postgres%3A%2F%2FUSER%3APASSWORD%40HOST%2FDB%3Fsslmode%3Drequire&env%5BBETTER_AUTH_SECRET%5D=replace-with-openssl-rand-hex-32&env%5BMANIFEST_ENCRYPTION_KEY%5D=replace-with-different-openssl-rand-hex-32&env%5BBETTER_AUTH_URL%5D=https%3A%2F%2F%7B%7B+KOYEB_PUBLIC_DOMAIN+%7D%7D&env%5BMANIFEST_MODE%5D=selfhosted&env%5BBIND_ADDRESS%5D=0.0.0.0&env%5BDB_POOL_MAX%5D=8&env%5BAUTH_DB_POOL_MAX%5D=4&env%5BREQUEST_RECORDING_STORAGE%5D=s3&env%5BREQUEST_RECORDING_S3_BUCKET%5D=replace-with-private-bucket&env%5BREQUEST_RECORDING_S3_ENDPOINT%5D=https%3A%2F%2Fs3.example.com&env%5BREQUEST_RECORDING_S3_REGION%5D=us-east-1&env%5BREQUEST_RECORDING_S3_ACCESS_KEY_ID%5D=replace-with-limited-access-key&env%5BREQUEST_RECORDING_S3_SECRET_ACCESS_KEY%5D=replace-with-secret-key&env%5BREQUEST_RECORDING_S3_FORCE_PATH_STYLE%5D=false).
+2. Replace `DATABASE_URL` with your Koyeb Postgres connection string.
+3. Replace `BETTER_AUTH_SECRET` with the first generated secret.
+4. Replace `MANIFEST_ENCRYPTION_KEY` with the second generated secret.
+5. Replace the `REQUEST_RECORDING_S3_*` placeholder values with your bucket, region, endpoint, and access keys. Leave the endpoint blank only for AWS S3.
+6. Leave `BETTER_AUTH_URL` as `https://{{ KOYEB_PUBLIC_DOMAIN }}`.
+7. Leave `PORT`, `MANIFEST_MODE`, `BIND_ADDRESS`, `DB_POOL_MAX`, `AUTH_DB_POOL_MAX`, and `REQUEST_RECORDING_STORAGE` unchanged for a single-instance deploy. Set `REQUEST_RECORDING_S3_FORCE_PATH_STYLE` to `true` only if your object-storage provider requires path-style URLs.
+8. Deploy the service.
+
+The button deploys `docker.io/manifestdotbuild/manifest:6` and exposes port `2099` over HTTP.
+
+## Open the gateway
+
+After the deployment is live, open the public Koyeb domain and create the first account. Fresh installs redirect to `/setup`; the first account you create becomes the admin.
+
+Verify the deployment:
+
+```bash
+curl -fsS https://<your-koyeb-domain>/api/v1/health
+```
+
+## Notes
+
+- Koyeb instances have an ephemeral filesystem, which is why the deploy link collects S3-compatible storage for [request logs](/llm-gateway/docs/request-logs). Recordings live in your bucket, not on the instance.
+
+## Tearing it down
+
+Delete both resources when you are done:
+
+- The Manifest Koyeb Web Service.
+- The Koyeb PostgreSQL Database Service.
+
+Deleting only the web service leaves the database running.
+
+Relevant Koyeb docs:
+
+- [Deploy to Koyeb button](https://www.koyeb.com/docs/build-and-deploy/deploy-to-koyeb-button)
+- [Koyeb environment variables](https://www.koyeb.com/docs/build-and-deploy/environment-variables)

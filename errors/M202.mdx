@@ -1,0 +1,34 @@
+---
+title: "M202: Per-IP rate limit exceeded"
+sidebarTitle: "M202"
+description: "M202 is returned when one IP exceeds 500 requests per minute across all harnesses."
+icon: "timer"
+keywords:
+  ["M202", "Manifest M202", "per-IP rate limit", "shared IP", "429 Too Many Requests", "Manifest limits", "abuse protection"]
+canonical: "https://manifest.build/llm-gateway/docs/errors/M202"
+---
+
+## What you saw
+
+```text
+[🦚 Manifest M202] Too many requests from this IP — wait a few seconds and retry.
+See https://manifest.build/llm-gateway/docs/errors/M202
+```
+
+## Why it happened
+
+There's a separate per-IP cap (500 requests per minute) sitting on top of the per-user limit. It catches abuse, plus dev setups where lots of agents share one IP. You hit it because that IP fired too many requests across all harnesses in a 60-second window.
+
+## How to fix it
+
+1. Back off and retry. The window resets after a minute.
+2. Running many agents from one machine in dev? Stagger their startup so they don't all hammer the proxy at once.
+3. The 500 requests/minute per-IP cap is a fixed guardrail. No env var or setting changes it, self-hosted included. Stagger workers as in step 2.
+
+## Related
+
+- [M201: Per-user rate limit](/llm-gateway/docs/errors/M201)
+- [M203: Concurrency limit](/llm-gateway/docs/errors/M203)
+- [M200: Usage limit exceeded](/llm-gateway/docs/errors/M200)
+- [Self-hosted setup](/llm-gateway/docs/self-hosted)
+- [All error codes](/llm-gateway/docs/errors)

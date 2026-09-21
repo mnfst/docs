@@ -1,0 +1,51 @@
+---
+title: "M303: Local provider unavailable on Cloud"
+sidebarTitle: "M303"
+description: "M303 is returned when LLM Gateway Cloud is asked to use Ollama, LM Studio, or llama.cpp."
+icon: "server-off"
+keywords:
+  ["M303", "Manifest M303", "local provider cloud", "Ollama Manifest Cloud", "LM Studio", "llama.cpp", "400 Bad Request", "custom provider", "tunnel"]
+canonical: "https://manifest.build/llm-gateway/docs/errors/M303"
+---
+
+## What you saw
+
+```text
+[🦚 Manifest M303] Built-in local providers are only available in self-hosted Manifest. On Manifest Cloud, expose the runtime through a public URL or tunnel and connect it as a custom provider.
+See https://manifest.build/llm-gateway/docs/errors/M303
+```
+
+## Why it happened
+
+The built-in [local provider](/llm-gateway/docs/providers/local-models) tiles (Ollama, LM Studio, llama.cpp) route to `localhost`. On a self-hosted install that's your machine, which is the whole point. On LLM Gateway Cloud, `localhost` is our server, which has no model running on it and no route back to your laptop.
+
+Rather than dial an address that can't be yours, the gateway stops the request here.
+
+## How to fix it
+
+Pick whichever fits:
+
+<Tabs>
+  <Tab title="Self-host">
+    Local providers work as designed on a self-hosted install, and your prompts
+    never leave your network. See [Self-hosted](/llm-gateway/docs/self-hosted) for the one-line
+    Docker install.
+  </Tab>
+  <Tab title="Custom provider">
+    Keep using Cloud and give your runtime a public address. A tunnel
+    (Cloudflare Tunnel, ngrok, Tailscale Funnel) is the usual way. Then add it
+    under [Custom providers](/llm-gateway/docs/providers/custom-providers) using the public URL
+    instead of the built-in tile.
+
+    Put authentication in front of it. A public URL with no key is an open
+    inference endpoint that anyone can bill to your hardware.
+  </Tab>
+</Tabs>
+
+## Related
+
+- [Local models](/llm-gateway/docs/providers/local-models)
+- [Custom providers](/llm-gateway/docs/providers/custom-providers)
+- [Self-hosted](/llm-gateway/docs/self-hosted)
+- [M302: Model not available](/llm-gateway/docs/errors/M302)
+- [All error codes](/llm-gateway/docs/errors)

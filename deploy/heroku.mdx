@@ -1,0 +1,91 @@
+---
+title: "Deploy the LLM Gateway on Heroku"
+sidebarTitle: "Heroku"
+description: "Deploy the Manifest LLM Gateway with a container-stack web dyno and Heroku Postgres."
+icon: "/icons/deploy/heroku.svg"
+keywords:
+  [
+    "Manifest deployment",
+    "Heroku",
+    "self-hosted gateway",
+    "PostgreSQL",
+    "Docker",
+  ]
+canonical: "https://manifest.build/llm-gateway/docs/deploy/heroku"
+---
+
+<Card
+  title="Open Heroku deploy"
+  icon="external-link"
+  href="https://www.heroku.com/deploy?template=https://github.com/mnfst/llm-gateway"
+>
+  Deploy-button guide with Heroku Postgres, generated secrets, and required
+  values for the app URL and S3-compatible recording storage.
+</Card>
+
+## Overview
+
+Heroku can deploy the gateway with the repository `app.json` and `heroku.yml`. The deploy button creates a Cedar container-stack app, provisions Heroku Postgres, generates gateway secrets, and builds a tiny Heroku Dockerfile that uses the public Manifest image.
+
+Heroku asks for a few values before it can deploy. Set `BETTER_AUTH_URL` to the public URL for the app name you choose. Heroku dynos have an ephemeral filesystem, so [request logs](/llm-gateway/docs/request-logs) write to external S3-compatible storage rather than local disk: set the bucket, region, and access key for that storage too.
+
+## Prerequisites
+
+- A Heroku account with billing enabled.
+- Permission to create apps, add-ons, and config vars.
+- A private S3-compatible bucket and an access key limited to it, for request logs.
+
+This stack creates paid resources. Heroku no longer provides free dynos or free Heroku Postgres plans.
+
+## Deploy
+
+1. Open the [Heroku deploy link](https://www.heroku.com/deploy?template=https://github.com/mnfst/llm-gateway).
+2. Choose an app name.
+3. Set `BETTER_AUTH_URL` to:
+
+```text
+https://<your-app-name>.herokuapp.com
+```
+
+4. Fill in the recording storage values: `REQUEST_RECORDING_S3_BUCKET`, `REQUEST_RECORDING_S3_REGION`, `REQUEST_RECORDING_S3_ACCESS_KEY_ID`, and `REQUEST_RECORDING_S3_SECRET_ACCESS_KEY`. Leave `REQUEST_RECORDING_S3_ENDPOINT` blank only when using AWS S3.
+5. Deploy the app.
+
+Heroku generates `BETTER_AUTH_SECRET` and `MANIFEST_ENCRYPTION_KEY`, provisions Postgres as `DATABASE_URL`, builds `Dockerfile.heroku`, and starts the web dyno.
+
+## Open the gateway
+
+Open the deployed app and create the first admin account. Fresh installs redirect to `/setup`; the first account you create becomes the admin.
+
+Verify the deployment:
+
+```bash
+curl -fsS https://<your-app-name>.herokuapp.com/api/v1/health
+```
+
+View logs:
+
+```bash
+heroku logs --tail -a <your-app-name>
+```
+
+## Production notes
+
+- Heroku sets `PORT` automatically, so the template does not pin a port.
+- `PGSSLMODE=no-verify` enables TLS for Heroku Postgres without editing the managed `DATABASE_URL`.
+- `DB_POOL_MAX=8` and `AUTH_DB_POOL_MAX=4` leave headroom under the Essential-0 connection limit.
+- Use a custom domain before configuring production OAuth callbacks.
+- Heroku's filesystem is ephemeral, which is why the deploy collects S3-compatible storage for [request logs](/llm-gateway/docs/request-logs) up front. Recordings live in your bucket, not on the dyno.
+
+## Tearing it down
+
+Destroy the app when testing is done to stop billing:
+
+```bash
+heroku apps:destroy -a <your-app-name>
+```
+
+Relevant Heroku docs:
+
+- [Deploy to Heroku Button](https://devcenter.heroku.com/articles/heroku-button)
+- [app.json schema](https://devcenter.heroku.com/articles/app-json-schema)
+- [Building Docker Images with heroku.yml](https://devcenter.heroku.com/articles/build-docker-images-heroku-yml)

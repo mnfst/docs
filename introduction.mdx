@@ -1,0 +1,87 @@
+---
+title: "Manifest LLM Gateway documentation"
+sidebarTitle: "Introduction"
+description: "Connect models and subscriptions behind one OpenAI- and Anthropic-compatible endpoint, with routing, fallbacks, limits, and Autofix."
+icon: "house"
+keywords:
+  ["LLM router", "AI subscriptions", "model routing", "open source", "LLM gateway", "quickstart", "first request", "create a harness", "gateway base URL"]
+canonical: "https://manifest.build/llm-gateway/docs/introduction"
+---
+
+<div className="deploy-mode-toggle" role="group" aria-label="Deployment mode">
+  <button type="button" data-deploy-mode="cloud">Cloud</button>
+  <button type="button" data-deploy-mode="selfhosted">Self-hosted</button>
+</div>
+
+The Manifest LLM Gateway connects the models and subscriptions you already use behind one OpenAI- and Anthropic-compatible endpoint.
+
+Send `auto` to apply your routing rules and fallbacks, or name a model to send the request there directly. Either way, you can cap what each harness spends and see the cost of every request.
+
+## Key features
+
+<CardGroup cols={2}>
+  <Card title="All your providers" icon="layers" href="/llm-gateway/docs/providers/api-key-providers">
+    Connect API keys, subscriptions you already pay for, local models, or any custom endpoint.
+  </Card>
+  <Card title="LLM Gateway" icon="split" href="/llm-gateway/docs/llm-gateway">
+    Send `auto` and your routing rules pick the model, with fallbacks when one fails. Limits cap what a harness can spend.
+  </Card>
+  <Card title="Autofix" icon="wrench" href="/llm-gateway/docs/autofix">
+    Repair a malformed request and resend it, instead of failing on something a retry can't fix.
+  </Card>
+  <Card title="Observability" icon="activity" href="/llm-gateway/docs/observability">
+    See what every harness spent, which models served it, and what failed.
+  </Card>
+  <Card title="Request logs" icon="logs" href="/llm-gateway/docs/request-logs">
+    Read back the full request and response body of any provider attempt, as a conversation.
+  </Card>
+  <Card title="CLI" icon="terminal" href="/llm-gateway/docs/cli">
+    Create harnesses, connect providers, set routing, and read the request log from the terminal or a script.
+  </Card>
+</CardGroup>
+
+## Cloud or self-hosted?
+
+The gateway is open source and runs two ways. Both speak the same API, so pointing a client at one or the other is a URL change.
+
+<CardGroup cols={2}>
+  <Card title="LLM Gateway Cloud" icon="cloud" href="https://app.manifest.build">
+    Runs on our servers. Sign up, connect a provider, and you're routing.
+    Recommended if you're starting out.
+  </Card>
+  <Card title="Self-hosting" icon="server" href="/llm-gateway/docs/deploy">
+    Runs on infrastructure you control: Docker on your own machine, a managed
+    platform like Railway, your AWS or GCP account, or a server panel.
+  </Card>
+</CardGroup>
+
+On Cloud there is nothing to install or configure on a server. You sign up, connect your providers, and point your harness at the gateway URL. Routing, limits, [Autofix](/llm-gateway/docs/autofix), and alerts are settings in the dashboard. The [environment variables](/llm-gateway/docs/reference/environment-variables) throughout these docs apply only to a self-hosted gateway.
+
+Cloud is also subject to [plan limits](/llm-gateway/docs/errors/M204): the free plan includes 10,000 routed requests per calendar month, shown by the usage meter in the dashboard sidebar and reset at 00:00 UTC on the 1st. And it can't reach [local models](/llm-gateway/docs/providers/local-models) running on your machine. A self-hosted instance has neither restriction.
+
+## Your first request
+
+<div data-deploy="cloud">
+
+Sign up at [app.manifest.build](https://app.manifest.build) and a guided setup walks you through it. Step one creates a harness. Then connect a provider, and give your default tier a model to route to. The last step shows the gateway address and the harness key, which starts with `mnfst_`. A harness you create later reuses the providers your workspace already has.
+
+<Frame caption="The guided setup after signing up: step one creates your first harness.">
+  <img src="/images/welcome-setup.png" alt="The LLM Gateway guided setup on step one, Create your first harness, with the five setup steps listed in the sidebar" />
+</Frame>
+
+```bash
+curl -X POST https://app.manifest.build/v1/chat/completions \
+  -H "Authorization: Bearer mnfst_YOUR_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"model": "auto", "messages": [{"role": "user", "content": "Hello"}]}'
+```
+
+`auto` asks the gateway to route the request. The request appears on the **Requests** page with the model that served it and its cost.
+
+</div>
+
+<div data-deploy="selfhosted">
+
+Install the gateway first. [Self-hosted](/llm-gateway/docs/self-hosted) covers Docker and the managed platforms. Your instance starts empty. [First request](/llm-gateway/docs/self-hosted#first-request) takes you from there to a routed request against `http://localhost:2099/v1`.
+
+</div>
