@@ -209,55 +209,55 @@
     },
     {
       "source": "/install",
-      "destination": "/llm-gateway/docs/self-hosted"
+      "destination": "/self-hosted"
     },
     {
       "source": "/docker",
-      "destination": "/llm-gateway/docs/self-hosted"
+      "destination": "/self-hosted"
     },
     {
       "source": "/telemetry",
-      "destination": "/llm-gateway/docs/reference/telemetry"
+      "destination": "/reference/telemetry"
     },
     {
       "source": "/privacy",
-      "destination": "/llm-gateway/docs/reference/telemetry"
+      "destination": "/reference/telemetry"
     },
     {
       "source": "/cloud-vs-local",
-      "destination": "/llm-gateway/docs/introduction"
+      "destination": "/introduction"
     },
     {
       "source": "/cloud-vs-self-hosted",
-      "destination": "/llm-gateway/docs/introduction"
+      "destination": "/introduction"
     },
     {
       "source": "/get-started",
-      "destination": "/llm-gateway/docs/introduction"
+      "destination": "/introduction"
     },
     {
       "source": "/track-usage",
-      "destination": "/llm-gateway/docs/observability"
+      "destination": "/observability"
     },
     {
       "source": "/routing",
-      "destination": "/llm-gateway/docs/llm-gateway"
+      "destination": "/llm-gateway"
     },
     {
       "source": "/fallback",
-      "destination": "/llm-gateway/docs/llm-gateway"
+      "destination": "/llm-gateway"
     },
     {
       "source": "/set-limits",
-      "destination": "/llm-gateway/docs/observability"
+      "destination": "/observability"
     },
     {
       "source": "/errors/M301",
-      "destination": "/llm-gateway/docs/errors"
+      "destination": "/errors"
     },
     {
       "source": "/configuration",
-      "destination": "/llm-gateway/docs/self-hosted"
+      "destination": "/self-hosted"
     },
     {
       "source": "/contributing",
@@ -265,71 +265,7 @@
     },
     {
       "source": "/message-recording",
-      "destination": "/llm-gateway/docs/request-logs"
-    },
-    {
-      "source": "/llm-gateway/docs",
-      "destination": "/llm-gateway/docs/introduction"
-    },
-    {
-      "source": "/llm-gateway/docs/install",
-      "destination": "/llm-gateway/docs/self-hosted"
-    },
-    {
-      "source": "/llm-gateway/docs/docker",
-      "destination": "/llm-gateway/docs/self-hosted"
-    },
-    {
-      "source": "/llm-gateway/docs/telemetry",
-      "destination": "/llm-gateway/docs/reference/telemetry"
-    },
-    {
-      "source": "/llm-gateway/docs/privacy",
-      "destination": "/llm-gateway/docs/reference/telemetry"
-    },
-    {
-      "source": "/llm-gateway/docs/cloud-vs-local",
-      "destination": "/llm-gateway/docs/introduction"
-    },
-    {
-      "source": "/llm-gateway/docs/cloud-vs-self-hosted",
-      "destination": "/llm-gateway/docs/introduction"
-    },
-    {
-      "source": "/llm-gateway/docs/get-started",
-      "destination": "/llm-gateway/docs/introduction"
-    },
-    {
-      "source": "/llm-gateway/docs/track-usage",
-      "destination": "/llm-gateway/docs/observability"
-    },
-    {
-      "source": "/llm-gateway/docs/routing",
-      "destination": "/llm-gateway/docs/llm-gateway"
-    },
-    {
-      "source": "/llm-gateway/docs/fallback",
-      "destination": "/llm-gateway/docs/llm-gateway"
-    },
-    {
-      "source": "/llm-gateway/docs/set-limits",
-      "destination": "/llm-gateway/docs/observability"
-    },
-    {
-      "source": "/llm-gateway/docs/errors/M301",
-      "destination": "/llm-gateway/docs/errors"
-    },
-    {
-      "source": "/llm-gateway/docs/configuration",
-      "destination": "/llm-gateway/docs/self-hosted"
-    },
-    {
-      "source": "/llm-gateway/docs/contributing",
-      "destination": "https://github.com/mnfst/llm-gateway"
-    },
-    {
-      "source": "/llm-gateway/docs/message-recording",
-      "destination": "/llm-gateway/docs/request-logs"
+      "destination": "/request-logs"
     }
   ]
 }
