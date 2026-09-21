@@ -1,7 +1,7 @@
 ---
 name: docs-sync
 description: >
-  Audit the gap between the Manifest platform (mnfst/manifest) and this
+  Audit the gap between the Manifest platform (mnfst/llm-gateway) and this
   documentation, through a multi-agent verification loop, and file ONE
   digest issue with evidence-backed findings and options. Use when the
   user says "/docs-sync", "lance l'audit", "compare la plateforme et la
@@ -16,7 +16,7 @@ findings are options to discuss, PRs happen manually with Seb
 afterwards. No findings = no issue = total silence.
 
 Requirements: `gh` authenticated (issues on mnfst/docs, read on
-mnfst/manifest), and a local platform clone: `~/codebase/manifest/manifest`
+mnfst/llm-gateway), and a local platform clone: `~/codebase/manifest/manifest`
 on Seb's Mac, `~/repos/manifest` on the VM (pull it fresh before
 auditing; never clone a duplicate if one of these exists). Run
 `bash scripts/setup.sh` at session start.
@@ -49,7 +49,7 @@ auditing; never clone a duplicate if one of these exists). Run
 
 Full mode: read `scripts/state.json` (`lastAuditedPr`), list merged
 PRs since:
-`gh pr list --repo mnfst/manifest --state merged --limit 100 --json number,title,mergedAt`
+`gh pr list --repo mnfst/llm-gateway --state merged --limit 100 --json number,title,mergedAt`
 and keep those with `number > lastAuditedPr`. If none: apply the
 **nightly rotation** — read `scripts/topics.json`, pick the topic with
 the oldest `lastAuditedAt` (null counts as oldest; tie-break by list
@@ -59,7 +59,7 @@ result). One topic per run, never more.
 
 Scoped mode: collect the topic's docs pages, and the topic's merged
 PRs over a stated window (default 30 days) via
-`gh pr list --repo mnfst/manifest --state merged --search "<topic terms>"`
+`gh pr list --repo mnfst/llm-gateway --state merged --search "<topic terms>"`
 plus a Grep of the clone for the feature's code paths. State the
 window and the page list in the issue.
 

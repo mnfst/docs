@@ -10,7 +10,7 @@ label per finding category present. No findings = no issue = no noise.
 ## Body structure
 
 ```
-Audited: mnfst/manifest PRs #<from> to #<to> (<n> merged PRs), against
+Audited: mnfst/llm-gateway PRs #<from> to #<to> (<n> merged PRs), against
 the docs at <docs commit sha>.
 
 ## Findings
