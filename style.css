@@ -584,7 +584,7 @@ html.dark .docs-book-call {
 /* Secondary CTA to the main Manifest Self-Healing documentation */
 .docs-self-healing {
   position: fixed;
-  top: calc(7.5px + var(--banner-height, 40px));
+  top: calc(5.5px + var(--banner-height, 40px));
   right: 166px;
   z-index: 60;
   display: inline-flex;
@@ -631,7 +631,7 @@ html.dark .docs-self-healing:hover {
     top: 7.5px;
   }
   .docs-self-healing {
-    top: 7.5px;
+    top: 5.5px;
   }
 }
 
