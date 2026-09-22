@@ -11,7 +11,7 @@
   "css": "/style.css",
   "js": "/scripts/no-tab-jump.js",
   "banner": {
-    "content": "**NEW LAUNCH** The self-healing layer for APIs. [Read more](https://manifest.build/blog/manifest-is-taking-a-new-direction/)",
+    "content": "**NEW LAUNCH:** Repair your API requests at runtime. [Get started](https://dashboard.manifest.build)",
     "dismissible": false
   },
   "colors": {
