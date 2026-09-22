@@ -2,7 +2,8 @@
 # .git, .github, .claude, .agents, .idea, node_modules,
 # README.md, LICENSE.md, CHANGELOG.md, CONTRIBUTING.md
 
-# Non-docs files: the harness the agents read, never published
+# Non-docs files: the harness the agents read, never published.
+# The scripts the site loads live in js/, which stays published.
 AGENTS.md
 CLAUDE.md
 references/

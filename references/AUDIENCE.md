@@ -31,7 +31,7 @@ need this to succeed?"
 ## The Cloud / Self-hosted rule
 
 - Any section whose instructions differ between cloud and self-hosted
-  uses the toggle (`scripts/deploy-mode-toggle.js`). Default view:
+  uses the toggle (`js/deploy-mode-toggle.js`). Default view:
   Cloud.
 - The chosen mode is sticky: a user who picked Self-hosted keeps
   seeing Self-hosted while navigating.
