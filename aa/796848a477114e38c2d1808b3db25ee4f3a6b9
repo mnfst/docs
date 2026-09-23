@@ -1,0 +1,41 @@
+errors.mdx
+  s_9985d850b0c3cd::t_2563168ce87d98 41
+errors/M100.mdx
+  s_9985d850b0c3cd::t_25541d9cde3968 32
+errors/M101.mdx
+  s_9985d850b0c3cd::t_8f8288c3b692b3 2,4,7,14,18-19,22-27,31-34
+errors/M102.mdx
+  s_9985d850b0c3cd::t_811e730ef4d3b6 54
+integrations/n8n.mdx
+  s_9985d850b0c3cd::t_01d34ff174f79e 127
+llm-gateway/docs/errors.mdx
+  s_9985d850b0c3cd::t_bd527bdd1f03e6 41
+llm-gateway/docs/errors/M100.mdx
+  s_9985d850b0c3cd::t_0d250962631ce9 32
+llm-gateway/docs/errors/M101.mdx
+  s_9985d850b0c3cd::t_eb133cd994803e 2,4,7,14,18-19,22-27,31-34
+llm-gateway/docs/errors/M102.mdx
+  s_9985d850b0c3cd::t_a5ecbf43694448 54
+llm-gateway/docs/integrations/n8n.mdx
+  s_9985d850b0c3cd::t_bf5442f9d952e8 127
+llm-gateway/docs/self-hosted.mdx
+  s_9985d850b0c3cd::t_75636313b2988c 169
+self-hosted.mdx
+  s_9985d850b0c3cd::t_af11951ac5d0c1 169
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "aa796848a477114e38c2d1808b3db25ee4f3a6b9",
+  "prompts": {},
+  "sessions": {
+    "s_9985d850b0c3cd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "32831f2e-0148-461d-915e-67ddb89b9dcb",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Guillaume Gay <guillaume.gay@protonmail.com>"
+    }
+  }
+}
