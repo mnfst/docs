@@ -1,29 +1,37 @@
 ---
-title: "M101: No providers configured"
+title: "M101: No model to route to"
 sidebarTitle: "M101"
-description: "M101 is returned when the authenticated harness has no providers configured."
+description: "M101 is returned when the authenticated harness has no model it can route to: no default model picked yet, or no provider connected."
 icon: "plug-zap"
 keywords:
-  ["M101", "Manifest M101", "no providers configured", "first-time setup", "empty agent", "empty harness", "Manifest routing", "connect provider", "OpenRouter setup"]
+  ["M101", "Manifest M101", "no model to route to", "no default model", "no providers configured", "first-time setup", "empty harness", "Manifest routing", "connect provider", "OpenRouter setup"]
 canonical: "https://manifest.build/llm-gateway/docs/errors/M101"
 ---
 
 ## What you saw
 
 ```text
-[🦚 Manifest M101] You're connected, but no providers are set up yet. Add one here: https://app.manifest.build/...
+[🦚 Manifest M101] This harness has no model to route to yet. Pick a default model here: https://app.manifest.build/...
 See https://manifest.build/llm-gateway/docs/errors/M101
 ```
 
+Earlier versions word it: "You're connected, but no providers are set up yet."
+
 ## Why it happened
 
-You'll usually see this on a fresh harness. Your key works, but no provider credentials are connected yet (OpenAI, Anthropic, OpenRouter, an Ollama instance, anything).
+Your key works, but the harness has nothing to send the request to. On a fresh harness this usually means one of two things:
+
+- No default model is picked yet, even though providers are connected.
+- No provider is connected at all (OpenAI, Anthropic, OpenRouter, an Ollama instance, anything).
+
+It also happens when the tier's model left your model list and no fallback is left.
 
 ## How to fix it
 
-1. Open the dashboard link in the error message.
-2. The page offers one card per connection type. Pick **Usage-based** to paste an API key, or **Subscriptions** to reuse a plan you already pay for. OpenRouter or OpenAI with an API key is the fastest path.
-3. Retry the request.
+1. Open the dashboard link in the error message. It goes to the harness's **Routing** page.
+2. If no provider is connected, connect one from the **Providers** section: **Usage-based** to paste an API key, or **Subscriptions** to reuse a plan you already pay for. OpenRouter or OpenAI with an API key is the fastest path.
+3. Pick a default model for the harness.
+4. Retry the request.
 
 ## Related
 
