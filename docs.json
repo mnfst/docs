@@ -10,10 +10,6 @@
   "favicon": "/favicon.svg",
   "css": "/style.css",
   "js": "/js/no-tab-jump.js",
-  "banner": {
-    "content": "**NEW LAUNCH:** Repair your API requests at runtime. [Get started](https://dashboard.manifest.build)",
-    "dismissible": false
-  },
   "colors": {
     "primary": "#0f172a",
     "light": "#ffffff",
