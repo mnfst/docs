@@ -12,78 +12,6 @@
   scroll-margin-top: 9999px !important;
 }
 
-/* Announcement banner: white-to-blue grained gradient of the Manifest brand,
-   black NEW LAUNCH label and black Get started button. The grain is an inline SVG
-   fractal noise, so the strip stays a few hundred bytes at any width. */
-#banner {
-  background-color: #f2f1ed !important;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.34'/%3E%3C/svg%3E"),
-    linear-gradient(95deg, #f2f1ed 0%, #efeeeb 24%, #dcdeee 50%, #a6aae7 78%, #5b61ea 100%) !important;
-  background-size: 160px 160px, 100% 100% !important;
-  background-repeat: repeat, no-repeat !important;
-  border-bottom: none !important;
-}
-/* The maple theme offsets the navbar by a hardcoded 40px, so the banner must
-   be exactly 40px tall on desktop or it overflows onto the header */
-@media (min-width: 1024px) {
-  #banner {
-    height: 40px;
-  }
-  #banner > div {
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-  }
-}
-#banner,
-#banner * {
-  color: #0b0b0c !important;
-  font-weight: 500;
-}
-/* The banner content is laid out as flex items, so the space typed after the
-   label in docs.json collapses; the margin restores it */
-#banner strong,
-#banner [data-streamdown="strong"] {
-  margin-right: 4px;
-  font-weight: 700;
-  color: #0b0b0c !important;
-}
-#banner a {
-  display: inline-block;
-  margin-left: 10px;
-  padding: 4px 12px;
-  border-radius: 6px;
-  background: #0b0b0c !important;
-  color: #f9f8f5 !important;
-  font-weight: 600 !important;
-  text-decoration: none !important;
-  border-bottom: none !important;
-  box-shadow: none !important;
-}
-#banner a:hover {
-  opacity: 0.9;
-}
-#banner a,
-#banner a * {
-  color: #f9f8f5 !important;
-}
-#banner button,
-#banner svg {
-  color: #0b0b0c !important;
-}
-/* Mintlify forces white text via a Tailwind utility marked !important inside
-   the "utilities" cascade layer; an un-layered !important loses to it, so the
-   color overrides must live in that same layer where ID specificity wins */
-@layer utilities {
-  #banner,
-  #banner * {
-    color: #0b0b0c !important;
-  }
-  #banner a,
-  #banner a * {
-    color: #f9f8f5 !important;
-  }
-}
-
 /* Logo height */
 #sidebar img[alt*="logo" i],
 #sidebar img[src*="logo"],
@@ -93,84 +21,6 @@ a[href="https://manifest.build"] img {
   min-height: 30px !important;
   max-height: 30px !important;
   width: auto !important;
-}
-
-/* Docs switcher: chevrons next to the logo, menu opened by a logo click */
-.docs-switcher-trigger {
-  display: inline-flex !important;
-  align-items: center;
-  gap: 2px;
-}
-.docs-switcher-chevron {
-  position: relative;
-  top: 4px;
-  display: inline-flex;
-  flex-shrink: 0;
-  color: #64748b;
-}
-.docs-switcher-trigger:hover .docs-switcher-chevron {
-  color: #0f172a;
-}
-html.dark .docs-switcher-chevron {
-  color: #94a3b8;
-}
-html.dark .docs-switcher-trigger:hover .docs-switcher-chevron {
-  color: #f9f8f5;
-}
-#docs-switcher-menu {
-  position: fixed;
-  z-index: 70;
-  min-width: 240px;
-  padding: 4px;
-  border: 1px solid #e8e2d9;
-  border-radius: 6px;
-  background: #fcfaf5;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
-}
-html.dark #docs-switcher-menu {
-  border-color: rgba(255, 255, 255, 0.12);
-  background: #1c1c1c;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-}
-.docs-switcher-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 8px 10px;
-  border-radius: 4px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #374151 !important;
-  text-decoration: none !important;
-  border-bottom: none !important;
-}
-a.docs-switcher-item:hover {
-  background: rgba(15, 23, 42, 0.05);
-  color: #0f172a !important;
-}
-.docs-switcher-item.is-active {
-  font-weight: 600;
-  color: #0f172a !important;
-  cursor: default;
-}
-.docs-switcher-item svg {
-  flex-shrink: 0;
-  color: #64748b;
-}
-.docs-switcher-item.is-active svg {
-  color: #0f172a;
-}
-html.dark .docs-switcher-item {
-  color: #d1d5db !important;
-}
-html.dark a.docs-switcher-item:hover {
-  background: rgba(255, 255, 255, 0.06);
-  color: #f9f8f5 !important;
-}
-html.dark .docs-switcher-item.is-active,
-html.dark .docs-switcher-item.is-active svg {
-  color: #f9f8f5 !important;
 }
 
 /* Theme switch moves under GitHub and Discord at the sidebar bottom, so the
@@ -532,7 +382,7 @@ figure.frame {
    script; centered fallback when the tab is not found. */
 .deploy-mode-toggle--floating {
   position: fixed;
-  top: calc(6px + var(--banner-height, 40px));
+  top: calc(6px + var(--banner-height, 0px));
   left: 50%;
   transform: translateX(-50%) translateY(-6px);
   z-index: 60;
@@ -560,7 +410,7 @@ html.dark .deploy-mode-toggle--floating {
 /* Book a call button, fixed top right over the header bar */
 .docs-book-call {
   position: fixed;
-  top: calc(7.5px + var(--banner-height, 40px));
+  top: calc(7.5px + var(--banner-height, 0px));
   right: 40px;
   z-index: 60;
   display: inline-block;
@@ -579,68 +429,6 @@ html.dark .deploy-mode-toggle--floating {
 html.dark .docs-book-call {
   background: #f9f8f5;
   color: #0f172a !important;
-}
-
-/* Secondary CTA to the main Manifest Self-Healing documentation */
-.docs-self-healing {
-  position: fixed;
-  top: calc(5.5px + var(--banner-height, 40px));
-  right: 166px;
-  z-index: 60;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 8px 13px;
-  border: 1px solid #d8d3ca;
-  border-radius: 10px;
-  background: #f8f6f1;
-  color: #475569 !important;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1;
-  text-decoration: none !important;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
-}
-.docs-self-healing svg {
-  width: 18px;
-  height: 18px;
-  flex: 0 0 auto;
-}
-.docs-self-healing:hover {
-  border-color: #b8b1a6;
-  color: #0f172a !important;
-}
-html.dark .docs-self-healing {
-  border-color: rgba(255, 255, 255, 0.16);
-  background: #252525;
-  color: #d1d5db !important;
-  box-shadow: none;
-}
-html.dark .docs-self-healing:hover {
-  border-color: rgba(255, 255, 255, 0.3);
-  color: #ffffff !important;
-}
-
-/* Below lg the banner scrolls with the page instead of staying fixed, so the
-   fixed elements keep their original offsets */
-@media (max-width: 1023px) {
-  .deploy-mode-toggle--floating {
-    top: 6px;
-  }
-  .docs-book-call {
-    top: 7.5px;
-  }
-  .docs-self-healing {
-    top: 5.5px;
-  }
-}
-
-/* Keep the compact header usable on tablets and phones. The Self-Healing
-   destination remains available from the announcement banner. */
-@media (max-width: 767px) {
-  .docs-self-healing {
-    display: none;
-  }
 }
 
 /* Paragraph spans nested in deploy-mode wrappers miss the theme's prose
