@@ -23,7 +23,7 @@ The gateway caps in-flight requests at 10 per workspace, shared by all its harne
 
 1. Let in-flight requests finish, then retry. Most SDKs handle this automatically with backoff on `429`.
 2. Reduce parallelism on the client side. Most agents only need one or two concurrent calls.
-3. The 10 concurrent-request cap is a fixed guardrail. No env var or setting changes it, self-hosted included. Reduce parallelism as in step 2.
+3. On Cloud, the 10 concurrent-request cap is fixed. Reduce parallelism as in step 2. Self-hosted, raise it with `MANIFEST_CONCURRENCY_MAX` in your `.env` and restart. Each gateway instance counts its own in-flight requests, so on a multi-replica deploy the cap applies per replica. See [Environment variables](/llm-gateway/docs/reference/environment-variables#llm-proxy).
 
 ## Related
 

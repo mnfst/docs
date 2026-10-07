@@ -25,7 +25,7 @@ The gateway caps each user at 200 requests per minute. The cap is there mostly t
 
 1. Add a small delay or exponential backoff on retry. Most SDKs handle this automatically when they see a `429`.
 2. If parallel workers are hitting the gateway, throttle them so they share the budget.
-3. The 200 requests/minute cap is a fixed guardrail. No env var or setting changes it, self-hosted included. Lean on the backoff in step 1.
+3. On Cloud, the 200 requests/minute cap is fixed. Lean on the backoff in step 1. Self-hosted, raise it with `MANIFEST_RATE_MAX_REQUESTS` in your `.env` and restart. See [Environment variables](/llm-gateway/docs/reference/environment-variables#llm-proxy).
 
 ## Related
 
