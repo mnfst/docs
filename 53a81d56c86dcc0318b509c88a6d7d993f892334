@@ -1,0 +1,23 @@
+integrations/mcp.mdx
+  s_b2b5a4b0535460::t_6f3c62853472f3 1-24,26-141,143,145-188
+  s_b2b5a4b0535460::t_5a7ce25ad647f7 25,142
+  s_b2b5a4b0535460::t_8d6a7c6c0255c7 144
+docs.json
+  s_b2b5a4b0535460::t_bf5a8314567035 174-175
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "53a81d56c86dcc0318b509c88a6d7d993f892334",
+  "prompts": {},
+  "sessions": {
+    "s_b2b5a4b0535460": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f66b0dafbffeDB7RS9O1okShA7",
+        "model": "auto"
+      },
+      "human_author": "Guillaume Gay <guillaume.gay@protonmail.com>"
+    }
+  }
+}
