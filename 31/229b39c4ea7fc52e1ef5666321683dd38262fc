@@ -1,0 +1,37 @@
+errors/M201.mdx
+  s_152e22090d027c::t_46221e01c4a58b 28
+errors/M202.mdx
+  s_152e22090d027c::t_77082ed0b3b62f 26
+errors/M203.mdx
+  s_152e22090d027c::t_e2c5bb730538af 26
+llm-gateway/docs/errors/M201.mdx
+  s_152e22090d027c::t_728da25261c6c3 28
+llm-gateway/docs/errors/M202.mdx
+  s_152e22090d027c::t_ab30f7fbd56664 26
+llm-gateway/docs/errors/M203.mdx
+  s_152e22090d027c::t_2f7828e5a33e40 26
+llm-gateway/docs/reference/api.mdx
+  s_152e22090d027c::t_28eef02c436c0b 215
+llm-gateway/docs/reference/environment-variables.mdx
+  s_152e22090d027c::t_2bcdd9f5566eea 6,41,61-63
+reference/api.mdx
+  s_152e22090d027c::t_3a42890dcda4e8 215
+reference/environment-variables.mdx
+  s_152e22090d027c::t_d8a5a0507fdae2 6,41,61-63
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "31229b39c4ea7fc52e1ef5666321683dd38262fc",
+  "prompts": {},
+  "sessions": {
+    "s_152e22090d027c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e1c125fa-9d68-4a46-b266-141e45a28b95",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Guillaume Gay <guillaume.gay@protonmail.com>"
+    }
+  }
+}
