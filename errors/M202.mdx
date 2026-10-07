@@ -23,7 +23,7 @@ There's a separate per-IP cap (500 requests per minute) sitting on top of the pe
 
 1. Back off and retry. The window resets after a minute.
 2. Running many agents from one machine in dev? Stagger their startup so they don't all hammer the proxy at once.
-3. The 500 requests/minute per-IP cap is a fixed guardrail. No env var or setting changes it, self-hosted included. Stagger workers as in step 2.
+3. On Cloud, the 500 requests/minute per-IP cap is fixed. Stagger workers as in step 2. Self-hosted, raise it with `MANIFEST_IP_RATE_MAX_REQUESTS` in your `.env` and restart. See [Environment variables](/llm-gateway/docs/reference/environment-variables#llm-proxy).
 
 ## Related
 

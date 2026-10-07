@@ -3,7 +3,7 @@ title: "Environment variables"
 description: "Environment variables for a self-hosted Manifest LLM Gateway."
 icon: "settings"
 keywords:
-  ["DATABASE_URL", "BETTER_AUTH_SECRET", "BETTER_AUTH_URL", "PORT", "BIND_ADDRESS", "THROTTLE_LIMIT", "EMAIL_PROVIDER", "Resend", "Mailgun", "SendGrid", "MANIFEST_TELEMETRY_DISABLED"]
+  ["DATABASE_URL", "BETTER_AUTH_SECRET", "BETTER_AUTH_URL", "PORT", "BIND_ADDRESS", "THROTTLE_LIMIT", "MANIFEST_RATE_MAX_REQUESTS", "MANIFEST_CONCURRENCY_MAX", "EMAIL_PROVIDER", "Resend", "Mailgun", "SendGrid", "MANIFEST_TELEMETRY_DISABLED"]
 canonical: "https://manifest.build/llm-gateway/docs/reference/environment-variables"
 ---
 
@@ -38,7 +38,7 @@ The gateway reads its configuration from environment variables. In the bundled D
 | `MANIFEST_DISABLE_HSTS` | — | Set `1` to silence the boot warning about HSTS being unavailable on a plain-HTTP deployment. Prefer an `https://` `BETTER_AUTH_URL` anywhere reachable from the internet |
 | `WINGMAN_CORS_ORIGINS` | — | Extra browser origins allowed to call the gateway, comma-separated. Useful when you host your own copy of [Wingman](https://github.com/mnfst/wingman), the open-source gateway tester; the hosted one at `wingman.manifest.build` is always allowed |
 | `THROTTLE_TTL` | `60000` | Window (ms) for the rate limit on the dashboard's own API calls. Does not apply to gateway traffic on `/v1` |
-| `THROTTLE_LIMIT` | `100` | Max dashboard API calls per window. The gateway has its own fixed caps, see [Rate limits](/llm-gateway/docs/reference/api#rate-limits) |
+| `THROTTLE_LIMIT` | `100` | Max dashboard API calls per window. The gateway has its own caps, set by the `MANIFEST_RATE_*` and `MANIFEST_CONCURRENCY_MAX` variables under [LLM proxy](#llm-proxy) |
 
 ## Database
 
@@ -58,6 +58,9 @@ How the gateway talks to upstream providers.
 |---|---|---|
 | `PROVIDER_TIMEOUT_MS` | `180000` | Per-attempt timeout (ms) for upstream requests. A hung provider surfaces as a synthetic `504` and triggers the next [fallback](/llm-gateway/docs/llm-gateway#fallback). Set it strictly below your client's own timeout; slow local models may need it raised |
 | `STREAM_WARMUP_MS` | `15000` | How long to wait for the first streamed chunk before falling back to the next model |
+| `MANIFEST_RATE_MAX_REQUESTS` | `200` | Max gateway requests per workspace per minute. Above it, requests fail with [M201](/llm-gateway/docs/errors/M201). Must be a positive integer; any other value keeps the default |
+| `MANIFEST_IP_RATE_MAX_REQUESTS` | `500` | Max gateway requests per client IP per minute. Above it, requests fail with [M202](/llm-gateway/docs/errors/M202). Must be a positive integer; any other value keeps the default |
+| `MANIFEST_CONCURRENCY_MAX` | `10` | Max requests a workspace can have in flight at once. A streamed response holds its slot until the stream ends. Above it, requests fail with [M203](/llm-gateway/docs/errors/M203). Must be a positive integer; any other value keeps the default |
 | `OLLAMA_HOST` | `http://localhost:11434` | Base URL for a local Ollama server. In Docker, set it to `http://host.docker.internal:11434` |
 
 ## Request recordings
