@@ -43,7 +43,7 @@ Your harness key is fine, but provider credentials are missing or unusable. See 
 
 ## Limits (M200–M204)
 
-You hit a usage cap, rate limit, or Free plan request quota. M200 comes back as an HTTP 200 assistant message for every client: the text rides in the assistant content, not in the HTTP status. M201-M203 surface as HTTP 429 for every client. M204 surfaces as HTTP 402 to non-chat clients because it is a billing plan restriction.
+You hit a usage cap, a rate limit, or your Cloud workspace has no subscription. M200 comes back as an HTTP 200 assistant message for every client: the text rides in the assistant content, not in the HTTP status. M201-M203 surface as HTTP 429 for every client. M204 surfaces as HTTP 402 to non-chat clients because it is a billing plan restriction.
 
 | Code | What |
 |------|------|
@@ -51,7 +51,7 @@ You hit a usage cap, rate limit, or Free plan request quota. M200 comes back as 
 | [M201: Per-user rate limit exceeded](/llm-gateway/docs/errors/M201) | More than 200 requests/minute from one user |
 | [M202: Per-IP rate limit exceeded](/llm-gateway/docs/errors/M202) | More than 500 requests/minute from one IP |
 | [M203: Concurrency limit exceeded](/llm-gateway/docs/errors/M203) | More than 10 in-flight requests at once |
-| [M204: Monthly request limit reached](/llm-gateway/docs/errors/M204) | Free plan monthly request quota was exhausted |
+| [M204: Subscription required](/llm-gateway/docs/errors/M204) | Cloud workspace without a Pro subscription |
 
 ## Request validation and model selection (M300–M303)
 

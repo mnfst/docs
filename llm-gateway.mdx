@@ -151,8 +151,8 @@ A limit rule can block requests as well as email you. When a rule's action inclu
 The check runs before any provider is contacted, so a blocked request costs nothing. The block clears on its own at the start of the next period, or immediately if you raise the threshold.
 
 <Note>
-  On LLM Gateway Cloud, running out of the Free plan's monthly requests is a
-  different thing entirely: that returns [M204](/llm-gateway/docs/errors/M204) with HTTP `402`
+  On LLM Gateway Cloud, a workspace without a Pro subscription is a different
+  thing entirely: that returns [M204](/llm-gateway/docs/errors/M204) with HTTP `402`
   and isn't something you configured.
 </Note>
 
