@@ -204,7 +204,7 @@ Errors come in two shapes, depending on the caller. A tool or SDK call gets a re
 | Status | Meaning |
 |---|---|
 | `401` | Invalid or missing `Authorization` header |
-| `402` | LLM Gateway Cloud Free plan quota reached (`error.code = PLAN_LIMIT_REQUESTS`, [M204](/llm-gateway/docs/errors/M204)), or provider billing/quota error from the upstream |
+| `402` | LLM Gateway Cloud workspace without a Pro subscription (`error.code = PLAN_LIMIT_REQUESTS`, [M204](/llm-gateway/docs/errors/M204)), or provider billing/quota error from the upstream |
 | `429` | gateway rate limit tripped ([M201](/llm-gateway/docs/errors/M201), [M202](/llm-gateway/docs/errors/M202), [M203](/llm-gateway/docs/errors/M203)), or a rate limit the provider itself returned |
 | `5xx` | Upstream provider error (triggers [fallback](/llm-gateway/docs/llm-gateway#fallback)) |
 
@@ -214,7 +214,7 @@ A [hard limit](/llm-gateway/docs/llm-gateway#hard-limits) block ([M200](/llm-gat
 
 The gateway enforces three caps. A workspace can send **200 requests per minute** ([M201](/llm-gateway/docs/errors/M201)). An IP can send **500 requests per minute** ([M202](/llm-gateway/docs/errors/M202)). A workspace can have **10 requests in flight at once** ([M203](/llm-gateway/docs/errors/M203)). On Cloud, these caps are fixed. Self-hosted, you can raise each one with an environment variable, see [LLM proxy variables](/llm-gateway/docs/reference/environment-variables#llm-proxy). Each gateway instance keeps its own counts, so on a multi-replica deploy the caps apply per replica.
 
-Your Cloud plan sets your monthly request quota ([M204](/llm-gateway/docs/errors/M204)). The per-minute caps stay the same on every plan.
+A Cloud workspace needs a Pro subscription to route requests at all ([M204](/llm-gateway/docs/errors/M204)). The per-minute caps are the same on Cloud and self-hosted.
 
 ## Response headers
 

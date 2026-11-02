@@ -65,11 +65,10 @@ Recordings are deleted on a schedule. The metadata row in the request log stays;
 
 | Deployment | Retention |
 |---|---|
-| Cloud Free | 7 days |
 | Cloud Pro | 365 days |
 | Self-hosted | 365 days |
 
-Cloud Pro keeps 365 days only while the subscription is active or in a trial. A canceled workspace, or one whose payment failed, drops to 7 days, and the nightly cleanup applies that on its next run, deleting everything older than 7 days.
+Cloud keeps 365 days only while the Pro subscription is active or in a trial. A canceled workspace, or one whose payment failed, drops to 7 days, and the nightly cleanup applies that on its next run, deleting everything older than 7 days.
 
 Self-hosted installs can override this with `REQUEST_RECORDING_RETENTION_DAYS`. Setting it also overrides the per-plan split, so every recording on the instance expires on the same schedule.
 

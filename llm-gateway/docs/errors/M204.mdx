@@ -1,34 +1,45 @@
 ---
-title: "M204: Monthly request limit reached"
+title: "M204: Subscription required"
 sidebarTitle: "M204"
-description: "M204 is returned when a free LLM Gateway Cloud workspace reaches its monthly request allowance."
+description: "M204 is returned when an LLM Gateway Cloud workspace without a Pro subscription sends a request."
 icon: "badge-alert"
 keywords:
-  ["M204", "Manifest M204", "PLAN_LIMIT_REQUESTS", "monthly request limit", "free plan request limit", "Manifest billing", "402 Payment Required", "upgrade to Pro"]
+  ["M204", "Manifest M204", "PLAN_LIMIT_REQUESTS", "subscription required", "Manifest Cloud plan", "Manifest billing", "402 Payment Required", "subscribe to Pro"]
 canonical: "https://manifest.build/llm-gateway/docs/errors/M204"
 ---
 
 ## What you saw
 
 ```text
-[🦚 Manifest M204] You've used all 10000 requests included this month on the Free plan. Upgrade to Pro for unlimited requests: https://app.manifest.build/upgrade?reason=requests
+[🦚 Manifest M204] Manifest Cloud needs a Pro subscription to route requests. Subscribe here: https://app.manifest.build/upgrade?reason=requests
 See https://manifest.build/llm-gateway/docs/errors/M204
 ```
 
-SDK and tool callers receive an HTTP 402 JSON error with `error.code` set to `PLAN_LIMIT_REQUESTS`.
+SDK and tool callers receive an HTTP 402 JSON error with `error.code` set to `PLAN_LIMIT_REQUESTS`:
+
+```json
+{
+  "error": {
+    "message": "[🦚 Manifest M204] Manifest Cloud needs a Pro subscription to route requests. Subscribe here: https://app.manifest.build/upgrade?reason=requests",
+    "type": "insufficient_quota",
+    "code": "PLAN_LIMIT_REQUESTS"
+  }
+}
+```
 
 ## Why it happened
 
-Your LLM Gateway Cloud workspace reached the Free plan monthly request quota. This is a Cloud plan restriction, not a provider error and not a limit you configured on a harness.
+Your LLM Gateway Cloud workspace has no active Pro subscription. Since November 2, 2026, Manifest Cloud is $19/month with unlimited routed requests, and a workspace without a subscription does not route requests. The check runs before any provider is contacted, so nothing was sent and nothing was spent. Your dashboard, harnesses and settings are kept.
+
+This is a Cloud plan restriction, not a provider error and not a limit you configured on a harness.
 
 ## How to fix it
 
-1. Upgrade to Pro from the dashboard link in the error message.
-2. Or wait for the monthly request quota to reset.
-3. Retry the request after the plan changes or the quota resets.
+1. Subscribe from the dashboard link in the error message. Routing resumes as soon as the subscription is active.
+2. Or run the gateway yourself: the [self-hosted](/llm-gateway/docs/self-hosted) gateway is free, has no request limit and never returns M204.
 
 ## Related
 
-- [Upgrade dashboard](https://app.manifest.build/upgrade?reason=requests)
+- [Subscribe](https://app.manifest.build/upgrade?reason=requests)
 - [M200: Usage limit exceeded](/llm-gateway/docs/errors/M200)
 - [All error codes](/llm-gateway/docs/errors)
